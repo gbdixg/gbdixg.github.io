@@ -1,0 +1,43 @@
+# Site
+name: "Geoff Dixon"
+description: "EUC | Automation | DevOps | X-Plat <br>"
+meta_description: "EUC | Automation | DevOps | X-Plat "
+logo: 'assets/images/logo.png'
+favicon: 'assets/images/logo.png'
+baseurl: ""
+google_analytics: 'UA-141237050-1'
+disqus: 'disqus_verbose'
+mailchimp-list: ''
+
+# Authors
+authors:
+  Geoff:
+    name: Geoff
+    display_name: Geoff
+    gravatar: 8c81e2f92c7da66c3a224f1340fb5958
+    email: dixg2004-google@yahoo.com
+    web: https://www.write-verbose.com
+    twitter: 'https://twitter.com/writeverbose'
+    description: 'Automation Engineer, Developer, Retro-gamer'
+    github: 'https://github.com/gbdixg'
+
+# Plugins
+plugins: 
+  - jekyll-paginate
+  - jekyll-archives
+    
+# Archives
+jekyll-archives:
+  enabled:
+    - categories
+  layout: archive
+  permalinks:
+    category: '/category/:name/'
+    
+# Pagination 
+paginate: 6
+paginate_path: /page:num/
+    
+# Other
+markdown: kramdown
+highlighter: rouge
