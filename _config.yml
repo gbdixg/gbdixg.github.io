@@ -8,7 +8,6 @@ baseurl: "/SiteTest"
 google_analytics: 'UA-141237050-1'
 disqus: 'disqus_verbose'
 mailchimp-list: ''
-apexdomain: "write-verbose.com"
 
 # Authors
 authors:
