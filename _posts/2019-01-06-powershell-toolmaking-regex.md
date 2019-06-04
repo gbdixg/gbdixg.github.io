@@ -10,12 +10,11 @@ image: assets/images/thumb-powershell-toolmaking-regex.png
 comments: false
 featured: true
 hidden: false
-apexdomain: write-verbose.com
 categories: [ powershell, regex, wifi, Level200, toolmaking]
 tags:
   - toolmaking
   - powershell
-  - codesample
+  - codesample 
   - regex
   - development
   - Level200
@@ -65,7 +64,7 @@ $Result | Foreach-Object {
         $Properties.Add($name, $val)
     }
 
-}
+} 
 ```
 The Foreach-Object loop above processes the NetSH command output line-by-line.<br>
 Each line (the $_ variable) is tested for a match against the RegEx expression using the PowerShell -match operator.
