@@ -14,14 +14,15 @@ categories: [ powershell, regex, wifi, Level200, toolmaking]
 tags:
   - toolmaking
   - powershell
-  - codesample 
+  - codesample
   - regex
   - development
   - Level200
 ---
 The example below demonstrates one of my **most used and easiest to remember Regular Expression techniques** - using the "not" operator to set the match boundary.
 
-I recommend forcing yourself to use the PowerShell -match operator instead of -like whenever possible to keep your RegEx skills honed. You don't need to be an expert to be effective as most tasks can be completed with basic syntax.
+PowerShell Tools are re-usable functions that can be used stand-alone or in a pipeline.
+In this case, a PowerShell function will "wrap around" a built-in executable to output an object rather than text.
 ### Example
 The NETSH WLAN command output is **ideal for parsing using a RegEx** and converting into a PowerShell object.
 ```
@@ -64,7 +65,7 @@ $Result | Foreach-Object {
         $Properties.Add($name, $val)
     }
 
-} 
+}
 ```
 The Foreach-Object loop above processes the NetSH command output line-by-line.<br>
 Each line (the $_ variable) is tested for a match against the RegEx expression using the PowerShell -match operator.
