@@ -4,7 +4,7 @@ description: "EUC | Automation | DevOps | X-Plat <br>"
 meta_description: "EUC | Automation | DevOps | X-Plat "
 logo: 'favicon-32x32.png'
 favicon: 'favicon.ico'
-baseurl: ""
+baseurl: "/SiteTest"
 google_analytics: 'UA-141237050-1'
 disqus: 'disqus_verbose'
 mailchimp-list: ''
