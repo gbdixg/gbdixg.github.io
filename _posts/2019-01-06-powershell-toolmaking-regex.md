@@ -19,10 +19,10 @@ tags:
   - development
   - Level200
 ---
-The example below demonstrates one of my **most used and easiest to remember Regular Expression techniques** - using the "not" operator to set the match boundary.
-
 PowerShell Tools are re-usable functions that can be used stand-alone or in a pipeline.
 In this case, a PowerShell function will "wrap around" a built-in executable to output an object rather than text.
+
+The example below demonstrates one of my **most used and easiest to remember Regular Expression techniques** - using the "not" operator to set the match boundary.
 ### Example
 The NETSH WLAN command output is **ideal for parsing using a RegEx** and converting into a PowerShell object.
 ```
