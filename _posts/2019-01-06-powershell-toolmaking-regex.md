@@ -22,9 +22,9 @@ tags:
 PowerShell Tools are re-usable functions that can be used stand-alone or in a pipeline.
 In this case, a PowerShell function will "wrap around" a built-in executable to output an object rather than text.
 
-The example below demonstrates one of my **most used and easiest to remember Regular Expression techniques** - using the "not" operator to set the match boundary.
+The example below demonstrates one of my **most used and easiest to remember Regular Expression techniques** - using the RegEx "not" operator to set the match boundary.
 ### Example
-The NETSH WLAN command output is **ideal for parsing using a RegEx** and converting into a PowerShell object.
+The `NETSH WLAN` command output is **ideal for parsing using a RegEx** and converting into a PowerShell object.
 ```
 C:\> netsh wlan show interfaces
 
@@ -70,12 +70,12 @@ $Result | Foreach-Object {
 The Foreach-Object loop above processes the NetSH command output line-by-line.<br>
 Each line (the $_ variable) is tested for a match against the RegEx expression using the PowerShell -match operator.
 
->Rather than trying to come up with a RegEx to match all the possible options of the name field, the "not" operator [^:]+ captures all the characters until the colon.
+>Rather than trying to come up with a RegEx to match all the possible options of the name field, the "not" operator `[^:]+` captures all the characters until the colon.
 
 #### Breaking down the RegEx
 ![RegEx](/assets/images/powershell-toolmaking-regex1.png)
 
-I prefer to use named captures in my RegEx. ?\<name> and ?\<value> are used within the brackets to name the matches allowing them to be referenced as $matches['name'] and $matches['value'].
+I prefer to use named captures in my RegEx. `?\<name>` and `?\<value>` are used within the brackets to name the matches allowing them to be referenced as `$matches['name']` and `$matches['value']`.
 If you don't use named captures, they would be $matches[1] and $matches[2].
 
 #### Full script
