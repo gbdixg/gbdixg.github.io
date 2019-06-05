@@ -7,7 +7,7 @@ description: PowerShell 'Toolmaking' is the process of creating useful re-usable
 layout: post
 permalink: /2019/01/06/powershell-toolmaking-regex
 image: assets/images/thumb-powershell-toolmaking-regex.png
-comments: false
+comments: true
 featured: true
 hidden: false
 categories: [ powershell, regex, wifi, Level200, toolmaking]
