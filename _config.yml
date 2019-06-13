@@ -8,6 +8,7 @@ baseurl: ''
 google_analytics: 'UA-141237050-1'
 disqus: 'write-verbose'
 mailchimp-list: ''
+url: 'http://write-verbose.com'
 
 # Authors
 authors:
@@ -25,6 +26,7 @@ authors:
 plugins:
   - jekyll-paginate
   - jekyll-archives
+  - jekyll-sitemap
 
 # Archives
 jekyll-archives:

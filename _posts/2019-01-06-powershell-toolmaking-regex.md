@@ -3,12 +3,12 @@ id: 15
 title: PowerShell Toolmaking via RegEx
 date: 2019-01-06T19:15:04+00:00
 author: Geoff
-description: PowerShell 'Toolmaking' is the process of creating useful re-usable tools, often by leveraging built-in executables. This post describes how the detailed output of NETSH WLAN can be converted to objects and properties using regular expression parsing.
+description: A PowerShell wrapper around NETSH WLAN, demonstrating a useful RegEx technique
 layout: post
 permalink: /2019/01/06/powershell-toolmaking-regex
 image: assets/images/thumb-powershell-toolmaking-regex.png
 comments: true
-featured: true
+featured: false
 hidden: false
 categories: [ powershell, regex, wifi, Level200, toolmaking]
 tags:
