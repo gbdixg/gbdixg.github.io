@@ -42,9 +42,9 @@ The site database has a backlog of SQL change tracking data. For more informatio
 
 #### Applying the fix
 
-The Microsoft article in the above description provides commands to run against the SCCM SQL database over a `diagnostic or administrator connection`.
+The Microsoft article in the above description provides SQL commands that must be run over a `diagnostic or administrator connection`.
 
-###### Create an Admin Connection to SQL Server
+###### Enable SQL remote admin connection
 
 If you try to create an Administrator connection to the SQL server using SQL Management Studio (SMSS), you will receive an error that SMSS can't be used. This is misleading.
 
@@ -65,7 +65,7 @@ Disconnect the SMSS connection so that an Admin connection can be made:
 * Click on the server/instance in the Object Explorer pane
 * File > Disconnect
 
-###### Clean-up the change tracking retention
+###### Make an admin connection to the SQL database
 
 It isn't possible to make an admin connection using the SQL Object Explorer. The Object explorer tries to make multiple connections whereas an Admin Connection requires a single connection. Instead, click on the option for a `database engine query:`
 
@@ -74,6 +74,8 @@ It isn't possible to make an admin connection using the SQL Object Explorer. The
 When prompted for the connection information, prefix the server or sql instance with `admin:`
 
 ![DatabaseEngineQuery](/assets/images/sql-change-tracking-retention3.png){:class="img-responsive"}
+
+###### Clean-up the change tracking retention
 
 Once connected, follow the steps in the [Microsoft KB article above](https://docs.microsoft.com/en-us/sccm/core/servers/deploy/install/list-of-prerequisite-checks#bkmk_changetracking) i.e. run the following commands:
 
