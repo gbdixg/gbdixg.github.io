@@ -1,7 +1,7 @@
 ---
 id: 16
 title: DIY Wireless Suppression with WMI and PowerShell
-date: 2019-01-12T16:11:03+00:00
+date: 2019-01-12T19:15:04+00:00
 author: Geoff
 description: A Windows 10 WMI permanent event subscription to disable / enable WIFI when Ethernet is connected.
 layout: post
@@ -49,10 +49,12 @@ netsh interface ipv4 show config
 >Despite this expected behaviour, removing or disabling the WIFI connection when Ethernet is connected provides a higher level of confidence that network traffic is using the desired connection and addresses some of the other problems described above.
 
 #### When are multiple active connections possible?
+
 In an office, laptops may be set to automatically connect to corporate WIFI, but also use docking stations with Ethernet connections. When users roam to meeting rooms and then return to the docking station, the WIFI connection remains active.
 There are obviously other scenarios, but this is a common one.
 
 #### 3rd Party Wireless Suppression
+
 Corporate laptop models from HP and [Dell](https://www.dell.com/support/article/uk/en/ukdhs1/sln285316/how-to-disable-wireless-when-connected-via-wired-connection-on-latitude-and-precision-mobile-workstations?lang=en) include wireless suppression in the BIOS options. The down-side of this method are (a) BIOS settings are not the easiest to manage and (b) hardware models from other vendors may not support wireless suppression.
 
 There are some licensed software solutions such as [Wireless Autoswitch XPV](https://www.wirelessautoswitch.com/), but these obviously incur a cost.
@@ -89,7 +91,7 @@ When the MediaConnectState of a networkport changes the event will fire, but onl
 SELECT * FROM __InstanceModificationEvent WITHIN 1 WHERE TargetInstance ISA 'CIM_NetworkPort' AND (TargetInstance.MediaConnectState <> PreviousInstance.MediaConnectState) AND (PreviousInstance.InterfaceType='6') AND (NOT PreviousInstance.DriverName LIKE '%jnprva%')"
 ```
 
-The [interfacetype](https://www.iana.org/assignments/ianaiftype-mib/ianaiftype-mib) is a WMI property that limits the subscription to state changes of an Ethernet interface ('6'), excluding WIFI or iSCSI etc.
+The [interfacetype](https://www.iana.org/assignments/ianaiftype-mib/ianaiftype-mib) is a WMI property that limits the subscription to state changes of an Ethernet interface (6), excluding WIFI or iSCSI etc.
 
 The example also shows how to further filter the subscription to exclude a specific Ethernet connections from generating events - in this case using the network driver name to exclude the Pulse Secure virtual adapter 'jnprva'.
 
