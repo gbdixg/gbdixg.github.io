@@ -29,9 +29,9 @@ This post will cover the problem, common 3rd-party solutions and a built-in solu
 #### Why is this a problem?
 
 * Corporate WIFI can suffer from slow-down due to contention or distance to the Access Point. An available Ethernet connection will provide a more reliable speed.
-* Some corporate WIFI networks are not routed to the Intranet and require a VPN connection. WIFI should disconnected when corprate Ethernet is connected to avoid routing failures.
+* Some corporate WIFI networks are not routed to the Intranet and require a VPN connection. WIFI should be disconnected when corprate Ethernet is connected to avoid routing failures.
 * DHCP address pools can be depleted if all the office clients are consuming two IP addresses unexpectedly.
-* I.T. Security teams often want guaranteea that a laptop cannot be connected to public WIFI at the same time as corporate Ethernet (even though routing does not occur by default and Windows Firewall applies per-connection profiles)
+* I.T. Security teams often want guarantees that a laptop cannot be connected to public WIFI at the same time as corporate Ethernet (even though routing does not occur by default and Windows Firewall applies per-connection profiles)
 
 #### How does Windows work with multiple active network connections?
 
@@ -65,7 +65,7 @@ The above solutions work by disabling the Wireless radio when an Ethernet connec
 
 ### Custom solution using WMI and PowerShell
 
-[WMI Events](https://docs.microsoft.com/en-us/windows/desktop/wmisdk/receiving-a-wmi-event) allow software and scripts to respond to changes in the state of a Windows device. Permanent subscriptions persist across reboots. To create a WMI event permanent subscription, you need to create the following (administrative rights required):
+[WMI event subscriptions](https://docs.microsoft.com/en-us/windows/desktop/wmisdk/receiving-a-wmi-event) allow software and scripts to respond to changes in the state of a Windows device. Permanent subscriptions persist across reboots. To create a WMI event permanent subscription, you need to create the following (administrative rights required):
 
 * An Event Filter
 * An Event Consumer
@@ -84,30 +84,30 @@ Get-WMIObject -Namespace $Namespace -Class __FilterToConsumerBinding
 
 The filter defines the WMI class to 'watch' for events, how often to monitor for new events and a query that limits when events are 'fired'.
 
-The following filter subscribes to events from the CIM_NetworkPort class, watching every 1 second ('WITHIN 1')
-When the MediaConnectState of a networkport changes the event will fire, but only if the additional criteria in the filter are also met.
+The following filter subscribes to events from the CIM_NetworkPort class, watching every 1 second ('WITHIN 1').
+When the MediaConnectState of a network port changes, the event will fire, but only if the additional criteria in the filter are also met.
 
 ```PowerShell
 SELECT * FROM __InstanceModificationEvent WITHIN 1 WHERE TargetInstance ISA 'CIM_NetworkPort' AND (TargetInstance.MediaConnectState <> PreviousInstance.MediaConnectState) AND (PreviousInstance.InterfaceType='6') AND (NOT PreviousInstance.DriverName LIKE '%jnprva%')"
 ```
 
-The [interfacetype](https://www.iana.org/assignments/ianaiftype-mib/ianaiftype-mib) is a WMI property that limits the subscription to state changes of an Ethernet interface (6), excluding WIFI or iSCSI etc.
+The [interfacetype](https://www.iana.org/assignments/ianaiftype-mib/ianaiftype-mib) is a WMI property that limits the subscription to state changes of an Ethernet interface (6), which is what we want.
 
-The example also shows how to further filter the subscription to exclude a specific Ethernet connections from generating events - in this case using the network driver name to exclude the Pulse Secure virtual adapter 'jnprva'.
+The example also shows how to further filter the subscription to exclude a specific Ethernet connection from generating events - in this case using the network driver name to exclude the Pulse Secure VPN adapter 'jnprva'.
 
 #### Event Consumer
 
-The event consumer dictates how the raised events are handled. There are separate WMI consumer classes that can logg events (text and event log), run 'active scripts' (vbscript/jscript), send SMTP messages and run command lines. To run a PowerShell script, we need to use the [CommandLineEventConsumer](https://docs.microsoft.com/en-us/windows/desktop/wmisdk/commandlineeventconsumer) and set the CommandLineTemplate property as follows:
+The event consumer dictates how the raised events are handled. There are separate WMI consumer classes that can logg events (text and event log), run 'active scripts' (vbscript/jscript), send SMTP messages and run command lines. To run a PowerShell script, we need to use the [CommandLineEventConsumer](https://docs.microsoft.com/en-us/windows/desktop/wmisdk/commandlineeventconsumer) and set it's CommandLineTemplate property as follows:
 
 ```powershell
 CommandLineTemplate = "$($ENV:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$ScripttoInvoke`""
 ```
 
-The `$ScriptToInvoke` is the full path to a .ps1 file that will be called every time an event is raised.
+The `$ScriptToInvoke` is the full path to a PowerShell .ps1 file that will be called every time an event is raised.
 
 #### Filter to Consumer Binding
 
-The filter to consumer binding links the filter and consumer using the __FilterToConsumerBinding WMI class, creating the event subscription. It takes only two input parameters - the output of creating the event filter and the output of creating the event consumer. See working example below that registers an event subscription.
+The filter to consumer binding links the filter and consumer using the __FilterToConsumerBinding WMI class, creating the event subscription. It takes only two input parameters - the output of creating the event filter and the output of creating the event consumer. See  `Register-WMIEventSubscription.ps1` below.
 
 #### The Script to Invoke
 
@@ -223,8 +223,7 @@ PROCESS{
 
 #### Script to disable / enable WIFI
 
-The path and filename of the PowerShell script below must match the `$ScripttoInvoke` variable in the WMI subscription registration script above..
-This script is invoked whenever a WMI event fires from the subscription above. It disables and enables WIFI based on the connection state of the Ethernet adapter.
+The following script is invoked whenever a WMI event fires from the subscription above. It disables and enables WIFI based on the connection state of the Ethernet adapter. The path and filename must match the `$ScripttoInvoke` variable in the WMI subscription registration script above.
 
 ```powershell
 <#
