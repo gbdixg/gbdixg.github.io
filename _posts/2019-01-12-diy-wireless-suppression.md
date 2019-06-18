@@ -8,7 +8,7 @@ layout: post
 permalink: /2019/01/12/diy-wireless-suppression
 image: assets/images/thumb-diy-wireless-suppression.png
 comments: true
-featured: false
+featured: true
 hidden: false
 categories: [ powershell, wifi, Level300, WMI, Windows10 ]
 tags:
