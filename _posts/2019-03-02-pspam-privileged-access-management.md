@@ -281,4 +281,4 @@ Remove-PSSession -Session $session
 
 ### Download
 
-[PAM-ModuleExample.zip](/assets/files/PAM-Example.zip)
+[PAM-ModuleExample.zip](/assets/files/PAM-ModuleExample.zip)
