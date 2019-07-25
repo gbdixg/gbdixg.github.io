@@ -131,9 +131,7 @@ At this stage we have a registered a custom PowerShell endpoint that can only be
 
 The Role Capabilities file specified for 'Domain Users' in the Session Configuration file is used to define which commands can be run in the PowerShell session.
 
-Since the PowerShell session runs as a temporary administrator, the allowed commands have elevated access and should be carefully controlled. Luckily, the control is granular, evening restricting commands to specific parameter options.
-
-In the example Role Capabilities file below, Restart-Service is an allowed command, but only when used to restart the W32Time service.
+Since the PowerShell session runs as a temporary administrator, the allowed commands have elevated access and should be carefully controlled. Luckily, the control is granular, even restricting commands to specific parameter options. In the example Role Capabilities file below, Restart-Service is an allowed command, but only when used to restart the W32Time service.
 
 ```powershell
 # StdUser.psrc - JEA role capabilities file
