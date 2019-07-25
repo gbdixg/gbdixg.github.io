@@ -18,7 +18,7 @@ My first I.T. job was on a telephone Helpdesk. I job-hopped a bit in the next fe
 
 After a few permanent roles, I got the opportunity to work as a consultant on a major office relocation and Windows platform transformation project. Over the next few years, I worked as a consultant for numerous financial companies on major Windows projects in the City of London.
 
-I don't get a much time to blog due to the all-encompassing nature of project work and looking after two daughters (now both teenagers!).
+I don't get much time to blog due to the all-encompassing nature of project work and looking after two daughters (now both teenagers!).
 
 ##### Disclaimers:
 **Views expressed are soley my own**.
