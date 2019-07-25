@@ -354,7 +354,6 @@ BEGIN{
       [string]$Action
     )
     PROCESS{
-        $Source = 'AonWirelessSuppression'
 
         $AdapterTypeInt = Switch($AdapterType){
           'WIFI' {71}
