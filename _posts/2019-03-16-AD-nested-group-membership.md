@@ -46,7 +46,7 @@ The 'System.DirectoryServices.AccountManagement' class is a .NET framework (Full
 It contains a method called GetAuthorizationGroups that returns direct and indirect groups for
 a user account.
 
-> The GetAuthorizationGroup() method is convenient as it works with a username rather than requiring a distinguishedName
+> The GetAuthorizationGroup function below is convenient as it works with a username rather than requiring a distinguishedName
 
 GetAuthorizationGroups can be used for the current user account or an alternate user.
 The following PowerShell function demonstrates the method:
@@ -103,12 +103,13 @@ Function Get-AuthorizationGroup {
 
 ## Get-TokenGroup - method 1
 
-> TokenGroups is a constructed attribute of Active Directory user and computer objects
+> TokenGroups is a constructed attribute of Active Directory user and computer objects that contains all their group memberships.
 
 Constructed attributes are generated when queried. In this case, TokenGroups effectively *explodes* the security token so that the list contains the SIDs of direct and indirect groups.
 
-In the PowerShell function below, a .NET method is then used to convert the SIDs to group names:
-System.Security.Principal.SecurityIdentifier::Translate()
+In the PowerShell function below, a .NET method is then used to convert the SIDs to group names: System.Security.Principal.SecurityIdentifier::Translate()
+
+The function requires the distinguishedName of an Active Directory user or computer as input.
 
 ```powershell
 Function Get-TokenGroup1 {
@@ -185,9 +186,9 @@ Function Get-TokenGroup1 {
 
 The script below also uses the TokenGroups attribute to obtain the directed and nested group membership.  The only difference from Method1 is the way the group SIDs are resolved to names.
 
-In the example below, each SIDs is converted to an *Octet string* format that can be looked-up in AD using an LDAP query. The list of Octetet Strings is concatenated into a single LDAP query that returns the group names.
+In the example below, each SIDs is converted to an *Octet string* format that can be looked-up in AD using an LDAP query. The entire list of group Octet Strings is concatenated into a single LDAP query that returns the group names.
 
-There is no real benefit to using Method2 over Method1. It was the first way I solved this problem, before becoming aware of the .Net options that are more concise.
+There is no real benefit to using Method2 over Method1. Method2 was the first way I solved this problem, before becoming aware of the .Net options that are more concise.
 
 ```powershell
 Function Get-TokenGroup2 {
