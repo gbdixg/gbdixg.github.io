@@ -37,7 +37,7 @@ whoami /groups /fo csv | convertfrom-csv | out-gridview
 The Microsoft AD PowerShell module (available with the RSAT tools) does not contain a command to get user groups. It does contain a command to recursively look-up the members of a group to get the direct and indirect members:
 
 ```powershell
-gGet-ADGroupMember -Identity MyGroup -Recursive
+Get-ADGroupMember -Identity MyGroup -Recursive
 ```
 
 # Get-AuthorizationGroup
