@@ -17,7 +17,7 @@ tags:
 ---
 > It is often much faster to export an event log on a remote computer and copy the .evtx file over the network.
 
-Although the built-in PowerShell **Get-Winevent** cmdlet can work against remote event logs, it can be painfully slow to retrieve event records when network bandwidth is limited. Copying an .evtx file across the same connection is much faster.
+Although the built-in PowerShell **Get-Winevent** cmdlet can work against remote event logs, it can be painfully slow to retrieve individual event records when network bandwidth is limited. Copying an entire exported log (.evtx file) across the same connection is much faster.
 
 **wevtutil.exe** is a built-in Windows executable that can export event logs on a local or remote computer.  The following PowerShell function uses wevtutil under-the-hood to export event logs and copy them locally.
 
