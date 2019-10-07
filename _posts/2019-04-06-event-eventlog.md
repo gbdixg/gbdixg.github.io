@@ -3,7 +3,7 @@ id: 18
 title: Export Remote Eventlog
 date: 2019-04-06T18:11:01+00:00
 author: Geoff
-description: Export Windows event logs from remote computers
+description: Export Windows event logs from remote computers using wevtutil.exe and PowerShell
 layout: post
 permalink: /2019/04/06/export-eventlog
 image: assets/images/thumb-export-eventlog.png
@@ -17,7 +17,7 @@ tags:
 ---
 > It is often much faster to export an event log on a remote computer and copy the .evtx file over the network.
 
-Although the built-in **Get-Winevent** cmdlet can work against remote event logs, it can be painfully slow to retrieve data when network bandwidth is limited. Copying an .evtx file across the same connection is much faster.
+Although the built-in PowerShell **Get-Winevent** cmdlet can work against remote event logs, it can be painfully slow to retrieve event records when network bandwidth is limited. Copying an .evtx file across the same connection is much faster.
 
 **wevtutil.exe** is a built-in Windows executable that can export event logs on a local or remote computer.  The following PowerShell function uses wevtutil under-the-hood to export event logs and copy them locally.
 
