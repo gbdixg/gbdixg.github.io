@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>.NET on Geoff Dixon &gt; Write-Verbose</title>
+    <link>https://write-verbose.com/tags/.net/</link>
+    <description>Recent content in .NET on Geoff Dixon &gt; Write-Verbose</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 30 Mar 2019 18:45:05 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/.net/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Active Directory ADSystemInfo with PowerShell</title>
+      <link>https://write-verbose.com/2019/03/30/adsysteminfo/</link>
+      <pubDate>Sat, 30 Mar 2019 18:45:05 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2019/03/30/adsysteminfo/</guid>
+      <description>ADSystemInfo is a built-in COM object in Windows 7, 8.1 and 10 that simplifies lookup of Active Directory user and computer information.
+ ADSystemInfo can only return information about the local computer and current user. A domain controller must be accessible when the functions are called.
+Its simple to instantiate COM objects in PowerShell. The function below shows how to use this object.
+Function Get-ADSystemInfo{ &amp;lt;# .SynopsisUsed to lookup specific AD user/computer object properties of the current session .</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,795 @@
+
+  
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="siteBaseUrl" content="https://write-verbose.com/">
+    <meta name="author" content="Geoff Dixon">
+    <meta name="description" content="Technology Blog">
+    <meta name="keywords" content="blog, Windows, Azure, cloud, automation, devops, powershell, .net, enterprise, code, I.T., SCCM, OSD, Autopilot, database">
+    <meta name="generator" content="Hugo 0.82.0" />
+    <title>
+        
+           
+               DIY Wireless Suppression with WMI and PowerShell &vert; Geoff Dixon &gt; Write-Verbose
+           
+        
+    </title>
+    <meta name="description" content="A Windows 10 WMI permanent event subscription to disable / enable WIFI when Ethernet is connected.">
+    <meta itemprop="name" content="DIY Wireless Suppression with WMI and PowerShell">
+    <meta itemprop="description" content="A Windows 10 WMI permanent event subscription to disable / enable WIFI when Ethernet is connected.">
+    <meta property="og:title" content="DIY Wireless Suppression with WMI and PowerShell">
+    <meta property="og:description" content="A Windows 10 WMI permanent event subscription to disable / enable WIFI when Ethernet is connected.">
+    <meta property="og:image" content="https://www.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e?size=200">
+    <meta property="og:url" content="https://write-verbose.com/2019/01/12/diy-wireless-suppression/">
+    <meta property="og:site_name" content="Geoff Dixon &gt; Write-Verbose">
+    <meta property="og:type" content="article">
+
+    
+
+
+    <script src="/modernizr-simple.js"></script>
+
+    
+    <link href="/2019/01/12/diy-wireless-suppression/" rel="alternate" type="application/rss+xml" title="Geoff Dixon &gt; Write-Verbose" />
+    <link href="/2019/01/12/diy-wireless-suppression/" rel="feed" type="application/rss+xml" title="Geoff Dixon &gt; Write-Verbose" />
+    
+
+    
+    <link rel="canonical" href="https://write-verbose.com/2019/01/12/diy-wireless-suppression/">
+    
+
+    <link rel="stylesheet" href="https://write-verbose.com/theme.css">
+
+    
+
+    
+        
+    
+</head>
+
+<body class="bilberry-hugo-theme">
+
+    
+    <nav>
+
+    <div class="container">
+        <ul class="topnav">
+            
+                
+                    <li><a href="https://write-verbose.com/page/about/">About</a></li>
+                
+            
+        </ul>
+
+        
+    </div>
+</nav>
+
+
+    
+    <header>
+
+        <div class="container">
+            <div class="logo">
+                <a href="/" class="logo">
+                    
+                        
+                        
+                            
+                        
+                        <img src="https://seccdn.libravatar.org/avatar/45d016258ee70966111f139052804f66?d=mm&size=200" alt="">
+                    
+
+                    <span class="overlay"><i class="fa fa-home"></i></span>
+                </a>
+            </div>
+            <div class="titles">
+                <h3 class="title">
+                    <a href="/">
+                        Geoff Dixon &gt; Write-Verbose
+                    </a>
+                </h3>
+
+                
+                    <span class="subtitle">Technology | Cloud | Code</span>
+                
+            </div>
+
+            
+
+            
+                <div class="toggler">
+            
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                </div>
+            </div>
+    </header>
+
+
+    <div class="main container">
+        
+    <div class="article-wrapper u-cf single">
+        
+            <a class="bubble" href="https://write-verbose.com/2019/01/12/diy-wireless-suppression/">
+    <i class="fas fa-fw fa-file-alt"></i>
+</a>
+
+<article class="default article">
+    
+
+    <div class="content">
+    <h1 class="article-title">
+        <a href="https://write-verbose.com/2019/01/12/diy-wireless-suppression/">
+            DIY Wireless Suppression with WMI and PowerShell
+        </a>
+    </h1>
+
+    <div class="meta">
+        
+            
+                <span class="date moment">2019-01-12</span>
+            
+        
+
+        
+            
+                <span class="readingTime">10 min read</span>
+            
+        
+
+        
+            <span class="categories">
+                
+                    
+                    
+                        <a href="https://write-verbose.com/categories/powershell/">powershell</a>
+                    
+                
+                    
+                    
+                        <a href="https://write-verbose.com/categories/network/">network</a>
+                    
+                
+            </span>
+        
+
+        
+            <span class="author">
+                
+                
+                    <a href="https://write-verbose.com/author/geoff/">Geoff</a>
+                
+            </span>
+        
+    </div>
+
+    
+        
+
+        <p>When you drop a laptop into a docking station with an Ethernet cable, you expect it to use the wired connection instead of than WIFI. This may not be the case on Windows unless wireless is supressed.</p>
+<p>This post will cover the problem, common 3rd-party solutions and a built-in solution using WMI and PowerShell</p>
+<blockquote>
+<p>Wireless Suppression prevents a WIFI connection being used when Ethernet is available.</p>
+</blockquote>
+<h2 id="why-is-this-a-problem">Why is this a problem?</h2>
+<ul>
+<li>Corporate WIFI can suffer from slow-down due to contention or distance to the Access Point. An available Ethernet connection will provide a more reliable speed.</li>
+<li>Some corporate WIFI networks are not directly connected to the Intranet and require a VPN connection. WIFI should be disconnected when corprate Ethernet is connected to avoid routing failures.</li>
+<li>DHCP address pools can be depleted if all the office clients are consuming two IP addresses (LAN and WIFI).</li>
+</ul>
+<h2 id="how-does-windows-work-with-multiple-active-network-connections">How does Windows work with multiple active network connections?</h2>
+<p>Windows uses interface metrics to prioritise traffic when there is more than one active connection. The connection with the lowest metric has the highest priority and should be used.</p>
+<p><a href="https://support.microsoft.com/en-us/help/299540/an-explanation-of-the-automatic-metric-feature-for-ipv4-routes">Automatic metric assignment has been updated in Windows 10</a> to make it more reliable when dealing with high-speed WIFI.
+Prior to Windows 10, it was common for WIFI to have a lower interface metric than fast ethernet.</p>
+<p>Use <em>NETSH</em> to view the interface metric:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmd" data-lang="cmd">netsh interface ipv4 show config
+
+Configuration for interface <span style="color:#e6db74">&#34;Local Area Connection&#34;</span>
+    DHCP enabled:                         Yes
+    IP Address:                           192.168.0.100
+    Subnet Prefix:                        192.168.0.0/24 (mask 255.255.255.0)
+    Default Gateway:                      192.168.0.1
+    Gateway Metric:                       0
+    InterfaceMetric:                      25
+    Statically Configured DNS Servers:    192.168.0.10
+    Register with which suffix:           Primary only
+    WINS servers configured through DHCP: None
+</code></pre></div><p>The automatic metric assignment in Windows 10 <em>should</em> work without intervention, but monitoring this behaviour across a large estate and multiple scenarios is difficult.</p>
+<blockquote>
+<p>Removing or disabling the Wifi connection when Ethernet is connected provides a higher level of confidence that network traffic is using the wired connection</p>
+</blockquote>
+<h2 id="when-are-multiple-active-connections-possible">When are multiple active connections possible?</h2>
+<p>In an office, laptops may be set to automatically connect to corporate WIFI, but also use docking stations with Ethernet connections. When users roam to meeting rooms and then return to the docking station, the WIFI connection remains active.
+There are obviously other scenarios, but this is a common one.</p>
+<h2 id="3rd-party-wireless-suppression">3rd Party Wireless Suppression</h2>
+<h3 id="oem-bios">OEM BIOS</h3>
+<p>Corporate laptop models from HP and <a href="https://www.dell.com/support/article/uk/en/ukdhs1/sln285316/how-to-disable-wireless-when-connected-via-wired-connection-on-latitude-and-precision-mobile-workstations?lang=en">Dell</a> include wireless suppression in the BIOS options. The down-side of this method are (a) BIOS settings are not the easiest to manage and (b) if you have hardware models from other vendors you may not have the option.</p>
+<h3 id="isv-software">ISV Software</h3>
+<p>There are some licensed software solutions such as <a href="https://www.wirelessautoswitch.com/">Wireless Autoswitch XPV</a>, but these obviously incur a cost.</p>
+<h3 id="vpn-clients">VPN Clients</h3>
+<p>VPN clients, such as <a href="https://www.pulsesecure.net/">Pulse Secure</a>, have an option to implement wireless suppression. This can be a good method, but does tie together two unrelated solutions, making it harder to change the VPN client in the future.</p>
+<p>The above solutions work by disabling the Wireless radio when an Ethernet connection is detected and re-enabling it when Ethernet is dropped.</p>
+<h2 id="a-custom-solution-using-wmi-and-powershell">A Custom solution using WMI and PowerShell</h2>
+<p>The following solution uses a PowerShell script triggered by a WMI event to disable and enable WIFI.</p>
+<p><a href="https://docs.microsoft.com/en-us/windows/desktop/wmisdk/receiving-a-wmi-event">WMI event subscriptions</a> allow software and scripts to respond to changes in the state of a Windows device. Permanent subscriptions persist across reboots. To create a WMI event permanent subscription, you need to create the following (administrative rights required):</p>
+<ul>
+<li>An Event Filter</li>
+<li>An Event Consumer</li>
+<li>A Filter to Consumer Binding</li>
+</ul>
+<p>The event subscription is then saved in the WMI repository. You can list any existing permanent event subscriptions as follows:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">$Namespace = <span style="color:#e6db74">&#39;root\subscription&#39;</span>
+Get-WMIObject -Namespace $Namespace -Class __EventFilter
+Get-WMIObject -Namespace $Namespace -Class __EventConsumer
+Get-WMIObject -Namespace $Namespace -Class __FilterToConsumerBinding
+</code></pre></div><h3 id="event-filter">Event Filter</h3>
+<p>The filter defines the WMI class to &lsquo;watch&rsquo; for events, how often to monitor for new events and a query that limits when events are &lsquo;fired&rsquo;.</p>
+<p>The following filter subscribes to events from the CIM_NetworkPort class, watching every 1 second (&lsquo;WITHIN 1&rsquo;).
+When the MediaConnectState of a network port changes, the event will fire, but only if the additional criteria in the filter are also met.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PowerShell" data-lang="PowerShell">SELECT * FROM __InstanceModificationEvent WITHIN 1 WHERE TargetInstance ISA <span style="color:#e6db74">&#39;CIM_NetworkPort&#39;</span> AND (TargetInstance.MediaConnectState &lt;&gt; PreviousInstance.MediaConnectState) AND (PreviousInstance.InterfaceType=<span style="color:#e6db74">&#39;6&#39;</span>) AND (NOT PreviousInstance.DriverName LIKE <span style="color:#e6db74">&#39;%jnprva%&#39;</span>)<span style="color:#e6db74">&#34;
+</span></code></pre></div><p>The <a href="https://www.iana.org/assignments/ianaiftype-mib/ianaiftype-mib">interfacetype</a> is a WMI property that limits the subscription to state changes of an Ethernet interface (6), which is what we want.</p>
+<p>The example also shows how to further filter the subscription to exclude a specific Ethernet connection from generating events - in this case using the network driver name to exclude the Pulse Secure VPN adapter &lsquo;jnprva&rsquo;.</p>
+<h3 id="event-consumer">Event Consumer</h3>
+<p>The event consumer dictates how the raised events are handled. There are separate WMI consumer classes that can logg events (text and event log), run &lsquo;active scripts&rsquo; (vbscript/jscript), send SMTP messages and run command lines. To run a PowerShell script, we need to use the <a href="https://docs.microsoft.com/en-us/windows/desktop/wmisdk/commandlineeventconsumer">CommandLineEventConsumer</a> and set it&rsquo;s CommandLineTemplate property as follows:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">CommandLineTemplate = <span style="color:#e6db74">&#34;</span>$($ENV:SystemRoot)<span style="color:#e6db74">\system32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File </span><span style="color:#ae81ff">`&#34;</span><span style="color:#e6db74">$ScripttoInvoke</span><span style="color:#ae81ff">`&#34;</span><span style="color:#e6db74">&#34;</span>
+</code></pre></div><p>The <code>$ScriptToInvoke</code> is the full path to a PowerShell .ps1 file that will be called every time an event is raised.</p>
+<h3 id="filter-to-consumer-binding">Filter to Consumer Binding</h3>
+<p>The filter to consumer binding links the filter and consumer using the __FilterToConsumerBinding WMI class, creating the event subscription. It takes only two input parameters - the output of creating the event filter and the output of creating the event consumer. See  <code>Register-WMIEventSubscription.ps1</code> below.</p>
+<h3 id="the-script-to-invoke">The Script to Invoke</h3>
+<p>When an event is fired, it will run a PowerShell script to suppress or enable WIFI. This script is very simple:</p>
+<blockquote>
+<p>When the PowerShell script is triggered it queries the active network connections. If Ethernet is active, any WIFI adapters are disabled. If Ethernet is disconnected, any WIFI adapters are enabled.</p>
+</blockquote>
+<h2 id="working-code-example">Working Code Example</h2>
+<h3 id="script-to-register-wmi-event-subscription">Script to register WMI event subscription</h3>
+<p>The PowerShell script below is run once on a laptop to register the WMI permanent event subscription. Set the <code>$ScripttoInvoke</code> variable to your desired path on the local disk (make sure only administrators can modify files in the selected path otherwise you will create an elevation of privilege vulnerability).</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#75715e">&lt;#
+</span><span style="color:#75715e">    </span><span style="color:#e6db74">.SYNOPSIS</span><span style="color:#75715e">
+</span><span style="color:#75715e">    Register-WMIEventSubscription.ps1
+</span><span style="color:#75715e">    Registers a WMI permanent event subscription that calls a PowerShell script when Ethernet connectivity changes
+</span><span style="color:#75715e">#&gt;</span>
+[<span style="color:#66d9ef">cmdletBinding</span>()]
+[OutputType(<span style="color:#e6db74">&#39;PSObject&#39;</span>)]
+<span style="color:#66d9ef">param</span>(
+    [<span style="color:#66d9ef">Parameter</span>(<span style="color:#66d9ef">Position</span>=0,<span style="color:#66d9ef">ValueFromPipeline</span>=$True,<span style="color:#66d9ef">ValueFromPipelineByPropertyName</span>=$True)]
+    <span style="color:#66d9ef">[string]</span>$Computername=$env:COMPUTERNAME
+    ,
+    <span style="color:#66d9ef">[string]</span>$ScripttoInvoke = <span style="color:#e6db74">&#34;C:\Windows\Invoke-WirelessSuppression.ps1&#34;</span>
+    ,
+    <span style="color:#66d9ef">[string]</span>$EventName = <span style="color:#e6db74">&#39;OnEthernetChange&#39;</span>
+)
+<span style="color:#66d9ef">PROCESS</span>{
+  $Output = New-Object PSObject | Select-Object Computername,FilterResult,ConsumerResult,BindingResult,OperatorMessage
+  $Output.Computername = $Computername
+  $Output.OperatorMessage = <span style="color:#e6db74">&#34;OK&#34;</span>
+
+  $wmiParams = @{
+      Computername = $Computername
+      ErrorAction = <span style="color:#e6db74">&#39;Stop&#39;</span>
+      NameSpace = <span style="color:#e6db74">&#39;root\subscription&#39;</span>
+  }
+
+  <span style="color:#66d9ef">if</span>(Test-Connection -ComputerName $Computername -Count 1 -Quiet){
+
+    <span style="color:#75715e">#REGION -----FILTER-----</span>
+    Write-Verbose <span style="color:#e6db74">&#34;Creating Event Filter&#34;</span>
+    $wmiParams.Class = <span style="color:#e6db74">&#39;__EventFilter&#39;</span>
+
+    <span style="color:#75715e"># Fire the event when there is a change to the Win32_NetworkAdapter.NetConnectionStatus of any Ethernet adapter i.e. connected or disconnected</span>
+    <span style="color:#75715e"># InterfaceType=6 is Ethernet only</span>
+    <span style="color:#75715e"># jnprva is the Pulse Secure Juniper virtual adapter</span>
+
+    $wmiParams.Arguments = @{
+        Name           = <span style="color:#e6db74">&#34;$EventName&#34;</span>
+        EventNamespace = <span style="color:#e6db74">&#39;root\StandardCIMV2&#39;</span>
+        QueryLanguage  = <span style="color:#e6db74">&#39;WQL&#39;</span>
+        Query          = <span style="color:#e6db74">&#34;SELECT * FROM __InstanceModificationEvent WITHIN 1 WHERE TargetInstance ISA &#39;CIM_NetworkPort&#39; AND (TargetInstance.MediaConnectState &lt;&gt; PreviousInstance.MediaConnectState) AND (PreviousInstance.InterfaceType=&#39;6&#39;) AND (NOT PreviousInstance.DriverName LIKE &#39;%jnprva%&#39;)&#34;</span>
+    }
+
+    <span style="color:#66d9ef">try</span>{
+      $filterResult = Set-WmiInstance @wmiParams
+      $Output.FilterResult = <span style="color:#e6db74">&#34;&#39;</span>$($FilterResult.Name)<span style="color:#e6db74">&#39; filter created successfully&#34;</span>
+
+    }<span style="color:#66d9ef">catch</span>{
+      $Output.FilterResult = <span style="color:#e6db74">&#34;Failed to create - &#39;$_&#39;&#34;</span>
+      $Output.OperatorMessage = <span style="color:#e6db74">&#34;One or more errors&#34;</span>
+
+    }
+    <span style="color:#75715e">#ENDREGION</span>
+
+    <span style="color:#75715e">#REGION -----CONSUMER-----</span>
+    <span style="color:#75715e"># When the event fires, run a PowerShell script</span>
+    Write-Verbose <span style="color:#e6db74">&#34;Creating Event Consumer&#34;</span>
+    $wmiParams.Class = <span style="color:#e6db74">&#39;CommandLineEventConsumer&#39;</span>
+    $wmiParams.Arguments = @{
+      Name = <span style="color:#e6db74">&#34;$EventName&#34;</span>
+      CommandLineTemplate = <span style="color:#e6db74">&#34;</span>$($ENV:SystemRoot)<span style="color:#e6db74">\system32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File </span><span style="color:#ae81ff">`&#34;</span><span style="color:#e6db74">$ScripttoInvoke</span><span style="color:#ae81ff">`&#34;</span><span style="color:#e6db74">&#34;</span>
+    }
+
+    <span style="color:#66d9ef">try</span>{
+      $consumerResult = Set-WmiInstance @wmiParams
+      $Output.ConsumerResult = <span style="color:#e6db74">&#34;&#39;</span>$($consumerResult.Name)<span style="color:#e6db74">&#39; consumer created successfully&#34;</span>
+
+    }<span style="color:#66d9ef">catch</span>{
+      $Output.ConsumerResult = <span style="color:#e6db74">&#34;Failed to create - &#39;$_&#39;&#34;</span>
+      $Output.OperatorMessage = <span style="color:#e6db74">&#34;One or more errors&#34;</span>
+    }
+
+    <span style="color:#75715e">#ENDREGION</span>
+
+    <span style="color:#75715e">#REGION ----- Binding -----</span>
+    Write-Verbose <span style="color:#e6db74">&#34;Creating Filter to Consumer Binding&#34;</span>
+    $wmiParams.Class = <span style="color:#e6db74">&#39;__FilterToConsumerBinding&#39;</span>
+    $wmiParams.Arguments = @{
+      <span style="color:#66d9ef">Filter</span> = $filterResult
+      Consumer = $consumerResult
+    }
+
+    <span style="color:#66d9ef">try</span>{
+      $bindingResult = Set-WmiInstance @wmiParams
+      $Output.BindingResult = <span style="color:#e6db74">&#34;Filter to consumer binding created successfully&#34;</span>
+
+    }<span style="color:#66d9ef">catch</span>{
+      $Output.BindingResult = <span style="color:#e6db74">&#34;Failed to create - &#39;$_&#39;&#34;</span>
+      $Output.OperatorMessage = <span style="color:#e6db74">&#34;One or more errors&#34;</span>
+    }
+
+  }<span style="color:#66d9ef">else</span>{
+    $Output.OperatorMessage = <span style="color:#e6db74">&#34;Ping failed. No changes made&#34;</span>
+  }
+  <span style="color:#75715e">#ENDREGION</span>
+
+  $Output
+}
+</code></pre></div><h3 id="script-to-disable--enable-wifi">Script to disable / enable WIFI</h3>
+<p>The following script is invoked whenever a WMI event fires from the subscription above. It disables and enables WIFI based on the connection state of the Ethernet adapter. The path and filename must match the <code>$ScripttoInvoke</code> variable in the WMI subscription registration script above.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#75715e">&lt;#
+</span><span style="color:#75715e">    </span><span style="color:#e6db74">.SYNOPSIS</span><span style="color:#75715e">
+</span><span style="color:#75715e">      Invoke-WirelessSuppression.ps1
+</span><span style="color:#75715e">      Disables WIFI adapter when Ethernet is connected. Enables WIFI when Ethernet is disconnected
+</span><span style="color:#75715e">    </span><span style="color:#e6db74">.DESCRIPTION</span><span style="color:#75715e">
+</span><span style="color:#75715e">      - If WIFI is connected when Ethernet is connected, the WIFI adapter is disabled
+</span><span style="color:#75715e">      - When an Ethernet connection is lost, if there is a disabled WIFI adapter, it is enabled
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">      Requires administrative or SYSTEM permissions to disable and enable net adapters
+</span><span style="color:#75715e">      Designed to be run from a WMI event trigger in the background
+</span><span style="color:#75715e">#&gt;</span>
+[<span style="color:#66d9ef">cmdletBinding</span>()]
+<span style="color:#66d9ef">param</span>()
+<span style="color:#66d9ef">BEGIN</span>{
+  <span style="color:#75715e">#REGION ----- Support Functions -----</span>
+
+  <span style="color:#66d9ef">Function</span> Test-NetAdapterState{
+  <span style="color:#75715e">&lt;#
+</span><span style="color:#75715e">    </span><span style="color:#e6db74">.SYNOPSIS</span><span style="color:#75715e">
+</span><span style="color:#75715e">        Determines connection state of Ethernet and WIFI adapters
+</span><span style="color:#75715e">  #&gt;</span>
+  [<span style="color:#66d9ef">cmdletBinding</span>()]
+    [OutputType(<span style="color:#e6db74">&#39;PSObject&#39;</span>)]
+    <span style="color:#66d9ef">param</span>()
+    <span style="color:#66d9ef">PROCESS</span>{
+
+        $Output = <span style="color:#66d9ef">[PSCustomObject][ordered]</span> @{
+          Time = Get-Date
+          WIFIAdapterCount = 0
+          EthernetAdapterCount = 0
+          WIFIConnected = $false
+          EthernetConnected = $false
+          Status = <span style="color:#e6db74">&#39;OK&#39;</span>
+        }
+
+        <span style="color:#66d9ef">Try</span>{
+          <span style="color:#75715e"># MSFT_Netadapter.InterfaceType:  Other (1),Ethernet (6),Token ring (9),PPP (23),Loopback (24),ATM (37),WIFI (71),Encapsulated Tunnel (131),Firewire (144)</span>
+          <span style="color:#75715e"># MSFT_Netadapter.MediaConnectState : (0) Unknown (1) Connected (2) Disconnected</span>
+          <span style="color:#75715e"># State: Unknown (0), Present (1), Started (2), Disabled (3)</span>
+          $WMIParams =@{
+            NameSpace=<span style="color:#e6db74">&#39;Root\StandardCimv2&#39;</span>
+            Class=<span style="color:#e6db74">&#39;MSFT_Netadapter&#39;</span>
+            <span style="color:#66d9ef">Filter</span>=<span style="color:#e6db74">&#34;Virtual=&#39;False&#39; AND (InterfaceType=71 OR InterfaceType=6)&#34;</span>
+            Property=<span style="color:#e6db74">&#39;InterfaceType&#39;</span>,<span style="color:#e6db74">&#39;InterfaceDescription&#39;</span>,<span style="color:#e6db74">&#39;Name&#39;</span>,<span style="color:#e6db74">&#39;MediaConnectState&#39;</span>,<span style="color:#e6db74">&#39;State&#39;</span>
+          }
+
+          <span style="color:#75715e"># Is there an Ethernet and WIFI adapter?</span>
+          $PhysicalAdapters = Get-WmiObject @WMIParams
+
+          <span style="color:#66d9ef">if</span>(<span style="color:#f92672">-not</span>($null <span style="color:#f92672">-eq</span> $PhysicalAdapters)){
+
+            <span style="color:#75715e"># Is WIFI connected?</span>
+            $WIFIAdapters = @($PhysicalAdapters | Where-Object{$_.InterfaceType <span style="color:#f92672">-eq</span> 71})
+            <span style="color:#66d9ef">if</span>(<span style="color:#f92672">-not</span>($null <span style="color:#f92672">-eq</span> $WIFIAdapters)){
+              $Output.WIFIAdapterCount = $WIFIAdapters.Count
+
+              <span style="color:#66d9ef">Foreach</span>($WIFIAdapter <span style="color:#66d9ef">in</span> $WIFIAdapters){
+                $MediaConnectState = <span style="color:#66d9ef">Switch</span>($WIFIAdapter.MediaConnectState){
+                  0 {<span style="color:#e6db74">&#39;unknown&#39;</span>}
+                  1 {<span style="color:#e6db74">&#39;connected&#39;</span>}
+                  2 {<span style="color:#e6db74">&#39;disconnected&#39;</span>}
+                }
+
+                <span style="color:#66d9ef">if</span>($WIFIAdapter.MediaConnectState <span style="color:#f92672">-eq</span> 1){
+                  $Output.WIFIConnected = $True
+                }
+
+              }<span style="color:#75715e">#foreach</span>
+
+            }<span style="color:#66d9ef">else</span>{
+              Write-Verbose <span style="color:#e6db74">&#34;WIFI adapter is not connected&#34;</span>
+            }
+
+            <span style="color:#75715e"># Is Ethernet connected?</span>
+            $EthernetAdapters = @($PhysicalAdapters | Where-Object{$_.InterfaceType <span style="color:#f92672">-eq</span> 6})
+            <span style="color:#66d9ef">if</span>(<span style="color:#f92672">-not</span>($null <span style="color:#f92672">-eq</span> $EthernetAdapters)){
+              $Output.EthernetAdapterCount = $EthernetAdapters.Count
+
+              <span style="color:#66d9ef">Foreach</span>($EthernetAdapter <span style="color:#66d9ef">in</span> $EthernetAdapters){
+                $MediaConnectState = <span style="color:#66d9ef">Switch</span>($EthernetAdapter.MediaConnectState){
+                  0 {<span style="color:#e6db74">&#39;unknown&#39;</span>}
+                  1 {<span style="color:#e6db74">&#39;connected&#39;</span>}
+                  2 {<span style="color:#e6db74">&#39;disconnected&#39;</span>}
+                }
+
+                <span style="color:#66d9ef">if</span>($EthernetAdapter.MediaConnectState <span style="color:#f92672">-eq</span> 1){
+                  $Output.EthernetConnected = $True
+                }
+              }<span style="color:#75715e">#foreach</span>
+
+            }<span style="color:#66d9ef">else</span>{
+              Write-Verbose <span style="color:#e6db74">&#34;Ethernet is not connected&#34;</span>
+            }
+
+          }<span style="color:#66d9ef">else</span>{
+            Write-Error <span style="color:#e6db74">&#34;No physical adapters found&#34;</span>
+            $Output.Status = <span style="color:#e6db74">&#39;ERROR&#39;</span>
+          }
+
+        }<span style="color:#66d9ef">catch</span>{
+           Write-Error <span style="color:#e6db74">&#34;Error enumerating physical adapters. &#39;$_&#39;&#34;</span>
+           $Output.Status = <span style="color:#e6db74">&#39;ERROR&#39;</span>
+        }
+
+        <span style="color:#75715e"># Return custom object</span>
+        $Output
+
+    }<span style="color:#75715e">#Process</span>
+  } <span style="color:#75715e">#EndFunction</span>
+
+
+  <span style="color:#66d9ef">Function</span> Set-NetAdapterState{
+  <span style="color:#75715e">&lt;#
+</span><span style="color:#75715e">    </span><span style="color:#e6db74">.SYNOPSIS</span><span style="color:#75715e">
+</span><span style="color:#75715e">        Enables or disables any adapters of the specified type - Ethernet or WIFI
+</span><span style="color:#75715e">  #&gt;</span>
+    [<span style="color:#66d9ef">cmdletBinding</span>()]
+    [OutputType(<span style="color:#e6db74">&#39;PSObject&#39;</span>)]
+    <span style="color:#66d9ef">param</span>(
+      [<span style="color:#66d9ef">Parameter</span>()]
+      [<span style="color:#66d9ef">ValidateSet</span>(<span style="color:#e6db74">&#39;WIFI&#39;</span>,<span style="color:#e6db74">&#39;Ethernet&#39;</span>)]
+      <span style="color:#66d9ef">[string]</span>$AdapterType
+      ,
+      [<span style="color:#66d9ef">Parameter</span>()]
+      [<span style="color:#66d9ef">ValidateSet</span>(<span style="color:#e6db74">&#39;Enable&#39;</span>,<span style="color:#e6db74">&#39;Disable&#39;</span>)]
+      <span style="color:#66d9ef">[string]</span>$Action
+    )
+    <span style="color:#66d9ef">PROCESS</span>{
+
+        $AdapterTypeInt = <span style="color:#66d9ef">Switch</span>($AdapterType){
+          <span style="color:#e6db74">&#39;WIFI&#39;</span> {71}
+          <span style="color:#e6db74">&#39;Ethernet&#39;</span> {6}
+        }
+
+        <span style="color:#66d9ef">if</span>($Action <span style="color:#f92672">-eq</span> <span style="color:#e6db74">&#39;Disable&#39;</span>){
+          <span style="color:#75715e"># Is there an enabled adapter?</span>
+          <span style="color:#75715e"># State: Unknown (0), Present (1), Started (2), Disabled (3)</span>
+          $WMIParams =@{
+            NameSpace=<span style="color:#e6db74">&#39;Root\StandardCimv2&#39;</span>
+            Class=<span style="color:#e6db74">&#39;MSFT_Netadapter&#39;</span>
+            <span style="color:#66d9ef">Filter</span>=<span style="color:#e6db74">&#34;Virtual=&#39;False&#39; AND InterfaceType=$AdapterTypeInt AND State=2&#34;</span>
+            Property=<span style="color:#e6db74">&#39;InterfaceType&#39;</span>,<span style="color:#e6db74">&#39;InterfaceDescription&#39;</span>,<span style="color:#e6db74">&#39;Name&#39;</span>,<span style="color:#e6db74">&#39;MediaConnectState&#39;</span>,<span style="color:#e6db74">&#39;InterfaceIndex&#39;</span>
+          }
+
+          $Adapters = Get-WmiObject @WMIParams
+
+          <span style="color:#66d9ef">if</span>(<span style="color:#f92672">-not</span>($null <span style="color:#f92672">-eq</span> $Adapters)){
+            <span style="color:#75715e"># Found an enabled adapter - disable it</span>
+            $Adapters | <span style="color:#66d9ef">ForEach</span>-Object{
+                Write-Verbose <span style="color:#e6db74">&#34;Disabling adapter &#39;</span>$($_.InterfaceDescription)<span style="color:#e6db74">&#39; (</span>$($_.Name)<span style="color:#e6db74">)...&#34;</span>
+                <span style="color:#66d9ef">Try</span>{
+                   $_ | Disable-NetAdapter -Confirm<span style="color:#960050;background-color:#1e0010">:</span>$False -ErrorAction Stop <span style="color:#75715e"># Built-in Windows 10 PS command</span>
+                  Write-Verbose <span style="color:#e6db74">&#34;Disabled successfully&#34;</span>
+
+                }<span style="color:#66d9ef">catch</span>{
+                  Write-Error <span style="color:#e6db74">&#34;Failed to disable. Error &#39;$_&#39;&#34;</span>
+                }
+            }
+          }<span style="color:#66d9ef">else</span>{
+            Write-Verbose <span style="color:#e6db74">&#34;No enabled $AdapterType adapters were found&#34;</span>
+          }
+
+        }<span style="color:#66d9ef">elseif</span>($Action <span style="color:#f92672">-eq</span> <span style="color:#e6db74">&#39;Enable&#39;</span>){
+
+          <span style="color:#75715e"># # Is there a disabled adapter?</span>
+          <span style="color:#75715e"># State : (0) Unknown (1) Present (2) Started (3) Disabled</span>
+          $WMIParams =@{
+            NameSpace=<span style="color:#e6db74">&#39;Root\StandardCimv2&#39;</span>
+            Class=<span style="color:#e6db74">&#39;MSFT_Netadapter&#39;</span>
+            <span style="color:#66d9ef">Filter</span>=<span style="color:#e6db74">&#34;Virtual=&#39;False&#39; AND InterfaceType=$AdapterTypeInt AND State=3&#34;</span>
+            Property=<span style="color:#e6db74">&#39;InterfaceType&#39;</span>,<span style="color:#e6db74">&#39;InterfaceDescription&#39;</span>,<span style="color:#e6db74">&#39;Name&#39;</span>,<span style="color:#e6db74">&#39;MediaConnectState&#39;</span>,<span style="color:#e6db74">&#39;InterfaceIndex&#39;</span>
+          }
+
+          $Adapters = Get-WmiObject @WMIParams
+
+          <span style="color:#66d9ef">if</span>(<span style="color:#f92672">-not</span>($null <span style="color:#f92672">-eq</span> $Adapters)){
+            <span style="color:#75715e"># Found a disabled adapter - enable it</span>
+            $Adapters | <span style="color:#66d9ef">ForEach</span>-Object{
+
+              Write-Verbose <span style="color:#e6db74">&#34;Enabling adapter &#39;</span>$($_.InterfaceDescription)<span style="color:#e6db74">&#39; (</span>$($_.Name)<span style="color:#e6db74">)...&#34;</span>
+              <span style="color:#66d9ef">Try</span>{
+                $_ | Enable-NetAdapter -Confirm<span style="color:#960050;background-color:#1e0010">:</span>$False -ErrorAction Stop <span style="color:#75715e"># Built-in Windows 10 PS command</span>
+                Write-Verbose <span style="color:#e6db74">&#34;Enabled successfully&#34;</span>
+
+              }<span style="color:#66d9ef">catch</span>{
+                Write-Error <span style="color:#e6db74">&#34;Failed to enable. Error &#39;$_&#39;&#34;</span>
+              }
+
+            }
+          }<span style="color:#66d9ef">else</span>{
+            Write-Verbose <span style="color:#e6db74">&#34;No disabled $AdapterType adapters were found&#34;</span>
+          }
+
+        }<span style="color:#75715e">#End if</span>
+
+    }<span style="color:#75715e">#Process</span>
+  } <span style="color:#75715e">#EndFunction</span>
+
+  <span style="color:#75715e">#ENDREGION</span>
+
+}
+
+<span style="color:#66d9ef">PROCESS</span>{
+
+  Write-Verbose <span style="color:#e6db74">&#34;Processing connected status of physical network adapters...&#34;</span>
+  $Result = Test-NetAdapterState
+
+  <span style="color:#66d9ef">if</span>(<span style="color:#f92672">-not</span>($Result.Status <span style="color:#f92672">-eq</span> <span style="color:#e6db74">&#39;ERROR&#39;</span>)){
+
+    <span style="color:#66d9ef">if</span>($Result.EthernetConnected <span style="color:#f92672">-eq</span> $True){
+
+      <span style="color:#75715e"># Disable WIFI</span>
+      Write-Verbose <span style="color:#e6db74">&#34;Ethernet is connected&#34;</span>
+      Set-NetAdapterState -AdapterType WIFI -Action Disable
+
+    }<span style="color:#66d9ef">elseif</span>(($Result.EthernetConnected <span style="color:#f92672">-eq</span> $False) <span style="color:#f92672">-and</span> ($Result.WIFIConnected <span style="color:#f92672">-eq</span> $False)){
+
+      <span style="color:#75715e"># Enable WIFI</span>
+      Write-Verbose <span style="color:#e6db74">&#34;Ethernet is disconnected and WIFI is disconnected&#34;</span>
+      Set-NetAdapterState -AdapterType WIFI -Action Enable
+
+    }<span style="color:#66d9ef">else</span>{
+      Write-Verbose <span style="color:#e6db74">&#34;No action required&#34;</span>
+    }
+
+  }<span style="color:#66d9ef">else</span>{
+
+    Write-Error <span style="color:#e6db74">&#34;Error getting connection state. No action taken&#34;</span>
+  }
+
+}
+</code></pre></div><h3 id="removing-a-permanent-event-subscription">Removing a permanent event subscription</h3>
+<p>If you need to remove the event subscription run the following code:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">$Computername = $ENV:Computername
+$Namespace = <span style="color:#e6db74">&#39;root\subscription&#39;</span>
+$EventName = <span style="color:#e6db74">&#39;OnEthernetChange&#39;</span>
+Get-WMIObject -Computername $Computername -Namespace $Namespace -Class __EventFilter -Filter <span style="color:#e6db74">&#34;Name=&#39;$EventName&#39;&#34;</span> | Remove-WmiObject -ErrorAction Stop
+Get-WMIObject -Computername $Computername -Namespace $Namespace -Class CommandLineEventConsumer -Filter <span style="color:#e6db74">&#34;Name=&#39;$EventName&#39;&#34;</span> | Remove-WmiObject -ErrorAction Stop
+Get-WMIObject -Computername $Computername -Namespace $Namespace -Class __FilterToConsumerBinding -Filter <span style="color:#e6db74">&#34;__Path LIKE &#39;%$EventName%&#39;&#34;</span>  | Remove-WmiObject -ErrorAction Stop
+</code></pre></div>
+    
+</div>
+
+    
+<div class="footer">
+
+
+    
+        <div class="tags">
+            <i class="fa fa-tags"></i>
+            <div class="links">
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/powershell/">powershell</a>
+                    
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/wmi/">WMI</a>
+                    
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/scripting/">scripting</a>
+                    
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/windows10/">windows10</a>
+                    
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/laptop/">laptop</a>
+                    
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/network/">network</a>
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+</article>
+
+        
+    </div>
+
+    
+        <div id="comments-container">
+            
+            
+
+        </div>
+    
+
+    </div>
+
+    
+<footer>
+    <div class="container">
+
+        
+        <div class="recent-posts">
+            <strong>Latest posts</strong>
+            <ul>
+                
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/04/13/find-adsite/">Find a computer&#39;s Active Directory Site and Subnet with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/04/06/export-eventlog/">Export Remote Eventlog with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/03/30/adsysteminfo/">Active Directory ADSystemInfo with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/03/16/ad-nested-group-membership/">Get direct and nested Active Directory group membership with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/02/23/sql-change-tracking-retention/">Config Manager &#39;Potential SQL performance issue caused by change tracking retention period&#39;</a>
+                    </li>
+                
+            </ul>
+        </div>
+        
+
+        
+        <div class="categories">
+            <a href="/categories/"><strong>Categories</strong></a>
+            <ul>
+                
+                <li>
+                    <a href="/categories/powershell">Powershell
+                        (8)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/activedirectory">Activedirectory
+                        (3)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/browser">Browser
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/memcm">Memcm
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/network">Network
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/regularexpression">Regularexpression
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/sccm">Sccm
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/security">Security
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/troubleshooting">Troubleshooting
+                        (1)</a>
+                </li>
+                
+            </ul>
+        </div>
+        
+
+        <div class="right">
+            
+            <div class="external-profiles">
+                <strong>Social media</strong>
+
+                
+                <a href="https://twitter.com/writeverbose" target="_blank"><i class="fab fa-twitter"></i></a>
+                
+                <a href="https://github.com/gbdixg" target="_blank"><i class="fab fa-github"></i></a>
+                
+            </div>
+            
+
+            
+        </div>
+    </div>
+</footer>
+
+
+<div class="credits">
+    <div class="container">
+        <div class="copyright">
+            <a href="https://github.com/gbdixg" target="_blank">
+                &copy;
+                
+                2021
+                
+                Geoff Dixon
+            </a>
+            
+        </div>
+        <div class="author">
+            <a href="https://github.com/gbdixg/gbdixg.github.io"
+                target="_blank">Write-Verbose Blog</a>
+        </div>
+    </div>
+</div>
+
+
+    
+
+    
+
+
+    <script type="text/javascript" src="https://write-verbose.com/theme.js"></script>
+
+    
+    
+    
+
+    
+</body>
+
+</html>

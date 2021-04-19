@@ -1,0 +1,590 @@
+
+  
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="siteBaseUrl" content="https://write-verbose.com/">
+    <meta name="author" content="Geoff Dixon">
+    <meta name="description" content="Technology Blog">
+    <meta name="keywords" content="blog, Windows, Azure, cloud, automation, devops, powershell, .net, enterprise, code, I.T., SCCM, OSD, Autopilot, database">
+    <meta name="generator" content="Hugo 0.82.0" />
+    <title>
+        
+           
+               Find a computer&#39;s Active Directory Site and Subnet with PowerShell &vert; Geoff Dixon &gt; Write-Verbose
+           
+        
+    </title>
+    <meta name="description" content="Use PowerShell to determine the AD Site and Subnet of a Windows computer">
+    <meta itemprop="name" content="Find a computer&#39;s Active Directory Site and Subnet with PowerShell">
+    <meta itemprop="description" content="Use PowerShell to determine the AD Site and Subnet of a Windows computer">
+    <meta property="og:title" content="Find a computer&#39;s Active Directory Site and Subnet with PowerShell">
+    <meta property="og:description" content="Use PowerShell to determine the AD Site and Subnet of a Windows computer">
+    <meta property="og:image" content="https://www.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e?size=200">
+    <meta property="og:url" content="https://write-verbose.com/2019/04/13/find-adsite/">
+    <meta property="og:site_name" content="Geoff Dixon &gt; Write-Verbose">
+    <meta property="og:type" content="article">
+
+    
+
+
+    <script src="/modernizr-simple.js"></script>
+
+    
+    <link href="/2019/04/13/find-adsite/" rel="alternate" type="application/rss+xml" title="Geoff Dixon &gt; Write-Verbose" />
+    <link href="/2019/04/13/find-adsite/" rel="feed" type="application/rss+xml" title="Geoff Dixon &gt; Write-Verbose" />
+    
+
+    
+    <link rel="canonical" href="https://write-verbose.com/2019/04/13/find-adsite/">
+    
+
+    <link rel="stylesheet" href="https://write-verbose.com/theme.css">
+
+    
+
+    
+        
+    
+</head>
+
+<body class="bilberry-hugo-theme">
+
+    
+    <nav>
+
+    <div class="container">
+        <ul class="topnav">
+            
+                
+                    <li><a href="https://write-verbose.com/page/about/">About</a></li>
+                
+            
+        </ul>
+
+        
+    </div>
+</nav>
+
+
+    
+    <header>
+
+        <div class="container">
+            <div class="logo">
+                <a href="/" class="logo">
+                    
+                        
+                        
+                            
+                        
+                        <img src="https://seccdn.libravatar.org/avatar/45d016258ee70966111f139052804f66?d=mm&size=200" alt="">
+                    
+
+                    <span class="overlay"><i class="fa fa-home"></i></span>
+                </a>
+            </div>
+            <div class="titles">
+                <h3 class="title">
+                    <a href="/">
+                        Geoff Dixon &gt; Write-Verbose
+                    </a>
+                </h3>
+
+                
+                    <span class="subtitle">Technology | Cloud | Code</span>
+                
+            </div>
+
+            
+
+            
+                <div class="toggler">
+            
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                </div>
+            </div>
+    </header>
+
+
+    <div class="main container">
+        
+    <div class="article-wrapper u-cf single">
+        
+            <a class="bubble" href="https://write-verbose.com/2019/04/13/find-adsite/">
+    <i class="fas fa-fw fa-file-alt"></i>
+</a>
+
+<article class="default article">
+    
+
+    <div class="content">
+    <h1 class="article-title">
+        <a href="https://write-verbose.com/2019/04/13/find-adsite/">
+            Find a computer&#39;s Active Directory Site and Subnet with PowerShell
+        </a>
+    </h1>
+
+    <div class="meta">
+        
+            
+                <span class="date moment">2019-04-13</span>
+            
+        
+
+        
+            
+                <span class="readingTime">5 min read</span>
+            
+        
+
+        
+            <span class="categories">
+                
+                    
+                    
+                        <a href="https://write-verbose.com/categories/activedirectory/">activedirectory</a>
+                    
+                
+                    
+                    
+                        <a href="https://write-verbose.com/categories/powershell/">powershell</a>
+                    
+                
+            </span>
+        
+
+        
+            <span class="author">
+                
+                
+                    <a href="https://write-verbose.com/author/geoff/">Geoff</a>
+                
+            </span>
+        
+    </div>
+
+    
+        
+
+        <p><strong>Active Directory Sites</strong> represent locations with good network connectivity. An ADSite is often created for each office or a group of offices in a metropolitan area, to generate the replication topology between Domain Controllers, and to help workstations/servers locate closest services.</p>
+<p><strong>Active Directory Subnets</strong> define the IP ranges included in an AD Site. A member workstation/server will have an IP address that should fall within a defined AD subnet, making it part of an AD Site.</p>
+<p>AD Site membership is not fixed. Laptops can move between Sites when they roam to another location.</p>
+<blockquote>
+<p>An incorrect or undefined AD subnet can lead to slow logon times and slow access to DFS shares. A domain member will use any server that responds when it isn&rsquo;t in a defined subnet.</p>
+</blockquote>
+<h2 id="powershell-script">Powershell script</h2>
+<p>The <strong>Find-ADSite</strong> PowerShell function below will return the AD Site and Subnet for a specified computer name or IP Address.</p>
+<p>If a company populates subnet descriptions with useful information, it can also identify information such as the specific Office or floor.</p>
+<p><img src="/assets/images/find-adsite1.png" alt="Find-ADSite"></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#66d9ef">Function</span> Find-ADSite {
+    <span style="color:#75715e">&lt;#
+</span><span style="color:#75715e">	</span><span style="color:#e6db74">.Synopsis</span><span style="color:#75715e">
+</span><span style="color:#75715e">		Used to get the Active Directory subnet and the site it is assigned to for a Windows computer/IP address
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">	</span><span style="color:#e6db74">.Description</span><span style="color:#75715e">
+</span><span style="color:#75715e">		Requires only standard user read access to AD and can determine the ADSite for a local or remote computer
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">	</span><span style="color:#e6db74">.PARAMETER</span><span style="color:#75715e">  IPAddress
+</span><span style="color:#75715e">		Specifies the IP Address for the subnet/site lookup in as a .NET System.Net.IPAddress
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">		When this parameter is used, the computername is not specified.
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">	</span><span style="color:#e6db74">.PARAMETER</span><span style="color:#75715e">  Computername
+</span><span style="color:#75715e">		Specifies a computername for the subnet/site lookup.
+</span><span style="color:#75715e">		The computername is resolved to an IP address before performing the subnet query.
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">		Defaults to %COMPUTERNAME%
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">		When this parameter is used, the IPAddress and IP are not specified.
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">	</span><span style="color:#e6db74">.PARAMETER</span><span style="color:#75715e">  DC
+</span><span style="color:#75715e">		A specific domain controller in the current users domain for the subnet query
+</span><span style="color:#75715e">		If not specified, standard DC locator methods are used.
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">	</span><span style="color:#e6db74">.PARAMETER</span><span style="color:#75715e">  AllMatches
+</span><span style="color:#75715e">		A switch parameter that causes the subnet query to return all matching subnets in AD
+</span><span style="color:#75715e">		This is not normally used as the default behaviour (only the most specific match is returned) is usually prefered.
+</span><span style="color:#75715e">		This switch will include &#34;catch-all&#34; subnets that may be defined to accomodate missing subnets
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">	</span><span style="color:#e6db74">.Example</span><span style="color:#75715e">
+</span><span style="color:#75715e">		PS C:\&gt;Find-ADSite -ComputerName PC123456789
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">		ADSubnetName : 162.26.192.128/25
+</span><span style="color:#75715e">		IPAddress    : 162.26.192.151
+</span><span style="color:#75715e">		ComputerName : PC123456789
+</span><span style="color:#75715e">		ADSite       : EULON01
+</span><span style="color:#75715e">		ADSubnetDesc : GB-LONDON
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">	</span><span style="color:#e6db74">.Notes</span><span style="color:#75715e">
+</span><span style="color:#75715e">		Version:        1.1
+</span><span style="color:#75715e">			Removed script block and parallel parallel support
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">#&gt;</span>
+    [<span style="color:#66d9ef">CmdletBinding</span>(DefaultParameterSetName = <span style="color:#e6db74">&#34;byHost&#34;</span>)]
+    <span style="color:#66d9ef">Param</span>(
+        [<span style="color:#66d9ef">Parameter</span>(<span style="color:#66d9ef">Position</span> = 0, <span style="color:#66d9ef">ValueFromPipeline</span> = $true, <span style="color:#66d9ef">ValueFromPipelineByPropertyName</span> = $True, <span style="color:#66d9ef">ParameterSetName</span> = <span style="color:#e6db74">&#34;byHost&#34;</span>)]
+        <span style="color:#66d9ef">[string]</span>$ComputerName = $Env:COMPUTERNAME
+        ,
+        [<span style="color:#66d9ef">Parameter</span>(<span style="color:#66d9ef">Position</span> = 0, <span style="color:#66d9ef">ValueFromPipeline</span> = $true, <span style="color:#66d9ef">ValueFromPipelineByPropertyName</span> = $True, <span style="color:#66d9ef">Mandatory</span> = $True, <span style="color:#66d9ef">ParameterSetName</span> = <span style="color:#e6db74">&#34;byIPAddress&#34;</span>)]
+        <span style="color:#66d9ef">[System.Net.IPAddress]</span>$IPAddress
+        ,
+        [<span style="color:#66d9ef">Parameter</span>(<span style="color:#66d9ef">Position</span> = 1)]
+        <span style="color:#66d9ef">[string]</span>$DC
+        ,
+        [<span style="color:#66d9ef">Parameter</span>()]
+        <span style="color:#66d9ef">[switch]</span>$AllMatches
+
+    )
+    <span style="color:#66d9ef">BEGIN</span> {	}
+    <span style="color:#66d9ef">PROCESS</span> {
+
+        <span style="color:#66d9ef">switch</span> ($pscmdlet.<span style="color:#66d9ef">ParameterSetName</span>) {
+
+            <span style="color:#e6db74">&#34;byHost&#34;</span> {
+                <span style="color:#66d9ef">try</span> {
+                    $Resolved = <span style="color:#66d9ef">[system.net.dns]</span>::GetHostByName($Computername)
+                    <span style="color:#66d9ef">[System.Net.IPAddress]</span>$IP = ($Resolved.AddressList)[0] <span style="color:#f92672">-as</span> <span style="color:#66d9ef">[System.Net.IPAddress]</span>
+                }<span style="color:#66d9ef">catch</span>{
+                    Write-Warning <span style="color:#e6db74">&#34;$ComputerName :: Unable to resolve name to an IP Address&#34;</span>
+                    $IP = $Null
+                }
+            }
+
+            <span style="color:#e6db74">&#34;byIPAddress&#34;</span> {
+                <span style="color:#66d9ef">try</span> {
+                    $Resolved = <span style="color:#66d9ef">[system.net.dns]</span>::GetHostByAddress($IPAddress)
+                    $ComputerName = $Resolved.HostName
+                } <span style="color:#66d9ef">catch</span> {
+                    <span style="color:#75715e"># Write-Warning &#34;$IP :: Could not be resolved to a hostname&#34;</span>
+                    $ComputerName = <span style="color:#e6db74">&#34;Unable to resolve&#34;</span>
+                }
+
+                $IP = $IPAddress
+            }
+
+        }<span style="color:#75715e">#switch</span>
+
+        <span style="color:#66d9ef">if</span> ($IP) {
+            <span style="color:#75715e"># The following maths loops over all the possible subnet mask lengths</span>
+            <span style="color:#75715e"># The masks are converted into the number of Bits to allow conversion to CIDR format</span>
+
+            <span style="color:#66d9ef">[psobject[]]</span>$MatchedSubnets = @()
+
+            <span style="color:#66d9ef">For</span> ($bit = 30 ; $bit <span style="color:#f92672">-ge</span> 1; $bit--) {
+
+                <span style="color:#66d9ef">[int]</span>$octet = <span style="color:#66d9ef">[math]</span>::Truncate(($bit - 1 ) / 8)
+                $net = <span style="color:#66d9ef">[byte[]]</span>@()
+
+                <span style="color:#66d9ef">for</span> ($o = 0; $o <span style="color:#f92672">-le</span> 3; $o++) {
+                    $ba = $ip.GetAddressBytes()
+                    <span style="color:#66d9ef">if</span> ($o <span style="color:#f92672">-lt</span> $Octet) {
+                        $Net += $ba[$o]
+                    } <span style="color:#66d9ef">ELSEIF</span> ($o <span style="color:#f92672">-eq</span> $octet) {
+                        $factor = 8 + $Octet * 8 - $bit
+                        $Divider = <span style="color:#66d9ef">[math]</span>::pow(2, $factor)
+                        $value = $divider * <span style="color:#66d9ef">[math]</span>::Truncate($ba[$o] / $divider)
+                        $Net += $value
+                    } <span style="color:#66d9ef">ELSE</span> {
+                        $Net += 0
+                    }
+                } <span style="color:#75715e">#Next</span>
+
+                <span style="color:#75715e">#Format network in CIDR notation</span>
+                $NetWork = <span style="color:#66d9ef">[string]</span>::join(<span style="color:#e6db74">&#39;.&#39;</span>, $net) + <span style="color:#e6db74">&#34;/$bit&#34;</span>
+
+                <span style="color:#75715e"># Try to find this Network in AD Subnets list</span>
+                <span style="color:#75715e"># Most &#34;possible&#34; subnets will not be found, but one should.</span>
+                Write-Verbose <span style="color:#e6db74">&#34;Trying : $network&#34;</span>
+                <span style="color:#66d9ef">try</span>{
+                    $de = New-Object System.DirectoryServices.DirectoryEntry(<span style="color:#e6db74">&#34;LDAP://&#34;</span> + $DC + <span style="color:#e6db74">&#34;rootDSE&#34;</span>)
+                    $Root = New-Object System.DirectoryServices.DirectoryEntry(<span style="color:#e6db74">&#34;LDAP://$DC</span>$($de.configurationNamingContext)<span style="color:#e6db74">&#34;</span>)
+                    $ds = New-Object System.Directoryservices.DirectorySearcher($root)
+                    $ds.<span style="color:#66d9ef">filter</span> = <span style="color:#e6db74">&#34;(CN=$NetWork)&#34;</span>
+                    $Result = $ds.findone()
+                }<span style="color:#66d9ef">catch</span>{
+                    $Result = $null
+                }
+
+                <span style="color:#66d9ef">if</span> ($Result) {
+                    write-verbose <span style="color:#e6db74">&#34;AD Site found for $IP&#34;</span>
+
+                    <span style="color:#75715e"># Try to split out AD Site from LDAP path</span>
+                    $Match = <span style="color:#e6db74">&#34;</span>$($Result.GetDirectoryEntry().siteObject)<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">-match</span> <span style="color:#e6db74">&#34;^CN=(.*),CN=Sites,CN=Configuration.*$&#34;</span>
+                    <span style="color:#66d9ef">if</span> ($Match) {
+                        $ADSite = $Matches[1]
+                    } <span style="color:#66d9ef">else</span> {
+                        $ADSite = <span style="color:#e6db74">&#34;</span>$($Result.GetDirectoryEntry().siteObject)<span style="color:#e6db74">&#34;</span>
+                    }
+
+                    $MatchedSubnets += New-Object -TypeName PSObject -Property @{
+                        ComputerName = $ComputerName
+                        IPAddress    = $IP.ToString()
+                        ADSubnetName = $($Result.properties.name).ToString()
+                        ADSubnetDesc = <span style="color:#e6db74">&#34;</span>$($Result.properties.description)<span style="color:#e6db74">&#34;</span>
+                        ADSite       = $ADSite
+                    }
+                    $bFound = $true
+                }<span style="color:#75715e">#endif</span>
+            }<span style="color:#75715e">#next</span>
+
+        }<span style="color:#75715e">#endif</span>
+        <span style="color:#66d9ef">if</span> ($bFound) {
+
+            <span style="color:#66d9ef">if</span> ($AllMatches) {
+                <span style="color:#75715e"># output all the matched subnets</span>
+
+                $MatchedSubnets
+
+            } <span style="color:#66d9ef">else</span> {
+
+                <span style="color:#75715e"># Only output the subnet with the largest mask bits</span>
+                <span style="color:#66d9ef">[Int32]</span>$MaskBits = 0 <span style="color:#75715e"># initial value</span>
+
+                <span style="color:#66d9ef">Foreach</span> ($MatchedSubnet <span style="color:#66d9ef">in</span> $MatchedSubnets) {
+
+                    <span style="color:#66d9ef">if</span> ($MatchedSubnet.ADSubnetName <span style="color:#f92672">-match</span> <span style="color:#e6db74">&#34;\/(?&lt;Bits&gt;\d+)$&#34;</span>) {
+                        <span style="color:#66d9ef">[Int32]</span>$ThisMaskBits = $Matches[<span style="color:#e6db74">&#39;Bits&#39;</span>]
+                        Write-Verbose <span style="color:#e6db74">&#34;ThisMaskBits = &#39;$ThisMaskBits&#39;&#34;</span>
+
+                        <span style="color:#66d9ef">if</span> ($ThisMaskBits <span style="color:#f92672">-gt</span> $MaskBits) {
+                            <span style="color:#75715e"># This is a more specific subnet</span>
+
+                            $OutputSubnet = $MatchedSubnet
+                            $MaskBits = $ThisMaskBits
+
+                        } <span style="color:#66d9ef">else</span> {
+                            Write-Verbose <span style="color:#e6db74">&#34;No match&#34;</span>
+                        }
+                    } <span style="color:#66d9ef">else</span> {
+                        Write-Verbose <span style="color:#e6db74">&#34;No match&#34;</span>
+                    }
+                }
+                $OutputSubnet
+            }
+
+        } <span style="color:#66d9ef">else</span> {
+
+            Write-Verbose <span style="color:#e6db74">&#34;AD Subnet not found for $IP&#34;</span>
+            <span style="color:#66d9ef">if</span> ($IP <span style="color:#f92672">-eq</span> $null) {$IP = <span style="color:#e6db74">&#34;&#34;</span>} <span style="color:#75715e"># required to prevent exception on ToString() below</span>
+
+            New-Object -TypeName PSObject -Property @{
+                ComputerName = $ComputerName
+                IPAddress    = $IP.ToString()
+                ADSubnetName = <span style="color:#e6db74">&#34;Not found&#34;</span>
+                ADSubnetDesc = <span style="color:#e6db74">&#34;&#34;</span>
+                ADSite       = <span style="color:#e6db74">&#34;&#34;</span>
+            }
+        }<span style="color:#75715e">#end if</span>
+
+
+    }<span style="color:#75715e">#process</span>
+
+    <span style="color:#66d9ef">End</span> {}
+}
+
+</code></pre></div>
+    
+</div>
+
+    
+<div class="footer">
+
+
+    
+        <div class="tags">
+            <i class="fa fa-tags"></i>
+            <div class="links">
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/activedirectory/">activedirectory</a>
+                    
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/powershell/">powershell</a>
+                    
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/network/">network</a>
+                    
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/coreinfrastructure/">coreinfrastructure</a>
+                    
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/scripting/">scripting</a>
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+</article>
+
+        
+    </div>
+
+    
+        <div id="comments-container">
+            
+            
+
+        </div>
+    
+
+    </div>
+
+    
+<footer>
+    <div class="container">
+
+        
+        <div class="recent-posts">
+            <strong>Latest posts</strong>
+            <ul>
+                
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/04/13/find-adsite/">Find a computer&#39;s Active Directory Site and Subnet with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/04/06/export-eventlog/">Export Remote Eventlog with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/03/30/adsysteminfo/">Active Directory ADSystemInfo with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/03/16/ad-nested-group-membership/">Get direct and nested Active Directory group membership with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/02/23/sql-change-tracking-retention/">Config Manager &#39;Potential SQL performance issue caused by change tracking retention period&#39;</a>
+                    </li>
+                
+            </ul>
+        </div>
+        
+
+        
+        <div class="categories">
+            <a href="/categories/"><strong>Categories</strong></a>
+            <ul>
+                
+                <li>
+                    <a href="/categories/powershell">Powershell
+                        (8)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/activedirectory">Activedirectory
+                        (3)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/browser">Browser
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/memcm">Memcm
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/network">Network
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/regularexpression">Regularexpression
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/sccm">Sccm
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/security">Security
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/troubleshooting">Troubleshooting
+                        (1)</a>
+                </li>
+                
+            </ul>
+        </div>
+        
+
+        <div class="right">
+            
+            <div class="external-profiles">
+                <strong>Social media</strong>
+
+                
+                <a href="https://twitter.com/writeverbose" target="_blank"><i class="fab fa-twitter"></i></a>
+                
+                <a href="https://github.com/gbdixg" target="_blank"><i class="fab fa-github"></i></a>
+                
+            </div>
+            
+
+            
+        </div>
+    </div>
+</footer>
+
+
+<div class="credits">
+    <div class="container">
+        <div class="copyright">
+            <a href="https://github.com/gbdixg" target="_blank">
+                &copy;
+                
+                2021
+                
+                Geoff Dixon
+            </a>
+            
+        </div>
+        <div class="author">
+            <a href="https://github.com/gbdixg/gbdixg.github.io"
+                target="_blank">Write-Verbose Blog</a>
+        </div>
+    </div>
+</div>
+
+
+    
+
+    
+
+
+    <script type="text/javascript" src="https://write-verbose.com/theme.js"></script>
+
+    
+    
+    
+
+    
+</body>
+
+</html>

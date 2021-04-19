@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>coreinfrastructure on Geoff Dixon &gt; Write-Verbose</title>
+    <link>https://write-verbose.com/tags/coreinfrastructure/</link>
+    <description>Recent content in coreinfrastructure on Geoff Dixon &gt; Write-Verbose</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 13 Apr 2019 17:22:14 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/coreinfrastructure/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Find a computer&#39;s Active Directory Site and Subnet with PowerShell</title>
+      <link>https://write-verbose.com/2019/04/13/find-adsite/</link>
+      <pubDate>Sat, 13 Apr 2019 17:22:14 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2019/04/13/find-adsite/</guid>
+      <description>Active Directory Sites represent locations with good network connectivity. An ADSite is often created for each office or a group of offices in a metropolitan area, to generate the replication topology between Domain Controllers, and to help workstations/servers locate closest services.
+Active Directory Subnets define the IP ranges included in an AD Site. A member workstation/server will have an IP address that should fall within a defined AD subnet, making it part of an AD Site.</description>
+    </item>
+    
+  </channel>
+</rss>

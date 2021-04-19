@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>browser on Geoff Dixon &gt; Write-Verbose</title>
+    <link>https://write-verbose.com/tags/browser/</link>
+    <description>Recent content in browser on Geoff Dixon &gt; Write-Verbose</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 15 Dec 2018 18:24:34 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/browser/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Audit Chrome Extensions with PowerShell</title>
+      <link>https://write-verbose.com/2018/12/15/audit-google-chrome-extensions/</link>
+      <pubDate>Sat, 15 Dec 2018 18:24:34 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2018/12/15/audit-google-chrome-extensions/</guid>
+      <description>Browser extensions are supposed to be curated and vetted, but there have been many examples of malware. If you don&amp;rsquo;t already have control of extensions through a whitelist or blacklist, the first step is to find out what is in-use.
+The code below is a PowerShell function to get the installed Google Chrome browser extensions from a local or remote Windows computer.
+ Chrome Browser Extensions install into the user profile and do not appear in the Add/Remove Programs list.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Geoff Dixon &gt; Write-Verbose</title>
+    <link>https://write-verbose.com/categories/</link>
+    <description>Recent content in Categories on Geoff Dixon &gt; Write-Verbose</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 13 Apr 2019 17:22:14 +0000</lastBuildDate><atom:link href="https://write-verbose.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>activedirectory</title>
+      <link>https://write-verbose.com/categories/activedirectory/</link>
+      <pubDate>Sat, 13 Apr 2019 17:22:14 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/categories/activedirectory/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>powershell</title>
+      <link>https://write-verbose.com/categories/powershell/</link>
+      <pubDate>Sat, 13 Apr 2019 17:22:14 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/categories/powershell/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>troubleshooting</title>
+      <link>https://write-verbose.com/categories/troubleshooting/</link>
+      <pubDate>Sat, 06 Apr 2019 18:11:01 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/categories/troubleshooting/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>MEMCM</title>
+      <link>https://write-verbose.com/categories/memcm/</link>
+      <pubDate>Sat, 23 Feb 2019 19:28:11 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/categories/memcm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SCCM</title>
+      <link>https://write-verbose.com/categories/sccm/</link>
+      <pubDate>Sat, 23 Feb 2019 19:28:11 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/categories/sccm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>network</title>
+      <link>https://write-verbose.com/categories/network/</link>
+      <pubDate>Sat, 12 Jan 2019 19:15:04 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/categories/network/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>regularexpression</title>
+      <link>https://write-verbose.com/categories/regularexpression/</link>
+      <pubDate>Sun, 06 Jan 2019 19:15:04 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/categories/regularexpression/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>browser</title>
+      <link>https://write-verbose.com/categories/browser/</link>
+      <pubDate>Sat, 15 Dec 2018 18:24:34 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/categories/browser/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>security</title>
+      <link>https://write-verbose.com/categories/security/</link>
+      <pubDate>Sat, 24 Nov 2018 16:40:11 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/categories/security/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

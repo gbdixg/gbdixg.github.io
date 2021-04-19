@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>remoting on Geoff Dixon &gt; Write-Verbose</title>
+    <link>https://write-verbose.com/tags/remoting/</link>
+    <description>Recent content in remoting on Geoff Dixon &gt; Write-Verbose</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 24 Nov 2018 16:40:11 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/remoting/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>PSPam - Privileged Access Management via PowerShell</title>
+      <link>https://write-verbose.com/2018/11/24/PSPam-privileged-access-management/</link>
+      <pubDate>Sat, 24 Nov 2018 16:40:11 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2018/11/24/PSPam-privileged-access-management/</guid>
+      <description>Update 2019-01-12: A Microsoft security update appears to have broken this solution.
+ TL;DR the following describes a DIY method for granualar assignment of elevated permissions on Windows, using PowerShell Just Enough Administration (JEA)
+ Background Most users logging on to a Windows client fall into one of the following categories:
+ Full administrator Standard user  Sometimes there is a need for a standard user to perform an elevated task, but granting full administrative access is undesirable.</description>
+    </item>
+    
+  </channel>
+</rss>

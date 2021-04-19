@@ -1,0 +1,525 @@
+
+  
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="siteBaseUrl" content="https://write-verbose.com/">
+    <meta name="author" content="Geoff Dixon">
+    <meta name="description" content="Technology Blog">
+    <meta name="keywords" content="blog, Windows, Azure, cloud, automation, devops, powershell, .net, enterprise, code, I.T., SCCM, OSD, Autopilot, database">
+    <meta name="generator" content="Hugo 0.82.0" />
+    <title>
+        
+           
+               Export Remote Eventlog with PowerShell &vert; Geoff Dixon &gt; Write-Verbose
+           
+        
+    </title>
+    <meta name="description" content="Export Windows event logs from remote computers using wevtutil.exe and PowerShell">
+    <meta itemprop="name" content="Export Remote Eventlog with PowerShell">
+    <meta itemprop="description" content="Export Windows event logs from remote computers using wevtutil.exe and PowerShell">
+    <meta property="og:title" content="Export Remote Eventlog with PowerShell">
+    <meta property="og:description" content="Export Windows event logs from remote computers using wevtutil.exe and PowerShell">
+    <meta property="og:image" content="https://www.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e?size=200">
+    <meta property="og:url" content="https://write-verbose.com/2019/04/06/export-eventlog/">
+    <meta property="og:site_name" content="Geoff Dixon &gt; Write-Verbose">
+    <meta property="og:type" content="article">
+
+    
+
+
+    <script src="/modernizr-simple.js"></script>
+
+    
+    <link href="/2019/04/06/export-eventlog/" rel="alternate" type="application/rss+xml" title="Geoff Dixon &gt; Write-Verbose" />
+    <link href="/2019/04/06/export-eventlog/" rel="feed" type="application/rss+xml" title="Geoff Dixon &gt; Write-Verbose" />
+    
+
+    
+    <link rel="canonical" href="https://write-verbose.com/2019/04/06/export-eventlog/">
+    
+
+    <link rel="stylesheet" href="https://write-verbose.com/theme.css">
+
+    
+
+    
+        
+    
+</head>
+
+<body class="bilberry-hugo-theme">
+
+    
+    <nav>
+
+    <div class="container">
+        <ul class="topnav">
+            
+                
+                    <li><a href="https://write-verbose.com/page/about/">About</a></li>
+                
+            
+        </ul>
+
+        
+    </div>
+</nav>
+
+
+    
+    <header>
+
+        <div class="container">
+            <div class="logo">
+                <a href="/" class="logo">
+                    
+                        
+                        
+                            
+                        
+                        <img src="https://seccdn.libravatar.org/avatar/45d016258ee70966111f139052804f66?d=mm&size=200" alt="">
+                    
+
+                    <span class="overlay"><i class="fa fa-home"></i></span>
+                </a>
+            </div>
+            <div class="titles">
+                <h3 class="title">
+                    <a href="/">
+                        Geoff Dixon &gt; Write-Verbose
+                    </a>
+                </h3>
+
+                
+                    <span class="subtitle">Technology | Cloud | Code</span>
+                
+            </div>
+
+            
+
+            
+                <div class="toggler">
+            
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                </div>
+            </div>
+    </header>
+
+
+    <div class="main container">
+        
+    <div class="article-wrapper u-cf single">
+        
+            <a class="bubble" href="https://write-verbose.com/2019/04/06/export-eventlog/">
+    <i class="fas fa-fw fa-file-alt"></i>
+</a>
+
+<article class="default article">
+    
+
+    <div class="content">
+    <h1 class="article-title">
+        <a href="https://write-verbose.com/2019/04/06/export-eventlog/">
+            Export Remote Eventlog with PowerShell
+        </a>
+    </h1>
+
+    <div class="meta">
+        
+            
+                <span class="date moment">2019-04-06</span>
+            
+        
+
+        
+            
+                <span class="readingTime">4 min read</span>
+            
+        
+
+        
+            <span class="categories">
+                
+                    
+                    
+                        <a href="https://write-verbose.com/categories/troubleshooting/">troubleshooting</a>
+                    
+                
+                    
+                    
+                        <a href="https://write-verbose.com/categories/powershell/">powershell</a>
+                    
+                
+            </span>
+        
+
+        
+            <span class="author">
+                
+                
+                    <a href="https://write-verbose.com/author/geoff/">Geoff</a>
+                
+            </span>
+        
+    </div>
+
+    
+        
+
+        <p>Event logs are a cornerstone of troubleshooting, but getting access to them can be difficult across the network.</p>
+<blockquote>
+<p>It can be faster to export a Windows event log on a remote computer,  copy the .evtx file over the network and then query it locally.</p>
+</blockquote>
+<p>The built-in PowerShell <strong>Get-Winevent</strong> cmdlet can work against remote event logs, but it can be painfully slow to stream events when network bandwidth is limited. Copying an entire exported log (.evtx file) across the same connection is much faster. Get-Winevent can still be used with the <em>-path</em> parameter to query the locally copied .evtx file.</p>
+<h2 id="powershell-script">PowerShell Script</h2>
+<p><strong>wevtutil.exe</strong> is a built-in Windows executable that can export event logs on a local or remote computer.  The following PowerShell function uses wevtutil under-the-hood to export event logs and copy them locally. The computer name is pre-pended to the log name.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#66d9ef">Function</span> Export-EventLog {
+	<span style="color:#75715e">&lt;#
+</span><span style="color:#75715e">		</span><span style="color:#e6db74">.SYNOPSIS</span><span style="color:#75715e">
+</span><span style="color:#75715e">			Exports a remote event log to a file.
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">		</span><span style="color:#e6db74">.DESCRIPTION</span><span style="color:#75715e">
+</span><span style="color:#75715e">			Uses wevtutil.exe to perform the export on the remote computer
+</span><span style="color:#75715e">			The log(s) are saved to c:\Windows\Temp and then moved over the network to the local computer
+</span><span style="color:#75715e">			The resulting log file is $Path\$computername-$logname.evtx
+</span><span style="color:#75715e">			The file can then be opened in Windows Event Viewer or queried directly using &#34;Get-Winevent -Path....&#34;
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">			The remote computer must be online and the Windows Firewall must allow inbound RPC and SMB connections
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">		</span><span style="color:#e6db74">.PARAMETER</span><span style="color:#75715e">  Computername
+</span><span style="color:#75715e">			The name of the remote computer.
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">		</span><span style="color:#e6db74">.PARAMETER</span><span style="color:#75715e">  Logname
+</span><span style="color:#75715e">			The name(s) of the log file to export.
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">		</span><span style="color:#e6db74">.PARAMETER</span><span style="color:#75715e">  Path
+</span><span style="color:#75715e">			The local folder path where the output file will be saved
+</span><span style="color:#75715e">			Default = %TEMP%
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">		</span><span style="color:#e6db74">.PARAMETER</span><span style="color:#75715e">  RemotePath
+</span><span style="color:#75715e">			The remote folder path used to stage the exported file prior to moving it to the local folder path.
+</span><span style="color:#75715e">			Environment variables are not supported.
+</span><span style="color:#75715e">			Default = C:\Windows\Temp
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">		</span><span style="color:#e6db74">.EXAMPLE</span><span style="color:#75715e">
+</span><span style="color:#75715e">			PS C:\&gt; Export-EventLog -Computername &#34;PC654321&#34;
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">			This command will export the System and Application event logs from the remote computer PC654321
+</span><span style="color:#75715e">			The logs will be exported to c:\windows\temp on the remote computer then moved to
+</span><span style="color:#75715e">			c:\temp on the local computer
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">		</span><span style="color:#e6db74">.EXAMPLE</span><span style="color:#75715e">
+</span><span style="color:#75715e">			PS C:\&gt; Export-EventLog -Computername &#34;PC654321&#34; -LogName &#34;System&#34;,&#34;Security&#34;
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">			This command will export the System and Security event logs from the remote computer PC654321
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">		</span><span style="color:#e6db74">.EXAMPLE</span><span style="color:#75715e">
+</span><span style="color:#75715e">			PS C:\&gt; &#34;PC654321&#34; | Export-EventLog -LogName &#34;Application&#34;,&#34;Security&#34;
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">			This command will export the Application and Security event logs from the remote computer PC654321
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">		</span><span style="color:#e6db74">.EXAMPLE</span><span style="color:#75715e">
+</span><span style="color:#75715e">			PS C:\&gt; Get-Winevent -Computername $Computer -Listlog * -EA 0 | Where{$_.RecordCount -gt 0} | Export-EventLog -Computername $Computer
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">			Thos command will export all the event logs from the remote computer represented by the $computer variable
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">		</span><span style="color:#e6db74">.NOTES</span><span style="color:#75715e">
+</span><span style="color:#75715e">			Version: 1.0
+</span><span style="color:#75715e">	#&gt;</span>
+	[<span style="color:#66d9ef">CmdletBinding</span>()]
+	<span style="color:#66d9ef">param</span>(
+		[<span style="color:#66d9ef">parameter</span>(<span style="color:#66d9ef">position</span> = 0, <span style="color:#66d9ef">mandatory</span> = $true, <span style="color:#66d9ef">valuefromPipeline</span> = $true, <span style="color:#66d9ef">valuefrompipelinebypropertyname</span> = $true)]
+		<span style="color:#66d9ef">[string[]]</span>$Computername = $Env:COMPUTERNAME
+		,
+		[<span style="color:#66d9ef">parameter</span>(<span style="color:#66d9ef">position</span> = 1, <span style="color:#66d9ef">valuefrompipelinebypropertyname</span> = $true)]
+		<span style="color:#66d9ef">[string[]]</span>$LogName = @(<span style="color:#e6db74">&#34;System&#34;</span>, <span style="color:#e6db74">&#34;Application&#34;</span>)
+		,
+		[<span style="color:#66d9ef">parameter</span>(<span style="color:#66d9ef">position</span> = 2)]
+		[ValidateScript( { Test-Path $_ -PathType <span style="color:#e6db74">&#39;Container&#39;</span> })]
+		<span style="color:#66d9ef">[string]</span>$Path = $ENV:TEMP
+		,
+		[<span style="color:#66d9ef">parameter</span>(<span style="color:#66d9ef">position</span> = 3)]
+		<span style="color:#66d9ef">[string]</span>$RemotePath = <span style="color:#e6db74">&#34;C:\Windows\Temp&#34;</span>
+
+	)
+	<span style="color:#66d9ef">PROCESS</span> {
+
+		<span style="color:#66d9ef">Foreach</span> ($Name <span style="color:#66d9ef">in</span> $Computername) {
+			Write-Progress -id 1 -Activity <span style="color:#e6db74">&#34;Computer &#34;</span> -Status <span style="color:#e6db74">&#34;$Name&#34;</span>
+
+			<span style="color:#66d9ef">If</span> (Test-Connection -ComputerName $Name -Count 1 -ErrorAction SilentlyContinue) {
+
+				$LogName | <span style="color:#66d9ef">ForEach</span>-Object {
+					$Log = $_
+
+					$Output = New-Object PSObject | Select Computername, LogName, Path, Result
+					$Output.Computername = $Name
+					$Output.LogName = $Log
+
+					<span style="color:#66d9ef">if</span> ((Get-WinEvent -LogName $Log -ComputerName $Name -MaxEvents 1 -ErrorAction SilentlyContinue | Measure-Object).Count <span style="color:#f92672">-lt</span> 1) {
+						Write-Warning -Message <span style="color:#e6db74">&#34;$Name::$log log is empty. Skipping export&#34;</span>
+						<span style="color:#66d9ef">return</span>
+					}
+					$OutputFileName = <span style="color:#e6db74">&#34;$Name-</span>$($Log <span style="color:#f92672">-replace</span> <span style="color:#e6db74">&#34;/&#34;</span>,<span style="color:#e6db74">&#34;-&#34;</span>)<span style="color:#e6db74">.evtx&#34;</span>
+
+					Write-Progress -id 2 -ParentId 1 -Activity <span style="color:#e6db74">&#34;Exporting&#34;</span> -Status <span style="color:#e6db74">&#34;$Log&#34;</span>
+
+					<span style="color:#66d9ef">if</span> ($Name <span style="color:#f92672">-eq</span> $Env:COMPUTERNAME) {
+						Write-Verbose <span style="color:#e6db74">&#34;Local computer...&#34;</span>
+						$Cmd = <span style="color:#e6db74">&#34;</span>$($Env:windir)<span style="color:#e6db74">\system32\wevtutil.exe epl &#39;$Log&#39; &#39;$Path\$OutputFileName&#39; /r:$Name /ow:True 2&gt;&amp;1&#34;</span>
+						$CmdResult = Invoke-Expression -Command $cmd
+
+						<span style="color:#66d9ef">if</span> ($CmdResult <span style="color:#f92672">-eq</span> $Null) {
+							Write-Verbose <span style="color:#e6db74">&#34;$Name::$log log export to &#39;$path&#39; = &#39;Success&#39;&#34;</span>
+							$Output.Result = <span style="color:#e6db74">&#34;Success&#34;</span>
+						} <span style="color:#66d9ef">else</span> {
+							Write-Error <span style="color:#e6db74">&#34;$Name::$log log export to &#39;$path&#39; = &#39;$CmdResult&#39;&#34;</span>
+							$Output.Result = <span style="color:#e6db74">&#34;Error - $CMDResult&#34;</span>
+						}
+
+					} <span style="color:#66d9ef">else</span> {
+						Write-Verbose <span style="color:#e6db74">&#34;Remote computer...&#34;</span>
+						<span style="color:#75715e"># Wevtutil LogName filepath /r:&lt;remote computer&gt; /ow:&lt;Overwrite true/false&gt;</span>
+						$Cmd = <span style="color:#e6db74">&#34;</span>$($Env:windir)<span style="color:#e6db74">\system32\wevtutil.exe epl &#39;$Log&#39; &#39;$RemotePath\$OutputFileName&#39; /r:$Name /ow:True 2&gt;&amp;1&#34;</span>
+						$CmdResult = Invoke-Expression -Command $cmd
+						<span style="color:#66d9ef">if</span> ($CmdResult <span style="color:#f92672">-eq</span> $Null) {
+							<span style="color:#75715e"># Convert &lt;Drive&gt;:\ to \&lt;Drive&gt;$ for remote connection</span>
+							$RemoteUNC = $RemotePath <span style="color:#f92672">-Replace</span> <span style="color:#e6db74">&#39;(?&lt;Drive&gt;[A-Za-z]+):&#39;</span>, <span style="color:#e6db74">&#39;${Drive}$$&#39;</span> <span style="color:#75715e"># c:\ = c$\</span>
+
+							Write-Verbose <span style="color:#e6db74">&#34;$Name::$log log export to &#39;\\$Name\$RemoteUNC\$OutputFileName&#39; = &#39;Success&#39;&#34;</span>
+
+							Write-Progress -id 3 -ParentId 1 -Activity <span style="color:#e6db74">&#34;Copying&#34;</span> -Status <span style="color:#e6db74">&#34;$Log&#34;</span>
+							<span style="color:#66d9ef">Try</span> {
+								move-item -path <span style="color:#e6db74">&#34;filesystem::\\$Name\$RemoteUNC\$OutputFileName&#34;</span> -Dest $Path -Force -ErrorAction Stop
+								Write-Verbose <span style="color:#e6db74">&#34;$Name::$log log move to &#39;$path&#39; = Success&#34;</span>
+								$Output.Result = <span style="color:#e6db74">&#34;Success&#34;</span>
+							} <span style="color:#66d9ef">Catch</span> {
+								Write-Error <span style="color:#e6db74">&#34;$Name::$log log move to &#39;$path&#39; failed - &#39;$_&#39;&#34;</span>
+								$Output.Result = <span style="color:#e6db74">&#34;Error - &#39;$_&#39;&#34;</span>
+							}
+
+						} <span style="color:#66d9ef">else</span> {
+							Write-Error <span style="color:#e6db74">&#34;$Name::$log log export to &#39;\\$Name\$RemotePath&#39; = &#39;$CmdResult&#39;&#34;</span>
+							$Result = <span style="color:#e6db74">&#34;Error - $CMDResult&#34;</span>
+						}
+
+
+					}<span style="color:#75715e">#end if</span>
+
+					$Output.Path = <span style="color:#e6db74">&#34;$Path\$OutputFileName&#34;</span>
+
+					$Output
+
+				}<span style="color:#75715e">#foreach logname</span>
+
+			} <span style="color:#66d9ef">else</span> {
+				Write-Warning -Message <span style="color:#e6db74">&#34;$Name :: ping failed&#34;</span>
+			}
+
+		} <span style="color:#75715e">#foreach Name</span>
+
+	}<span style="color:#75715e">#process</span>
+
+}<span style="color:#75715e">#EndFunction</span>
+
+</code></pre></div>
+    
+</div>
+
+    
+<div class="footer">
+
+
+    
+        <div class="tags">
+            <i class="fa fa-tags"></i>
+            <div class="links">
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/powershell/">powershell</a>
+                    
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/eventlog/">eventlog</a>
+                    
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/scripting/">scripting</a>
+                    
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/windows10/">windows10</a>
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+</article>
+
+        
+    </div>
+
+    
+        <div id="comments-container">
+            
+            
+
+        </div>
+    
+
+    </div>
+
+    
+<footer>
+    <div class="container">
+
+        
+        <div class="recent-posts">
+            <strong>Latest posts</strong>
+            <ul>
+                
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/04/13/find-adsite/">Find a computer&#39;s Active Directory Site and Subnet with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/04/06/export-eventlog/">Export Remote Eventlog with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/03/30/adsysteminfo/">Active Directory ADSystemInfo with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/03/16/ad-nested-group-membership/">Get direct and nested Active Directory group membership with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/02/23/sql-change-tracking-retention/">Config Manager &#39;Potential SQL performance issue caused by change tracking retention period&#39;</a>
+                    </li>
+                
+            </ul>
+        </div>
+        
+
+        
+        <div class="categories">
+            <a href="/categories/"><strong>Categories</strong></a>
+            <ul>
+                
+                <li>
+                    <a href="/categories/powershell">Powershell
+                        (8)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/activedirectory">Activedirectory
+                        (3)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/browser">Browser
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/memcm">Memcm
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/network">Network
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/regularexpression">Regularexpression
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/sccm">Sccm
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/security">Security
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/troubleshooting">Troubleshooting
+                        (1)</a>
+                </li>
+                
+            </ul>
+        </div>
+        
+
+        <div class="right">
+            
+            <div class="external-profiles">
+                <strong>Social media</strong>
+
+                
+                <a href="https://twitter.com/writeverbose" target="_blank"><i class="fab fa-twitter"></i></a>
+                
+                <a href="https://github.com/gbdixg" target="_blank"><i class="fab fa-github"></i></a>
+                
+            </div>
+            
+
+            
+        </div>
+    </div>
+</footer>
+
+
+<div class="credits">
+    <div class="container">
+        <div class="copyright">
+            <a href="https://github.com/gbdixg" target="_blank">
+                &copy;
+                
+                2021
+                
+                Geoff Dixon
+            </a>
+            
+        </div>
+        <div class="author">
+            <a href="https://github.com/gbdixg/gbdixg.github.io"
+                target="_blank">Write-Verbose Blog</a>
+        </div>
+    </div>
+</div>
+
+
+    
+
+    
+
+
+    <script type="text/javascript" src="https://write-verbose.com/theme.js"></script>
+
+    
+    
+    
+
+    
+</body>
+
+</html>

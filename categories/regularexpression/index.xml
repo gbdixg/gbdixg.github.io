@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>regularexpression on Geoff Dixon &gt; Write-Verbose</title>
+    <link>https://write-verbose.com/categories/regularexpression/</link>
+    <description>Recent content in regularexpression on Geoff Dixon &gt; Write-Verbose</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 06 Jan 2019 19:15:04 +0000</lastBuildDate><atom:link href="https://write-verbose.com/categories/regularexpression/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>PowerShell Toolmaking via RegEx</title>
+      <link>https://write-verbose.com/2019/01/06/powershell-toolmaking-regex/</link>
+      <pubDate>Sun, 06 Jan 2019 19:15:04 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2019/01/06/powershell-toolmaking-regex/</guid>
+      <description>This post shows how to create a PowerShell Get-WLAN function by parsing the output of the built-in Windows NETSH.EXE
+ PowerShell Tools are re-usable functions that can be used stand-alone or in a pipeline
+ Ideally, the function is written in pure PowerShell, but sometimes its more convenient to create a wrapper script using the output of a command line tool.
+The example below creates a PowerShell tool to get information about WI-Fi connections on the local computer.</description>
+    </item>
+    
+  </channel>
+</rss>

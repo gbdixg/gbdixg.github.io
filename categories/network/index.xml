@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>network on Geoff Dixon &gt; Write-Verbose</title>
+    <link>https://write-verbose.com/categories/network/</link>
+    <description>Recent content in network on Geoff Dixon &gt; Write-Verbose</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 12 Jan 2019 19:15:04 +0000</lastBuildDate><atom:link href="https://write-verbose.com/categories/network/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DIY Wireless Suppression with WMI and PowerShell</title>
+      <link>https://write-verbose.com/2019/01/12/diy-wireless-suppression/</link>
+      <pubDate>Sat, 12 Jan 2019 19:15:04 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2019/01/12/diy-wireless-suppression/</guid>
+      <description>When you drop a laptop into a docking station with an Ethernet cable, you expect it to use the wired connection instead of than WIFI. This may not be the case on Windows unless wireless is supressed.
+This post will cover the problem, common 3rd-party solutions and a built-in solution using WMI and PowerShell
+ Wireless Suppression prevents a WIFI connection being used when Ethernet is available.
+ Why is this a problem?</description>
+    </item>
+    
+  </channel>
+</rss>

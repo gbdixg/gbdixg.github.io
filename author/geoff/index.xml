@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Geoff on Geoff Dixon &gt; Write-Verbose</title>
+    <link>https://write-verbose.com/author/geoff/</link>
+    <description>Recent content in Geoff on Geoff Dixon &gt; Write-Verbose</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 13 Apr 2019 17:22:14 +0000</lastBuildDate><atom:link href="https://write-verbose.com/author/geoff/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Find a computer&#39;s Active Directory Site and Subnet with PowerShell</title>
+      <link>https://write-verbose.com/2019/04/13/find-adsite/</link>
+      <pubDate>Sat, 13 Apr 2019 17:22:14 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2019/04/13/find-adsite/</guid>
+      <description>Active Directory Sites represent locations with good network connectivity. An ADSite is often created for each office or a group of offices in a metropolitan area, to generate the replication topology between Domain Controllers, and to help workstations/servers locate closest services.
+Active Directory Subnets define the IP ranges included in an AD Site. A member workstation/server will have an IP address that should fall within a defined AD subnet, making it part of an AD Site.</description>
+    </item>
+    
+    <item>
+      <title>Export Remote Eventlog with PowerShell</title>
+      <link>https://write-verbose.com/2019/04/06/export-eventlog/</link>
+      <pubDate>Sat, 06 Apr 2019 18:11:01 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2019/04/06/export-eventlog/</guid>
+      <description>Event logs are a cornerstone of troubleshooting, but getting access to them can be difficult across the network.
+ It can be faster to export a Windows event log on a remote computer, copy the .evtx file over the network and then query it locally.
+ The built-in PowerShell Get-Winevent cmdlet can work against remote event logs, but it can be painfully slow to stream events when network bandwidth is limited.</description>
+    </item>
+    
+    <item>
+      <title>Active Directory ADSystemInfo with PowerShell</title>
+      <link>https://write-verbose.com/2019/03/30/adsysteminfo/</link>
+      <pubDate>Sat, 30 Mar 2019 18:45:05 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2019/03/30/adsysteminfo/</guid>
+      <description>ADSystemInfo is a built-in COM object in Windows 7, 8.1 and 10 that simplifies lookup of Active Directory user and computer information.
+ ADSystemInfo can only return information about the local computer and current user. A domain controller must be accessible when the functions are called.
+Its simple to instantiate COM objects in PowerShell. The function below shows how to use this object.
+Function Get-ADSystemInfo{ &amp;lt;# .SynopsisUsed to lookup specific AD user/computer object properties of the current session .</description>
+    </item>
+    
+    <item>
+      <title>Get direct and nested Active Directory group membership with PowerShell</title>
+      <link>https://write-verbose.com/2019/03/16/ad-nested-group-membership/</link>
+      <pubDate>Sat, 16 Mar 2019 16:31:05 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2019/03/16/ad-nested-group-membership/</guid>
+      <description>Active Directory supports multiple levels of group nesting. A user or computer can therefore be a direct member of a group, or an indirect member via a nested group. The Windows security token used to authorise a security principlal&amp;rsquo;s access to resources includes all group memberships - direct and nested.
+ The MemberOf attribute of an Active Directory user or computer object only contains the direct group memberships.
+ Listing all groups (direct and nested) is neccessary when troubleshooting access to resources.</description>
+    </item>
+    
+    <item>
+      <title>Config Manager &#39;Potential SQL performance issue caused by change tracking retention period&#39;</title>
+      <link>https://write-verbose.com/2019/02/23/sql-change-tracking-retention/</link>
+      <pubDate>Sat, 23 Feb 2019 19:28:11 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2019/02/23/sql-change-tracking-retention/</guid>
+      <description>If you come across this warning during a Config Manager Current Branch site upgrade, read on for the solution.
+ Warning - Potential SQL performance issue caused by change tracking retention period.
+ This warning was apparently added from CM current branch 1810 or later.
+Running the pre-requisite check CM Current Branch updates are initiated in the Administration &amp;gt; Updates and Servicing node of the CM console. The pre-requisiste check option will highlight any errors and warnings before the upgrade starts.</description>
+    </item>
+    
+    <item>
+      <title>DIY Wireless Suppression with WMI and PowerShell</title>
+      <link>https://write-verbose.com/2019/01/12/diy-wireless-suppression/</link>
+      <pubDate>Sat, 12 Jan 2019 19:15:04 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2019/01/12/diy-wireless-suppression/</guid>
+      <description>When you drop a laptop into a docking station with an Ethernet cable, you expect it to use the wired connection instead of than WIFI. This may not be the case on Windows unless wireless is supressed.
+This post will cover the problem, common 3rd-party solutions and a built-in solution using WMI and PowerShell
+ Wireless Suppression prevents a WIFI connection being used when Ethernet is available.
+ Why is this a problem?</description>
+    </item>
+    
+    <item>
+      <title>PowerShell Toolmaking via RegEx</title>
+      <link>https://write-verbose.com/2019/01/06/powershell-toolmaking-regex/</link>
+      <pubDate>Sun, 06 Jan 2019 19:15:04 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2019/01/06/powershell-toolmaking-regex/</guid>
+      <description>This post shows how to create a PowerShell Get-WLAN function by parsing the output of the built-in Windows NETSH.EXE
+ PowerShell Tools are re-usable functions that can be used stand-alone or in a pipeline
+ Ideally, the function is written in pure PowerShell, but sometimes its more convenient to create a wrapper script using the output of a command line tool.
+The example below creates a PowerShell tool to get information about WI-Fi connections on the local computer.</description>
+    </item>
+    
+    <item>
+      <title>Audit Chrome Extensions with PowerShell</title>
+      <link>https://write-verbose.com/2018/12/15/audit-google-chrome-extensions/</link>
+      <pubDate>Sat, 15 Dec 2018 18:24:34 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2018/12/15/audit-google-chrome-extensions/</guid>
+      <description>Browser extensions are supposed to be curated and vetted, but there have been many examples of malware. If you don&amp;rsquo;t already have control of extensions through a whitelist or blacklist, the first step is to find out what is in-use.
+The code below is a PowerShell function to get the installed Google Chrome browser extensions from a local or remote Windows computer.
+ Chrome Browser Extensions install into the user profile and do not appear in the Add/Remove Programs list.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,488 @@
+
+  
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="siteBaseUrl" content="https://write-verbose.com/">
+    <meta name="author" content="Geoff Dixon">
+    <meta name="description" content="Technology Blog">
+    <meta name="keywords" content="blog, Windows, Azure, cloud, automation, devops, powershell, .net, enterprise, code, I.T., SCCM, OSD, Autopilot, database">
+    <meta name="generator" content="Hugo 0.82.0" />
+    <title>
+        
+           
+               PowerShell Toolmaking via RegEx &vert; Geoff Dixon &gt; Write-Verbose
+           
+        
+    </title>
+    <meta name="description" content="Converting text output to PowerShell objects with regular expression matching technique">
+    <meta itemprop="name" content="PowerShell Toolmaking via RegEx">
+    <meta itemprop="description" content="Converting text output to PowerShell objects with regular expression matching technique">
+    <meta property="og:title" content="PowerShell Toolmaking via RegEx">
+    <meta property="og:description" content="Converting text output to PowerShell objects with regular expression matching technique">
+    <meta property="og:image" content="https://www.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e?size=200">
+    <meta property="og:url" content="https://write-verbose.com/2019/01/06/powershell-toolmaking-regex/">
+    <meta property="og:site_name" content="Geoff Dixon &gt; Write-Verbose">
+    <meta property="og:type" content="article">
+
+    
+
+
+    <script src="/modernizr-simple.js"></script>
+
+    
+    <link href="/2019/01/06/powershell-toolmaking-regex/" rel="alternate" type="application/rss+xml" title="Geoff Dixon &gt; Write-Verbose" />
+    <link href="/2019/01/06/powershell-toolmaking-regex/" rel="feed" type="application/rss+xml" title="Geoff Dixon &gt; Write-Verbose" />
+    
+
+    
+    <link rel="canonical" href="https://write-verbose.com/2019/01/06/powershell-toolmaking-regex/">
+    
+
+    <link rel="stylesheet" href="https://write-verbose.com/theme.css">
+
+    
+
+    
+        
+    
+</head>
+
+<body class="bilberry-hugo-theme">
+
+    
+    <nav>
+
+    <div class="container">
+        <ul class="topnav">
+            
+                
+                    <li><a href="https://write-verbose.com/page/about/">About</a></li>
+                
+            
+        </ul>
+
+        
+    </div>
+</nav>
+
+
+    
+    <header>
+
+        <div class="container">
+            <div class="logo">
+                <a href="/" class="logo">
+                    
+                        
+                        
+                            
+                        
+                        <img src="https://seccdn.libravatar.org/avatar/45d016258ee70966111f139052804f66?d=mm&size=200" alt="">
+                    
+
+                    <span class="overlay"><i class="fa fa-home"></i></span>
+                </a>
+            </div>
+            <div class="titles">
+                <h3 class="title">
+                    <a href="/">
+                        Geoff Dixon &gt; Write-Verbose
+                    </a>
+                </h3>
+
+                
+                    <span class="subtitle">Technology | Cloud | Code</span>
+                
+            </div>
+
+            
+
+            
+                <div class="toggler">
+            
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                </div>
+            </div>
+    </header>
+
+
+    <div class="main container">
+        
+    <div class="article-wrapper u-cf single">
+        
+            <a class="bubble" href="https://write-verbose.com/2019/01/06/powershell-toolmaking-regex/">
+    <i class="fas fa-fw fa-file-alt"></i>
+</a>
+
+<article class="default article">
+    
+
+    <div class="content">
+    <h1 class="article-title">
+        <a href="https://write-verbose.com/2019/01/06/powershell-toolmaking-regex/">
+            PowerShell Toolmaking via RegEx
+        </a>
+    </h1>
+
+    <div class="meta">
+        
+            
+                <span class="date moment">2019-01-06</span>
+            
+        
+
+        
+            
+                <span class="readingTime">3 min read</span>
+            
+        
+
+        
+            <span class="categories">
+                
+                    
+                    
+                        <a href="https://write-verbose.com/categories/powershell/">powershell</a>
+                    
+                
+                    
+                    
+                        <a href="https://write-verbose.com/categories/regularexpression/">regularexpression</a>
+                    
+                
+            </span>
+        
+
+        
+            <span class="author">
+                
+                
+                    <a href="https://write-verbose.com/author/geoff/">Geoff</a>
+                
+            </span>
+        
+    </div>
+
+    
+        
+
+        <p>This post shows how to create a PowerShell <em>Get-WLAN</em> function by parsing the output of the built-in Windows NETSH.EXE</p>
+<blockquote>
+<p>PowerShell Tools are re-usable functions that can be used stand-alone or in a pipeline</p>
+</blockquote>
+<p>Ideally, the function is written in pure PowerShell, but sometimes its more convenient to create a wrapper script using the output of a command line tool.</p>
+<p>The example below creates a PowerShell tool to get information about WI-Fi connections on the local computer.</p>
+<p><strong>Regular expressions are the ideal way to convert stdout text from a command line tool into PowerShell objects, making a re-usable pipeline tool</strong>.  Regex expressions are very powerful and flexible, but you may feel defeated if the stdout text seems unpredicable.</p>
+<blockquote>
+<p>A handy solution is to use the regex <em>not</em> operator to set the match boundary as shown below</p>
+</blockquote>
+<p><strong>The netsh output below needs to be split into key value pairs</strong> (e.g. SSID = MyWifi) and converted to a PSObject. For each line of output, the colon character is the obvious boundary between the key name and the value.</p>
+<h3 id="native-command-output">Native Command Output</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmd" data-lang="cmd">C:\<span style="color:#75715e">&gt; netsh wlan show interfaces</span>
+
+There is 1 interface on the system:
+
+    Name                   : Wi-Fi
+    Description            : Intel(R) Dual Band Wireless-AC 8260
+    GUID                   : 42bce393-237c-4bd4-9d5e-18020ba8bb87
+    Physical address       : b7:8a:60:a5:f7:d8
+    State                  : connected
+    SSID                   : MyWiFi
+    BSSID                  : 30:d4:2e:50:de:7f
+    Network type           : Infrastructure
+    Radio type             : 802.11n
+    Authentication         : WPA2-Personal
+    Cipher                 : CCMP
+    Connection mode        : Profile
+    Channel                : 6
+    Receive rate (Mbps)    : 115.6
+    Transmit rate (Mbps)   : 115.6
+    Signal                 : 97%
+    Profile                : MyWiFi
+
+    Hosted network status  : Not available
+
+</code></pre></div><p>The regex expression below achieves the following matches:</p>
+<ul>
+<li>MATCHES(0) = the entire line</li>
+<li>MATCHES(&lsquo;name&rsquo;) = from the start of the line, match any character that is not a colon</li>
+<li>MATCHES(&lsquo;value&rsquo;) = match everything from colon [space] to the end of the line</li>
+</ul>
+<h3 id="regex-expression">Regex Expression</h3>
+<p>The PowerShell snippet below shows the regular expression and how the matches are added to a hash table as name = value.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">$Properties = @{}
+$result = netsh wlan show interfaces
+
+$Result | <span style="color:#66d9ef">Foreach</span>-Object {
+
+    <span style="color:#66d9ef">if</span> ($_ <span style="color:#f92672">-match</span> <span style="color:#e6db74">&#39;^\s+(?&lt;name&gt;[^:]+):\s(?&lt;value&gt;.*)$&#39;</span>) {
+
+        $name = $Matches[<span style="color:#e6db74">&#39;name&#39;</span>].Trim()
+        $val = $Matches[<span style="color:#e6db74">&#39;value&#39;</span>].Trim()
+
+        $Properties.Add($name, $val)
+    }
+
+}
+</code></pre></div><p>The Foreach-Object loop above processes the NetSH command output line-by-line.<!-- raw HTML omitted -->
+Each line (the $_ variable) is tested for a match against the RegEx expression using the PowerShell -match operator.</p>
+<blockquote>
+<p>Rather than trying to come up with a RegEx to match all the possible options of the name field, the &ldquo;not&rdquo; operator <code>[^:]+</code> captures all the characters until the colon.</p>
+</blockquote>
+<h3 id="breaking-down-the-regex">Breaking down the RegEx</h3>
+<p><img src="/assets/images/powershell-toolmaking-regex1.png" alt="RegEx"></p>
+<p><code>?&lt;name&gt;</code> and <code>?&lt;value&gt;</code> are regex named captures that make the code more intuitive, allowing them to be referenced as <code>$matches['name']</code> and <code>$matches['value']</code>.</p>
+<p>A complete Get-WLAN PowerShell function is provided below, using the example code.</p>
+<h3 id="powershell-script">PowerShell Script</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#66d9ef">Function</span> Get-WLAN {
+<span style="color:#75715e">&lt;#
+</span><span style="color:#75715e">  </span><span style="color:#e6db74">.SYNOPSIS</span><span style="color:#75715e">
+</span><span style="color:#75715e">    Gets the properties of WiFI connections
+</span><span style="color:#75715e">  </span><span style="color:#e6db74">.DESCRIPTION</span><span style="color:#75715e">
+</span><span style="color:#75715e">    A PowerShell wrapper around NETSH WLAN to convert the output into a PS object
+</span><span style="color:#75715e">  </span><span style="color:#e6db74">.INPUTS</span><span style="color:#75715e">
+</span><span style="color:#75715e">    None
+</span><span style="color:#75715e">  </span><span style="color:#e6db74">.OUTPUTS</span><span style="color:#75715e">
+</span><span style="color:#75715e">    PSObject
+</span><span style="color:#75715e">  </span><span style="color:#e6db74">.EXAMPLE</span><span style="color:#75715e">
+</span><span style="color:#75715e">    Get-WLAN
+</span><span style="color:#75715e">  </span><span style="color:#e6db74">.NOTES</span><span style="color:#75715e">
+</span><span style="color:#75715e">    Author: Geoff Dixon
+</span><span style="color:#75715e">    Website: www.write-verbose.com
+</span><span style="color:#75715e">    Twitter: @writeverbose
+</span><span style="color:#75715e">  #&gt;</span>
+    [<span style="color:#66d9ef">cmdletBinding</span>()]
+    <span style="color:#66d9ef">param</span>()
+    <span style="color:#66d9ef">PROCESS</span> {
+      $Properties = @{}
+      $result = netsh wlan show interfaces
+      <span style="color:#66d9ef">if</span> ($LASTEXITCODE <span style="color:#f92672">-eq</span> 0) {
+            $Properties.Add(<span style="color:#e6db74">&#39;Computername&#39;</span>, $ENV:COMPUTERNAME)
+            $Result | <span style="color:#66d9ef">Foreach</span>-Object {
+
+                <span style="color:#75715e">&lt;# Example NETSH command output:
+</span><span style="color:#75715e">                Name                   : Wi-Fi
+</span><span style="color:#75715e">                Description            : Intel(R) Dual Band Wireless-AC 8260
+</span><span style="color:#75715e">                State                  : connected
+</span><span style="color:#75715e">                SSID                   : MyWiFi
+</span><span style="color:#75715e">                #&gt;</span>
+                <span style="color:#66d9ef">if</span> ($_ <span style="color:#f92672">-match</span> <span style="color:#e6db74">&#39;^\s+(?&lt;name&gt;[^:]+):\s(?&lt;value&gt;.*)$&#39;</span>) {
+
+                    $name = $Matches[<span style="color:#e6db74">&#39;name&#39;</span>].Trim()
+                    $val = $Matches[<span style="color:#e6db74">&#39;value&#39;</span>].Trim()
+
+                    $Properties.Add($name, $val)
+                }
+
+            } <span style="color:#75715e">#foreach</span>
+
+        <span style="color:#66d9ef">if</span> ($Properties.Count <span style="color:#f92672">-gt</span> 0) {
+            <span style="color:#66d9ef">[PSCustomObject]</span>$Properties
+        } <span style="color:#66d9ef">else</span> {
+            Write-Warning <span style="color:#e6db74">&#34;Failed to parse NETSH output&#34;</span>
+        }
+
+      } <span style="color:#66d9ef">else</span> {
+          Write-Warning <span style="color:#e6db74">&#34;Error from NETSH - &#39;</span>$($Error[0])<span style="color:#e6db74">&#39;&#34;</span>
+      }
+
+    }<span style="color:#75715e">#process</span>
+
+}
+</code></pre></div><p>For some practice with Regular Expressions, check out <a href="https://alf.nu/RegexGolf/">RegEx Golf</a> or <a href="https://regexcrossword.com/">Regex Crosswords</a>. There is even a <a href="https://www.bennadel.com/blog/3629-the-12th-annual-regular-expression-day---june-1st-2019.htm">Regular Expressions day</a>.</p>
+
+    
+</div>
+
+    
+<div class="footer">
+
+
+    
+        <div class="tags">
+            <i class="fa fa-tags"></i>
+            <div class="links">
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/powershell/">powershell</a>
+                    
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/network/">network</a>
+                    
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/regex/">regex</a>
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+</article>
+
+        
+    </div>
+
+    
+        <div id="comments-container">
+            
+            
+
+        </div>
+    
+
+    </div>
+
+    
+<footer>
+    <div class="container">
+
+        
+        <div class="recent-posts">
+            <strong>Latest posts</strong>
+            <ul>
+                
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/04/13/find-adsite/">Find a computer&#39;s Active Directory Site and Subnet with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/04/06/export-eventlog/">Export Remote Eventlog with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/03/30/adsysteminfo/">Active Directory ADSystemInfo with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/03/16/ad-nested-group-membership/">Get direct and nested Active Directory group membership with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/02/23/sql-change-tracking-retention/">Config Manager &#39;Potential SQL performance issue caused by change tracking retention period&#39;</a>
+                    </li>
+                
+            </ul>
+        </div>
+        
+
+        
+        <div class="categories">
+            <a href="/categories/"><strong>Categories</strong></a>
+            <ul>
+                
+                <li>
+                    <a href="/categories/powershell">Powershell
+                        (8)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/activedirectory">Activedirectory
+                        (3)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/browser">Browser
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/memcm">Memcm
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/network">Network
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/regularexpression">Regularexpression
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/sccm">Sccm
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/security">Security
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/troubleshooting">Troubleshooting
+                        (1)</a>
+                </li>
+                
+            </ul>
+        </div>
+        
+
+        <div class="right">
+            
+            <div class="external-profiles">
+                <strong>Social media</strong>
+
+                
+                <a href="https://twitter.com/writeverbose" target="_blank"><i class="fab fa-twitter"></i></a>
+                
+                <a href="https://github.com/gbdixg" target="_blank"><i class="fab fa-github"></i></a>
+                
+            </div>
+            
+
+            
+        </div>
+    </div>
+</footer>
+
+
+<div class="credits">
+    <div class="container">
+        <div class="copyright">
+            <a href="https://github.com/gbdixg" target="_blank">
+                &copy;
+                
+                2021
+                
+                Geoff Dixon
+            </a>
+            
+        </div>
+        <div class="author">
+            <a href="https://github.com/gbdixg/gbdixg.github.io"
+                target="_blank">Write-Verbose Blog</a>
+        </div>
+    </div>
+</div>
+
+
+    
+
+    
+
+
+    <script type="text/javascript" src="https://write-verbose.com/theme.js"></script>
+
+    
+    
+    
+
+    
+</body>
+
+</html>

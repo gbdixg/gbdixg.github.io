@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>MEMCM on Geoff Dixon &gt; Write-Verbose</title>
+    <link>https://write-verbose.com/categories/memcm/</link>
+    <description>Recent content in MEMCM on Geoff Dixon &gt; Write-Verbose</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 23 Feb 2019 19:28:11 +0000</lastBuildDate><atom:link href="https://write-verbose.com/categories/memcm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Config Manager &#39;Potential SQL performance issue caused by change tracking retention period&#39;</title>
+      <link>https://write-verbose.com/2019/02/23/sql-change-tracking-retention/</link>
+      <pubDate>Sat, 23 Feb 2019 19:28:11 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2019/02/23/sql-change-tracking-retention/</guid>
+      <description>If you come across this warning during a Config Manager Current Branch site upgrade, read on for the solution.
+ Warning - Potential SQL performance issue caused by change tracking retention period.
+ This warning was apparently added from CM current branch 1810 or later.
+Running the pre-requisite check CM Current Branch updates are initiated in the Administration &amp;gt; Updates and Servicing node of the CM console. The pre-requisiste check option will highlight any errors and warnings before the upgrade starts.</description>
+    </item>
+    
+  </channel>
+</rss>
