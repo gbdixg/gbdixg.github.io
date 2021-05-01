@@ -190,6 +190,7 @@
 <p>It can be faster to export a Windows event log on a remote computer,  copy the .evtx file over the network and then query it locally.</p>
 </blockquote>
 <p>The built-in PowerShell <strong>Get-Winevent</strong> cmdlet can work against remote event logs, but it can be painfully slow to stream events when network bandwidth is limited. Copying an entire exported log (.evtx file) across the same connection is much faster. Get-Winevent can still be used with the <em>-path</em> parameter to query the locally copied .evtx file.</p>
+<!-- raw HTML omitted -->
 <h2 id="powershell-script">PowerShell Script</h2>
 <p><strong>wevtutil.exe</strong> is a built-in Windows executable that can export event logs on a local or remote computer.  The following PowerShell function uses wevtutil under-the-hood to export event logs and copy them locally. The computer name is pre-pended to the log name.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#66d9ef">Function</span> Export-EventLog {
