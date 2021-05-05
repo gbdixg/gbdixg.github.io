@@ -243,7 +243,7 @@ $Result | <span style="color:#66d9ef">Foreach</span>-Object {
     }
 
 }
-</code></pre></div><p>The Foreach-Object loop above processes the NetSH command output line-by-line.<!-- raw HTML omitted -->
+</code></pre></div><p>The Foreach-Object loop above processes the NetSH command output line-by-line.<br>
 Each line (the $_ variable) is tested for a match against the RegEx expression using the PowerShell -match operator.</p>
 <blockquote>
 <p>Rather than trying to come up with a RegEx to match all the possible options of the name field, the &ldquo;not&rdquo; operator <code>[^:]+</code> captures all the characters until the colon.</p>
@@ -252,7 +252,17 @@ Each line (the $_ variable) is tested for a match against the RegEx expression u
 <p><img src="/assets/images/powershell-toolmaking-regex1.png" alt="RegEx"></p>
 <p><code>?&lt;name&gt;</code> and <code>?&lt;value&gt;</code> are regex named captures that make the code more intuitive, allowing them to be referenced as <code>$matches['name']</code> and <code>$matches['value']</code>.</p>
 <p>A complete Get-WLAN PowerShell function is provided below, using the example code.</p>
-<!-- raw HTML omitted -->
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client=""
+     data-ad-slot=""></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
 <h3 id="powershell-script">PowerShell Script</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#66d9ef">Function</span> Get-WLAN {
 <span style="color:#75715e">&lt;#
