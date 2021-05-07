@@ -230,20 +230,6 @@ There are obviously other scenarios, but this is a common one.</p>
 <p>The above solutions work by disabling the Wireless radio when an Ethernet connection is detected and re-enabling it when Ethernet is dropped.</p>
 <h2 id="a-custom-solution-using-wmi-and-powershell">A Custom solution using WMI and PowerShell</h2>
 <p>The following solution uses a PowerShell script triggered by a WMI event to disable and enable WIFI.</p>
-<div class="advert-inline">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3815563280169365"
-     crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
-     data-ad-client="ca-pub-3815563280169365"
-     data-ad-slot="2740322524"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-</div>
-
 <p><a href="https://docs.microsoft.com/en-us/windows/desktop/wmisdk/receiving-a-wmi-event">WMI event subscriptions</a> allow software and scripts to respond to changes in the state of a Windows device. Permanent subscriptions persist across reboots. To create a WMI event permanent subscription, you need to create the following (administrative rights required):</p>
 <ul>
 <li>An Event Filter</li>
@@ -691,6 +677,10 @@ Get-WMIObject -Computername $Computername -Namespace $Namespace -Class __FilterT
                 
                 
                     <li>
+                        <a href="https://write-verbose.com/2021/05/07/vscodesnippets/">Custom Snippets in VSCode</a>
+                    </li>
+                
+                    <li>
                         <a href="https://write-verbose.com/2019/04/13/find-adsite/">Find a computer&#39;s Active Directory Site and Subnet with PowerShell</a>
                     </li>
                 
@@ -706,10 +696,6 @@ Get-WMIObject -Computername $Computername -Namespace $Namespace -Class __FilterT
                         <a href="https://write-verbose.com/2019/03/16/ad-nested-group-membership/">Get direct and nested Active Directory group membership with PowerShell</a>
                     </li>
                 
-                    <li>
-                        <a href="https://write-verbose.com/2019/02/23/sql-change-tracking-retention/">Config Manager &#39;Potential SQL performance issue caused by change tracking retention period&#39;</a>
-                    </li>
-                
             </ul>
         </div>
         
@@ -721,7 +707,7 @@ Get-WMIObject -Computername $Computername -Namespace $Namespace -Class __FilterT
                 
                 <li>
                     <a href="/categories/powershell">Powershell
-                        (8)</a>
+                        (9)</a>
                 </li>
                 
                 <li>
@@ -761,6 +747,11 @@ Get-WMIObject -Computername $Computername -Namespace $Namespace -Class __FilterT
                 
                 <li>
                     <a href="/categories/troubleshooting">Troubleshooting
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/vscode">Vscode
                         (1)</a>
                 </li>
                 

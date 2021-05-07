@@ -4,10 +4,22 @@
     <link>https://write-verbose.com/</link>
     <description>Recent content on Geoff Dixon &gt; Write-Verbose</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 17 Jan 2020 15:22:40 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 07 May 2021 18:05:00 +0000</lastBuildDate>
     
         <atom:link href="https://write-verbose.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Custom Snippets in VSCode</title>
+      <link>https://write-verbose.com/2021/05/07/vscodesnippets/</link>
+      <pubDate>Fri, 07 May 2021 18:05:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2021/05/07/vscodesnippets/</guid>
+      <description>A summary of how to create user-defined code snippets in Visual Studio Code on Windows.
+Background Snippets are a great productivity feature in VSCode that allow common code blocks to be defined as templates.
+There are predefined Snippets included with most of the language extensions (see @category:&amp;ldquo;snippets&amp;rdquo; to see which ones).
+Snippets are an underused feature if the predefined templates do not match your coding style or common coding patterns. Its simple to add your own Snippets and dramatically boost your productivity.</description>
+    </item>
     
     <item>
       <title>Find a computer&#39;s Active Directory Site and Subnet with PowerShell</title>

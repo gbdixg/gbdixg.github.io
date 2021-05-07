@@ -2,10 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://write-verbose.com/page/about/</loc>
-    <lastmod>2020-01-17T15:22:40+00:00</lastmod>
+    <loc>https://write-verbose.com/author/</loc>
+    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/blog/</loc>
+    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/categories/</loc>
+    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/2021/05/07/vscodesnippets/</loc>
+    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/author/geoff/</loc>
+    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/</loc>
+    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/powershell/</loc>
+    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/categories/powershell/</loc>
+    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/scripting/</loc>
+    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/</loc>
+    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/categories/vscode/</loc>
+    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/page/about/</loc>
     <lastmod>2020-01-17T15:22:40+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/page/</loc>
@@ -17,37 +47,13 @@
     <loc>https://write-verbose.com/categories/activedirectory/</loc>
     <lastmod>2019-04-13T17:22:14+00:00</lastmod>
   </url><url>
-    <loc>https://write-verbose.com/author/</loc>
-    <lastmod>2019-04-13T17:22:14+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/blog/</loc>
-    <lastmod>2019-04-13T17:22:14+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/categories/</loc>
-    <lastmod>2019-04-13T17:22:14+00:00</lastmod>
-  </url><url>
     <loc>https://write-verbose.com/tags/coreinfrastructure/</loc>
     <lastmod>2019-04-13T17:22:14+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/2019/04/13/find-adsite/</loc>
     <lastmod>2019-04-13T17:22:14+00:00</lastmod>
   </url><url>
-    <loc>https://write-verbose.com/author/geoff/</loc>
-    <lastmod>2019-04-13T17:22:14+00:00</lastmod>
-  </url><url>
     <loc>https://write-verbose.com/tags/network/</loc>
-    <lastmod>2019-04-13T17:22:14+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/powershell/</loc>
-    <lastmod>2019-04-13T17:22:14+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/categories/powershell/</loc>
-    <lastmod>2019-04-13T17:22:14+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/scripting/</loc>
-    <lastmod>2019-04-13T17:22:14+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/</loc>
     <lastmod>2019-04-13T17:22:14+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/eventlog/</loc>

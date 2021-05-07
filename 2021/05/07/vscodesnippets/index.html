@@ -1,0 +1,514 @@
+
+    
+
+    
+        
+    
+
+    
+
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="siteBaseUrl" content="https://write-verbose.com/">
+    <meta name="author" content="Geoff Dixon">
+    <meta name="description" content="Technology Blog">
+    <meta name="keywords" content="blog, Windows, Azure, cloud, automation, devops, powershell, .net, enterprise, code, I.T., SCCM, OSD, Autopilot, database">
+    <meta name="generator" content="Hugo 0.82.0" />
+    <title>
+        
+           
+               Custom Snippets in VSCode &vert; Geoff Dixon &gt; Write-Verbose
+           
+        
+    </title>
+    <meta name="description" content="Create and manage code Snippets in Visual Studio Code">
+    <meta itemprop="name" content="Custom Snippets in VSCode">
+    <meta itemprop="description" content="Create and manage code Snippets in Visual Studio Code">
+    <meta property="og:title" content="Custom Snippets in VSCode">
+    <meta property="og:description" content="Create and manage code Snippets in Visual Studio Code">
+    <meta property="og:image" content="https://write-verbose.com/2021/05/07/vscodesnippets/featuredimage.png">
+    <meta property="og:url" content="https://write-verbose.com/2021/05/07/vscodesnippets/">
+    <meta property="og:site_name" content="Geoff Dixon &gt; Write-Verbose">
+    <meta property="og:type" content="article">
+
+    
+
+
+    <script src="/modernizr-simple.js"></script>
+
+    
+    <link href="/2021/05/07/vscodesnippets/" rel="alternate" type="application/rss+xml" title="Geoff Dixon &gt; Write-Verbose" />
+    <link href="/2021/05/07/vscodesnippets/" rel="feed" type="application/rss+xml" title="Geoff Dixon &gt; Write-Verbose" />
+    
+
+    
+    <link rel="canonical" href="https://write-verbose.com/2021/05/07/vscodesnippets/">
+    
+
+    <link rel="stylesheet" href="https://write-verbose.com/theme.css">
+
+    
+
+    
+        
+    
+</head>
+
+<body class="bilberry-hugo-theme">
+
+    
+    <nav>
+
+    <div class="container">
+        <ul class="topnav">
+            
+                
+                    <li><a href="https://write-verbose.com/page/about/">About</a></li>
+                
+            
+        </ul>
+
+        
+    </div>
+</nav>
+
+
+    
+    <header>
+
+        <div class="container">
+            <div class="logo">
+                <a href="/" class="logo">
+                    
+                        
+                        
+                            
+                        
+                        <img src="https://seccdn.libravatar.org/avatar/45d016258ee70966111f139052804f66?d=mm&size=200" alt="">
+                    
+
+                    <span class="overlay"><i class="fa fa-home"></i></span>
+                </a>
+            </div>
+            <div class="titles">
+                <h3 class="title">
+                    <a href="/">
+                        Geoff Dixon &gt; Write-Verbose
+                    </a>
+                </h3>
+
+                
+                    <span class="subtitle">Technology | Cloud | Code</span>
+                
+            </div>
+
+            
+
+            
+                <div class="toggler">
+            
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                </div>
+            </div>
+    </header>
+
+
+    <div class="main container">
+        
+    <div class="article-wrapper u-cf single">
+        
+            <a class="bubble" href="https://write-verbose.com/2021/05/07/vscodesnippets/">
+    <i class="fas fa-fw fa-file-alt"></i>
+</a>
+
+<article class="default article">
+    
+    <div class="featured-image">
+        <a href="https://write-verbose.com/2021/05/07/vscodesnippets/">
+            
+                <img src="/2021/05/07/vscodesnippets/featuredimage.png" alt="">
+            
+        </a>
+    </div>
+
+
+    <div class="content">
+    <h1 class="article-title">
+        <a href="https://write-verbose.com/2021/05/07/vscodesnippets/">
+            Custom Snippets in VSCode
+        </a>
+    </h1>
+
+    <div class="meta">
+        
+            
+                <span class="date moment">2021-05-07</span>
+            
+        
+
+        
+            
+                <span class="readingTime">4 min read</span>
+            
+        
+
+        
+            <span class="categories">
+                
+                    
+                    
+                        <a href="https://write-verbose.com/categories/vscode/">vscode</a>
+                    
+                
+                    
+                    
+                        <a href="https://write-verbose.com/categories/powershell/">powershell</a>
+                    
+                
+            </span>
+        
+
+        
+            <span class="author">
+                
+                
+                    <a href="https://write-verbose.com/author/geoff/">Geoff</a>
+                
+            </span>
+        
+    </div>
+
+    
+        
+
+        <p>A summary of how to create user-defined code snippets in Visual Studio Code on Windows.</p>
+<h2 id="background">Background</h2>
+<p>Snippets are a great productivity feature in VSCode that allow common code blocks to be defined as templates.</p>
+<p>There are predefined Snippets included with most of the language extensions (see @category:&ldquo;snippets&rdquo; to see which ones).</p>
+<p>Snippets are an underused feature if the predefined templates do not match your coding style or common coding patterns. Its simple to add your own Snippets and dramatically boost your productivity. Read on for the details.</p>
+<h2 id="user-defined-snippets">User-defined Snippets</h2>
+<p>Open a language-specific Snippet file as follows:</p>
+<blockquote>
+<p>File &gt; Preferences &gt; PowerShell</p>
+</blockquote>
+<p>The file will be empty apart from comments (prefixed by //) usally showing an example.</p>
+<p>A Snippet is made up of the following elements</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>&ldquo;Function template&rdquo;</td>
+<td>The name is shown by Intellisense if there is no description</td>
+</tr>
+<tr>
+<td>prefix</td>
+<td>[&ldquo;ft&rdquo;,&ldquo;function&rdquo;]</td>
+<td>One or more trigger words to display (uses substring matching)</td>
+</tr>
+<tr>
+<td>body</td>
+<td>[&ldquo;function Verb-Noun {\r&rdquo;,&quot;[cmdletbinding()]\r&quot;]</td>
+<td>The template code to be inserted</td>
+</tr>
+<tr>
+<td>description</td>
+<td>Advanced function boilerplate</td>
+<td>Optional description displayed by intellisense</td>
+</tr>
+<tr>
+<td>placeholder</td>
+<td>${1:Verb-Noun}</td>
+<td>An element within the body that is replaced by the user after insertion. The number represents the tab stop position. The text is the default value that is replaced</td>
+</tr>
+<tr>
+<td>choices</td>
+<td>${1|one,two,three|}</td>
+<td>This placeholder will prompt to choose one of the options between the pipe characters</td>
+</tr>
+<tr>
+<td>$0</td>
+<td>[&ldquo;while($i -lt 10){\r&rdquo;,&quot;\t$0\r&quot;,&quot;}&quot;]</td>
+<td>A special placeholder that always comes last and ends insertion mode</td>
+</tr>
+</tbody>
+</table>
+<h2 id="snippet-example">Snippet example</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#e6db74">&#34;Advanced function&#34;</span><span style="color:#960050;background-color:#1e0010">:</span> {
+ <span style="color:#f92672">&#34;prefix&#34;</span>: [<span style="color:#e6db74">&#34;fa&#34;</span>,<span style="color:#e6db74">&#34;function&#34;</span>]
+	<span style="color:#e6db74">&#34;body&#34;</span>: [
+		<span style="color:#e6db74">&#34;Function ${1:Verb-Noun}{\r&#34;</span>,
+		<span style="color:#e6db74">&#34;[cmdletBinding()]\r&#34;</span>,
+		<span style="color:#e6db74">&#34;param(\r&#34;</span>,
+		<span style="color:#e6db74">&#34;    \r&#34;</span>,
+		<span style="color:#e6db74">&#34;)\r&#34;</span>,
+		<span style="color:#e6db74">&#34;BEGIN{\r&#34;</span>,
+		<span style="color:#e6db74">&#34;\r&#34;</span>,
+		<span style="color:#e6db74">&#34;}\r&#34;</span>,
+		<span style="color:#e6db74">&#34;\r&#34;</span>,
+		<span style="color:#e6db74">&#34;PROCESS{\r&#34;</span>,
+		<span style="color:#e6db74">&#34;$0\r&#34;</span>,
+		<span style="color:#e6db74">&#34;}\r&#34;</span>,
+		<span style="color:#e6db74">&#34;\r&#34;</span>,
+		<span style="color:#e6db74">&#34;END{\r&#34;</span>,
+		<span style="color:#e6db74">&#34;\r&#34;</span>,
+		<span style="color:#e6db74">&#34;}\r&#34;</span>,
+		<span style="color:#e6db74">&#34;\r&#34;</span>,
+		<span style="color:#e6db74">&#34;}&#34;</span>
+ ],
+	<span style="color:#f92672">&#34;description&#34;</span>: <span style="color:#e6db74">&#34;Advanced function boilerplate&#34;</span>
+</code></pre></div><p>Note the use of an array for the body and control characters for new lines. This is all quite painful to create by hand, but VSCode extensions can make this much easier.</p>
+<h2 id="marketplace-snippet-extension">Marketplace Snippet Extension</h2>
+<p>There are a number of extensions in the VSCode marketplace that will create a Snippet from highlighted code.</p>
+<p>For example, <a href="https://marketplace.visualstudio.com/items?itemName=ryanolsonx.snippet-creator">Snippet Creator</a> will automatically detetect the in-use language and then prompt for the prefix and description.  You can then edit the Snippet to fine-tune it.</p>
+<h2 id="snippet-scope">Snippet Scope</h2>
+<p><strong>Language</strong></p>
+<p>Most Snippets will be created in a language-specific Snippet file and will only prompt for insertion when using that language e.g.<br>
+        <code>%APPDATA%\Code\User\snippetsPowershell.json</code></p>
+<p><strong>Global</strong></p>
+<p>There is also a global Snippets file that applies to all languages. This file does not exist by default but can be created from <code>File &gt; Preferences &gt; User Snippets &gt; New Global Snippets file</code>. The file can have any name, but always ends in <code>.code-snippets</code>. For example:<br>
+        <code>%APPDATA%\Code\User\snippets\GlobalSnippets.code-snippets</code></p>
+<p>The global Snippets can use an additional property called <em>Scope</em> to limit them to a list of languages. If it isn&rsquo;t specified, they are available to all.</p>
+<p><strong>Project</strong></p>
+<p>If a global Snippets file is placed in the <code>.vscode</code> folder at the root of a project, it is scoped only to that project.  It can still use the scope property to further limit Snipprts to specific languages.</p>
+<h2 id="keyboard-shortcut">Keyboard Shortcut</h2>
+<p>Use <code>File &gt; Preferences &gt; Keyboard Shortcuts</code> to assign a shortcut to a Snippet. Custom shortcuts are saved in the file <code>%AppData%\Code\User\keybindings.json</code></p>
+<p>The file can be edited to make the shortcut specific to a particular language using the <em>args</em> paramater:</p>
+<h3 id="keybinding-example">Keybinding example:</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#f92672">&#34;key&#34;</span>: <span style="color:#e6db74">&#34;cmd+k 1&#34;</span>,
+  <span style="color:#f92672">&#34;command&#34;</span>: <span style="color:#e6db74">&#34;editor.action.insertSnippet&#34;</span>,
+  <span style="color:#f92672">&#34;when&#34;</span>: <span style="color:#e6db74">&#34;editorTextFocus&#34;</span>,
+  <span style="color:#f92672">&#34;args&#34;</span>: {
+    <span style="color:#f92672">&#34;langId&#34;</span>: <span style="color:#e6db74">&#34;csharp&#34;</span>,
+    <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;NewClass&#34;</span>
+  }
+}
+</code></pre></div><h2 id="hiding-snippets">Hiding Snippets</h2>
+<p>Hiding Snippets is useful when there is a lot of noise in the Intellisense prompts. This can occur when different extensions have added Snippets for the same triggers.</p>
+<blockquote>
+<ul>
+<li>Open the insert Snippet dialog using CTRL + ALT + J</li>
+<li>Start typing the tigger characters to show the Snippet options in the list</li>
+<li>Hover over each item and click the Hide from Intellisense option on the right hand side</li>
+</ul>
+</blockquote>
+<h2 id="extension-snippets">Extension Snippets</h2>
+<p>I don&rsquo;t recommend trying to edit or remove extension Snippets. Changes are likely to get overwritten when the extension updates.</p>
+<p>For information, extension Snippets are stored under <code>%USERPROFILE%\.vscode\extensions</code>. For example the Microsodt PowerShell extension Snippets are at:</p>
+<p><code>%USERPROFILE%\.vscode\extensions\ms-vscode.powershell-2021.2.2\snippets\PowerShell.json</code></p>
+<h2 id="note">Note</h2>
+<p>All paths and keyboard shortcuts in this article assume VSCode is running on Windows.</p>
+
+    
+</div>
+
+    
+<div class="footer">
+
+
+    
+        <div class="tags">
+            <i class="fa fa-tags"></i>
+            <div class="links">
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/powershell/">powershell</a>
+                    
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/scripting/">scripting</a>
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+</article>
+
+        
+    </div>
+
+    
+        <div id="comments-container">
+            
+            
+
+        </div>
+    
+
+    </div>
+
+    
+<footer>
+    <div class="container">
+
+        
+        <div class="recent-posts">
+            <strong>Latest posts</strong>
+            <ul>
+                
+                
+                    <li>
+                        <a href="https://write-verbose.com/2021/05/07/vscodesnippets/">Custom Snippets in VSCode</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/04/13/find-adsite/">Find a computer&#39;s Active Directory Site and Subnet with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/04/06/export-eventlog/">Export Remote Eventlog with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/03/30/adsysteminfo/">Active Directory ADSystemInfo with PowerShell</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2019/03/16/ad-nested-group-membership/">Get direct and nested Active Directory group membership with PowerShell</a>
+                    </li>
+                
+            </ul>
+        </div>
+        
+
+        
+        <div class="categories">
+            <a href="/categories/"><strong>Categories</strong></a>
+            <ul>
+                
+                <li>
+                    <a href="/categories/powershell">Powershell
+                        (9)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/activedirectory">Activedirectory
+                        (3)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/browser">Browser
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/memcm">Memcm
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/network">Network
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/regularexpression">Regularexpression
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/sccm">Sccm
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/security">Security
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/troubleshooting">Troubleshooting
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/vscode">Vscode
+                        (1)</a>
+                </li>
+                
+            </ul>
+        </div>
+        
+
+        <div class="right">
+            
+            <div class="external-profiles">
+                <strong>Social media</strong>
+
+                
+                <a href="https://twitter.com/writeverbose" target="_blank"><i class="fab fa-twitter"></i></a>
+                
+                <a href="https://github.com/gbdixg" target="_blank"><i class="fab fa-github"></i></a>
+                
+            </div>
+            
+
+            
+        </div>
+    </div>
+</footer>
+
+
+<div class="credits">
+    <div class="container">
+        <div class="copyright">
+            <a href="https://github.com/gbdixg" target="_blank">
+                &copy;
+                
+                2021
+                
+                Geoff Dixon
+            </a>
+            
+        </div>
+        <div class="author">
+            <a href="https://github.com/gbdixg/gbdixg.github.io"
+                target="_blank">Write-Verbose Blog</a>
+        </div>
+    </div>
+</div>
+
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-141237050-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+    
+
+
+    <script type="text/javascript" src="https://write-verbose.com/theme.js"></script>
+
+    
+    
+    
+
+    
+</body>
+
+</html>
