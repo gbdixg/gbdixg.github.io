@@ -278,10 +278,10 @@
         <code>%APPDATA%\Code\User\snippets\GlobalSnippets.code-snippets</code></p>
 <p>The global Snippets can use an additional property called <em>Scope</em> to limit them to a list of languages. If it isn&rsquo;t specified, they are available to all.</p>
 <p><strong>Project</strong></p>
-<p>If a global Snippets file is placed in the <code>.vscode</code> folder at the root of a project, it is scoped only to that project.  It can still use the scope property to further limit Snipprts to specific languages.</p>
+<p>If a global Snippets file is placed in the <code>.vscode</code> folder at the root of a project, it is scoped only to that project.  It can still use the scope property to further limit Snippets to specific languages.</p>
 <h2 id="keyboard-shortcut">Keyboard Shortcut</h2>
 <p>Use <code>File &gt; Preferences &gt; Keyboard Shortcuts</code> to assign a shortcut to a Snippet. Custom shortcuts are saved in the file <code>%AppData%\Code\User\keybindings.json</code></p>
-<p>The file can be edited to make the shortcut specific to a particular language using the <em>args</em> paramater:</p>
+<p>If the Snippet is not in the Global Snippets file, the args &gt; langId and name are used to specifiy a language specific Snippet:</p>
 <h3 id="keybinding-example">Keybinding example:</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
   <span style="color:#f92672">&#34;key&#34;</span>: <span style="color:#e6db74">&#34;cmd+k 1&#34;</span>,
