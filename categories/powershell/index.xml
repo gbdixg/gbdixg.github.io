@@ -5,7 +5,18 @@
     <link>https://write-verbose.com/categories/powershell/</link>
     <description>Recent content in powershell on Geoff Dixon &gt; Write-Verbose</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 07 May 2021 18:05:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/categories/powershell/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 10 May 2021 21:11:06 +0000</lastBuildDate><atom:link href="https://write-verbose.com/categories/powershell/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Neo4J CMDB pt1 - MEMCM Export</title>
+      <link>https://write-verbose.com/2021/05/10/memcm-powershell-export/</link>
+      <pubDate>Mon, 10 May 2021 21:11:06 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2021/05/10/memcm-powershell-export/</guid>
+      <description>This is the first post in a series on creating a graph database CMDB.
+In part one we&amp;rsquo;ll cover exporting computer information from Microsoft Endpoint Configuration Manager (a.k.a SCCM) using PowerShell and T-SQL. MEMCM is one datasource used to create a configuration management database (CMDB) using a Neo4j graph database.
+Why a graph database? I&amp;rsquo;ll cover this in a future post, but in simple terms, relationships are the key strength of a graph DB and this is well suited to the CMDB use case.</description>
+    </item>
+    
     <item>
       <title>Custom Snippets in VSCode</title>
       <link>https://write-verbose.com/2021/05/07/vscodesnippets/</link>

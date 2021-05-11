@@ -5,13 +5,49 @@
     <link>https://write-verbose.com/tags/</link>
     <description>Recent content in Tags on Geoff Dixon &gt; Write-Verbose</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 07 May 2021 18:05:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 10 May 2021 21:11:06 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>cmdb</title>
+      <link>https://write-verbose.com/tags/cmdb/</link>
+      <pubDate>Mon, 10 May 2021 21:11:06 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/cmdb/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>memcm</title>
+      <link>https://write-verbose.com/tags/memcm/</link>
+      <pubDate>Mon, 10 May 2021 21:11:06 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/memcm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>neo4j</title>
+      <link>https://write-verbose.com/tags/neo4j/</link>
+      <pubDate>Mon, 10 May 2021 21:11:06 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/neo4j/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>powershell</title>
       <link>https://write-verbose.com/tags/powershell/</link>
-      <pubDate>Fri, 07 May 2021 18:05:00 +0000</pubDate>
+      <pubDate>Mon, 10 May 2021 21:11:06 +0000</pubDate>
       
       <guid>https://write-verbose.com/tags/powershell/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sql</title>
+      <link>https://write-verbose.com/tags/sql/</link>
+      <pubDate>Mon, 10 May 2021 21:11:06 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/sql/</guid>
       <description></description>
     </item>
     
@@ -115,29 +151,11 @@
     </item>
     
     <item>
-      <title>memcm</title>
-      <link>https://write-verbose.com/tags/memcm/</link>
-      <pubDate>Sat, 23 Feb 2019 19:28:11 +0000</pubDate>
-      
-      <guid>https://write-verbose.com/tags/memcm/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>sccm</title>
       <link>https://write-verbose.com/tags/sccm/</link>
       <pubDate>Sat, 23 Feb 2019 19:28:11 +0000</pubDate>
       
       <guid>https://write-verbose.com/tags/sccm/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>sql</title>
-      <link>https://write-verbose.com/tags/sql/</link>
-      <pubDate>Sat, 23 Feb 2019 19:28:11 +0000</pubDate>
-      
-      <guid>https://write-verbose.com/tags/sql/</guid>
       <description></description>
     </item>
     

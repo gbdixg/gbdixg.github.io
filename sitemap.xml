@@ -3,33 +3,51 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://write-verbose.com/author/</loc>
-    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
+    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/blog/</loc>
-    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
+    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/categories/</loc>
-    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
+    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/cmdb/</loc>
+    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/author/geoff/</loc>
+    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/</loc>
+    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/memcm/</loc>
+    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/categories/memcm/</loc>
+    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/neo4j/</loc>
+    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/2021/05/10/memcm-powershell-export/</loc>
+    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/powershell/</loc>
+    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/categories/powershell/</loc>
+    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/sql/</loc>
+    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/</loc>
+    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/2021/05/07/vscodesnippets/</loc>
     <lastmod>2021-05-07T18:05:00+00:00</lastmod>
   </url><url>
-    <loc>https://write-verbose.com/author/geoff/</loc>
-    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/</loc>
-    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/powershell/</loc>
-    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/categories/powershell/</loc>
-    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
-  </url><url>
     <loc>https://write-verbose.com/tags/scripting/</loc>
-    <lastmod>2021-05-07T18:05:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/</loc>
     <lastmod>2021-05-07T18:05:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/categories/vscode/</loc>
@@ -92,19 +110,10 @@
     <loc>https://write-verbose.com/tags/errormessage/</loc>
     <lastmod>2019-02-23T19:28:11+00:00</lastmod>
   </url><url>
-    <loc>https://write-verbose.com/categories/memcm/</loc>
-    <lastmod>2019-02-23T19:28:11+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/memcm/</loc>
-    <lastmod>2019-02-23T19:28:11+00:00</lastmod>
-  </url><url>
     <loc>https://write-verbose.com/categories/sccm/</loc>
     <lastmod>2019-02-23T19:28:11+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/sccm/</loc>
-    <lastmod>2019-02-23T19:28:11+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/sql/</loc>
     <lastmod>2019-02-23T19:28:11+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/2019/01/12/diy-wireless-suppression/</loc>
