@@ -12,10 +12,8 @@
       <pubDate>Sat, 12 Jan 2019 19:15:04 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/01/12/diy-wireless-suppression/</guid>
-      <description>When you drop a laptop into a docking station with an Ethernet cable, you expect it to use the wired connection instead of than WIFI. This may not be the case on Windows unless wireless is supressed.
-This post will cover the problem, common 3rd-party solutions and a built-in solution using WMI and PowerShell
- Wireless Suppression prevents a WIFI connection being used when Ethernet is available.
- Why is this a problem?</description>
+      <description>&lt;p&gt;When you drop a laptop into a docking station with an Ethernet cable, you expect it to use the wired connection instead of than WIFI. This may not be the case on Windows unless wireless is supressed.&lt;/p&gt;
+&lt;p&gt;This post will cover the problem, common 3rd-party solutions and a built-in solution using WMI and PowerShell&lt;/p&gt;</description>
     </item>
     
   </channel>

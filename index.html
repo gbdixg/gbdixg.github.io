@@ -130,12 +130,126 @@
         
     <div class="article-wrapper u-cf">
         
+            <a class="bubble" href="https://write-verbose.com/2021/05/15/wsl2-quick/">
+    <i class="fas fa-fw fa-file-alt"></i>
+</a>
+
+<article class="default article">
+    
+    <div class="featured-image">
+        <a href="https://write-verbose.com/2021/05/15/wsl2-quick/">
+            
+                <img src="/2021/05/15/wsl2-quick/featuredimage.jpg" alt="">
+            
+        </a>
+    </div>
+
+
+    <div class="content">
+    <h1 class="article-title">
+        <a href="https://write-verbose.com/2021/05/15/wsl2-quick/">
+            Quick steps to enable WSL2 on Windows 10
+        </a>
+    </h1>
+
+    <div class="meta">
+        
+            
+                <span class="date moment">2021-05-15</span>
+            
+        
+
+        
+            
+                <span class="readingTime">1 min read</span>
+            
+        
+
+        
+            <span class="categories">
+                
+                    
+                    
+                        <a href="https://write-verbose.com/categories/wsl/">wsl</a>
+                    
+                
+            </span>
+        
+
+        
+            <span class="author">
+                
+                
+                    <a href="https://write-verbose.com/author/geoff/">Geoff</a>
+                
+            </span>
+        
+    </div>
+
+    
+        <p>A quick summary of the manual steps to enable WSL2</p>
+
+        
+            <a href="https://write-verbose.com/2021/05/15/wsl2-quick/" class="more">Continue reading</a>
+        
+    
+</div>
+
+    
+<div class="footer">
+
+
+    
+        <div class="tags">
+            <i class="fa fa-tags"></i>
+            <div class="links">
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/linux/">linux</a>
+                    
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/wsl/">wsl</a>
+                    
+                
+                    
+                    
+                    <a href="https://write-verbose.com/tags/ubuntu/">ubuntu</a>
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+</article>
+
+        
+    </div>
+
+
+    
+        
+    <div class="article-wrapper u-cf">
+        
             <a class="bubble" href="https://write-verbose.com/2021/05/10/memcm-powershell-export/">
     <i class="fas fa-fw fa-file-alt"></i>
 </a>
 
 <article class="default article">
     
+    <div class="featured-image">
+        <a href="https://write-verbose.com/2021/05/10/memcm-powershell-export/">
+            
+                <img src="/2021/05/10/memcm-powershell-export/featuredimage.jpg" alt="">
+            
+        </a>
+    </div>
+
 
     <div class="content">
     <h1 class="article-title">
@@ -184,9 +298,8 @@
     </div>
 
     
-        This is the first post in a series on creating a graph database CMDB.
-In part one we&rsquo;ll cover exporting computer information from Microsoft Endpoint Configuration Manager (a.k.a SCCM) using PowerShell and T-SQL. MEMCM is one datasource used to create a configuration management database (CMDB) using a Neo4j graph database.
-Why a graph database? I&rsquo;ll cover this in a future post, but in simple terms, relationships are the key strength of a graph DB and this is well suited to the CMDB use case.
+        <p><strong>This is the first post in a series on creating a graph database CMDB.</strong></p>
+<p>In part one we&rsquo;ll cover exporting computer information from Microsoft Endpoint Configuration Manager (a.k.a SCCM) using PowerShell and T-SQL. MEMCM is one datasource used to create a configuration management database (CMDB) using a Neo4j graph database.</p>
 
         
             <a href="https://write-verbose.com/2021/05/10/memcm-powershell-export/" class="more">Continue reading</a>
@@ -307,9 +420,8 @@ Why a graph database? I&rsquo;ll cover this in a future post, but in simple term
     </div>
 
     
-        Background Snippets are a great productivity feature in VSCode that allow common code blocks to be defined as templates.
-Predefined Snippets are included with most of the VSCode language extensions (see @category:&ldquo;snippets&rdquo; to see which ones), but they may not match your coding style or appear when you need them. Its simple to add your own Snippets and dramatically boost your productivity. Read on for the details.
-User-defined Snippets Open a language-specific Snippet file as follows:
+        <h2 id="background">Background</h2>
+<p>Snippets are a great productivity feature in VSCode that allow common code blocks to be defined as templates.</p>
 
         
             <a href="https://write-verbose.com/2021/05/07/vscodesnippets/" class="more">Continue reading</a>
@@ -415,8 +527,7 @@ User-defined Snippets Open a language-specific Snippet file as follows:
     </div>
 
     
-        Active Directory Sites represent locations with good network connectivity. An ADSite is often created for each office or a group of offices in a metropolitan area, to generate the replication topology between Domain Controllers, and to help workstations/servers locate closest services.
-Active Directory Subnets define the IP ranges included in an AD Site. A member workstation/server will have an IP address that should fall within a defined AD subnet, making it part of an AD Site.
+        <p>Read-on for a PowerShell command to get the Active Directory Subnet and Site from the computername or IP Address.</p>
 
         
             <a href="https://write-verbose.com/2019/04/13/find-adsite/" class="more">Continue reading</a>
@@ -537,9 +648,7 @@ Active Directory Subnets define the IP ranges included in an AD Site. A member w
     </div>
 
     
-        Event logs are a cornerstone of troubleshooting, but getting access to them can be difficult across the network.
- It can be faster to export a Windows event log on a remote computer, copy the .evtx file over the network and then query it locally.
- The built-in PowerShell Get-Winevent cmdlet can work against remote event logs, but it can be painfully slow to stream events when network bandwidth is limited.
+        <p>This article includes a PowerShell <em>Export-Eventlog</em> command to quickly export a Windows event log from a remote computer and copy it to the local machine.</p>
 
         
             <a href="https://write-verbose.com/2019/04/06/export-eventlog/" class="more">Continue reading</a>
@@ -655,10 +764,9 @@ Active Directory Subnets define the IP ranges included in an AD Site. A member w
     </div>
 
     
-        ADSystemInfo is a built-in COM object in Windows 7, 8.1 and 10 that simplifies lookup of Active Directory user and computer information.
- ADSystemInfo can only return information about the local computer and current user. A domain controller must be accessible when the functions are called.
-Its simple to instantiate COM objects in PowerShell. The function below shows how to use this object.
-Function Get-ADSystemInfo{ &lt;# .SynopsisUsed to lookup specific AD user/computer object properties of the current session .
+        <blockquote>
+<p>ADSystemInfo is a built-in COM object in Windows 7, 8.1 and 10 that simplifies lookup of Active Directory user and computer information.</p>
+</blockquote>
 
         
             <a href="https://write-verbose.com/2019/03/30/adsysteminfo/" class="more">Continue reading</a>
@@ -774,9 +882,7 @@ Function Get-ADSystemInfo{ &lt;# .SynopsisUsed to lookup specific AD user/comput
     </div>
 
     
-        Active Directory supports multiple levels of group nesting. A user or computer can therefore be a direct member of a group, or an indirect member via a nested group. The Windows security token used to authorise a security principlal&rsquo;s access to resources includes all group memberships - direct and nested.
- The MemberOf attribute of an Active Directory user or computer object only contains the direct group memberships.
- Listing all groups (direct and nested) is neccessary when troubleshooting access to resources.
+        <p>This post lists various methods to get all the groups a Windows user is a member of (direct and through group nesting)</p>
 
         
             <a href="https://write-verbose.com/2019/03/16/ad-nested-group-membership/" class="more">Continue reading</a>
@@ -827,135 +933,6 @@ Function Get-ADSystemInfo{ &lt;# .SynopsisUsed to lookup specific AD user/comput
 
 
     
-        
-    <div class="article-wrapper u-cf">
-        
-            <a class="bubble" href="https://write-verbose.com/2019/02/23/sql-change-tracking-retention/">
-    <i class="fas fa-fw fa-file-alt"></i>
-</a>
-
-<article class="default article">
-    
-    <div class="featured-image">
-        <a href="https://write-verbose.com/2019/02/23/sql-change-tracking-retention/">
-            
-                <img src="/2019/02/23/sql-change-tracking-retention/FeaturedImage.png" alt="">
-            
-        </a>
-    </div>
-
-
-    <div class="content">
-    <h1 class="article-title">
-        <a href="https://write-verbose.com/2019/02/23/sql-change-tracking-retention/">
-            Config Manager &#39;Potential SQL performance issue caused by change tracking retention period&#39;
-        </a>
-    </h1>
-
-    <div class="meta">
-        
-            
-                <span class="date moment">2019-02-23</span>
-            
-        
-
-        
-            
-                <span class="readingTime">3 min read</span>
-            
-        
-
-        
-            <span class="categories">
-                
-                    
-                    
-                        <a href="https://write-verbose.com/categories/memcm/">memcm</a>
-                    
-                
-                    
-                    
-                        <a href="https://write-verbose.com/categories/sccm/">SCCM</a>
-                    
-                
-            </span>
-        
-
-        
-            <span class="author">
-                
-                
-                    <a href="https://write-verbose.com/author/geoff/">Geoff</a>
-                
-            </span>
-        
-    </div>
-
-    
-        If you come across this warning during a Config Manager Current Branch site upgrade, read on for the solution.
- Warning - Potential SQL performance issue caused by change tracking retention period.
- This warning was apparently added from CM current branch 1810 or later.
-Running the pre-requisite check CM Current Branch updates are initiated in the Administration &gt; Updates and Servicing node of the CM console. The pre-requisiste check option will highlight any errors and warnings before the upgrade starts.
-
-        
-            <a href="https://write-verbose.com/2019/02/23/sql-change-tracking-retention/" class="more">Continue reading</a>
-        
-    
-</div>
-
-    
-<div class="footer">
-
-
-    
-        <div class="tags">
-            <i class="fa fa-tags"></i>
-            <div class="links">
-                
-                    
-                    
-                    <a href="https://write-verbose.com/tags/sccm/">sccm</a>
-                    
-                
-                    
-                    
-                    <a href="https://write-verbose.com/tags/sql/">sql</a>
-                    
-                
-                    
-                    
-                    <a href="https://write-verbose.com/tags/memcm/">memcm</a>
-                    
-                
-                    
-                    
-                    <a href="https://write-verbose.com/tags/configman/">configman</a>
-                    
-                
-                    
-                    
-                    <a href="https://write-verbose.com/tags/database/">database</a>
-                    
-                
-                    
-                    
-                    <a href="https://write-verbose.com/tags/errormessage/">errormessage</a>
-                    
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-</article>
-
-        
-    </div>
-
-
-    
 
     
     <div class="paginator">
@@ -981,6 +958,10 @@ Running the pre-requisite check CM Current Branch updates are initiated in the A
                 
                 
                     <li>
+                        <a href="https://write-verbose.com/2021/05/15/wsl2-quick/">Quick steps to enable WSL2 on Windows 10</a>
+                    </li>
+                
+                    <li>
                         <a href="https://write-verbose.com/2021/05/10/memcm-powershell-export/">Neo4J CMDB pt1 - MEMCM Export</a>
                     </li>
                 
@@ -994,10 +975,6 @@ Running the pre-requisite check CM Current Branch updates are initiated in the A
                 
                     <li>
                         <a href="https://write-verbose.com/2019/04/06/export-eventlog/">Export Remote Eventlog with PowerShell</a>
-                    </li>
-                
-                    <li>
-                        <a href="https://write-verbose.com/2019/03/30/adsysteminfo/">Active Directory ADSystemInfo with PowerShell</a>
                     </li>
                 
             </ul>

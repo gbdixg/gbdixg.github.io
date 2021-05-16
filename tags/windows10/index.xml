@@ -12,9 +12,7 @@
       <pubDate>Sat, 06 Apr 2019 18:11:01 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/04/06/export-eventlog/</guid>
-      <description>Event logs are a cornerstone of troubleshooting, but getting access to them can be difficult across the network.
- It can be faster to export a Windows event log on a remote computer, copy the .evtx file over the network and then query it locally.
- The built-in PowerShell Get-Winevent cmdlet can work against remote event logs, but it can be painfully slow to stream events when network bandwidth is limited.</description>
+      <description>&lt;p&gt;This article includes a PowerShell &lt;em&gt;Export-Eventlog&lt;/em&gt; command to quickly export a Windows event log from a remote computer and copy it to the local machine.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -23,10 +21,8 @@
       <pubDate>Sat, 12 Jan 2019 19:15:04 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/01/12/diy-wireless-suppression/</guid>
-      <description>When you drop a laptop into a docking station with an Ethernet cable, you expect it to use the wired connection instead of than WIFI. This may not be the case on Windows unless wireless is supressed.
-This post will cover the problem, common 3rd-party solutions and a built-in solution using WMI and PowerShell
- Wireless Suppression prevents a WIFI connection being used when Ethernet is available.
- Why is this a problem?</description>
+      <description>&lt;p&gt;When you drop a laptop into a docking station with an Ethernet cable, you expect it to use the wired connection instead of than WIFI. This may not be the case on Windows unless wireless is supressed.&lt;/p&gt;
+&lt;p&gt;This post will cover the problem, common 3rd-party solutions and a built-in solution using WMI and PowerShell&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -35,10 +31,10 @@ This post will cover the problem, common 3rd-party solutions and a built-in solu
       <pubDate>Sat, 24 Nov 2018 16:40:11 +0000</pubDate>
       
       <guid>https://write-verbose.com/2018/11/24/PSPam-privileged-access-management/</guid>
-      <description>Update 2019-01-12: A Microsoft security update appears to have broken this solution.
- TL;DR the following describes a DIY method for granualar assignment of elevated permissions on Windows, using PowerShell Just Enough Administration (JEA)
- Background Most users logging on to a Windows client fall into one of the following categories:
- Full administrator Standard user  Sometimes there is a need for a standard user to perform an elevated task, but granting full administrative access is undesirable.</description>
+      <description>&lt;p&gt;&lt;code&gt;Update 2019-01-12:&lt;/code&gt; &lt;a href=&#34;https://devblogs.microsoft.com/powershell/windows-security-change-affecting-powershell/&#34;&gt;A Microsoft security update&lt;/a&gt; appears to have broken this solution.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;TL;DR the following describes a DIY method for granualar assignment of elevated local permissions on Windows, using PowerShell Just Enough Administration (JEA)&lt;/p&gt;
+&lt;/blockquote&gt;</description>
     </item>
     
   </channel>

@@ -185,7 +185,8 @@
     
         
 
-        <p>Active Directory supports multiple levels of group nesting. A user or computer can therefore be a direct member of a group, or an indirect member via a nested group. The Windows <em>security token</em> used to authorise a security principlal&rsquo;s access to resources includes all group memberships - direct and nested.</p>
+        <p>This post lists various methods to get all the groups a Windows user is a member of (direct and through group nesting)</p>
+<p>Active Directory supports multiple levels of group nesting. A user or computer can therefore be a direct member of a group, or an indirect member via a nested group. The Windows <em>security token</em> used to authorise a security principlal&rsquo;s access to resources includes all group memberships - direct and nested.</p>
 <blockquote>
 <p>The <em>MemberOf</em> attribute of an Active Directory user or computer object only contains the direct group memberships.</p>
 </blockquote>
@@ -553,6 +554,10 @@ It does contain a command to recursively look-up the members of a group to get t
                 
                 
                     <li>
+                        <a href="https://write-verbose.com/2021/05/15/wsl2-quick/">Quick steps to enable WSL2 on Windows 10</a>
+                    </li>
+                
+                    <li>
                         <a href="https://write-verbose.com/2021/05/10/memcm-powershell-export/">Neo4J CMDB pt1 - MEMCM Export</a>
                     </li>
                 
@@ -566,10 +571,6 @@ It does contain a command to recursively look-up the members of a group to get t
                 
                     <li>
                         <a href="https://write-verbose.com/2019/04/06/export-eventlog/">Export Remote Eventlog with PowerShell</a>
-                    </li>
-                
-                    <li>
-                        <a href="https://write-verbose.com/2019/03/30/adsysteminfo/">Active Directory ADSystemInfo with PowerShell</a>
                     </li>
                 
             </ul>

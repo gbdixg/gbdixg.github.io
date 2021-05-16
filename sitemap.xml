@@ -3,21 +3,39 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://write-verbose.com/author/</loc>
-    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
+    <lastmod>2021-05-15T11:22:45+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/blog/</loc>
-    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
+    <lastmod>2021-05-15T11:22:45+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/categories/</loc>
-    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/cmdb/</loc>
-    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
+    <lastmod>2021-05-15T11:22:45+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/author/geoff/</loc>
-    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
+    <lastmod>2021-05-15T11:22:45+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/</loc>
+    <lastmod>2021-05-15T11:22:45+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/linux/</loc>
+    <lastmod>2021-05-15T11:22:45+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/2021/05/15/wsl2-quick/</loc>
+    <lastmod>2021-05-15T11:22:45+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/</loc>
+    <lastmod>2021-05-15T11:22:45+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/ubuntu/</loc>
+    <lastmod>2021-05-15T11:22:45+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/wsl/</loc>
+    <lastmod>2021-05-15T11:22:45+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/categories/wsl/</loc>
+    <lastmod>2021-05-15T11:22:45+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/cmdb/</loc>
     <lastmod>2021-05-10T21:11:06+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/memcm/</loc>
@@ -39,9 +57,6 @@
     <lastmod>2021-05-10T21:11:06+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/sql/</loc>
-    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/</loc>
     <lastmod>2021-05-10T21:11:06+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/2021/05/07/vscodesnippets/</loc>

@@ -12,8 +12,7 @@
       <pubDate>Sat, 13 Apr 2019 17:22:14 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/04/13/find-adsite/</guid>
-      <description>Active Directory Sites represent locations with good network connectivity. An ADSite is often created for each office or a group of offices in a metropolitan area, to generate the replication topology between Domain Controllers, and to help workstations/servers locate closest services.
-Active Directory Subnets define the IP ranges included in an AD Site. A member workstation/server will have an IP address that should fall within a defined AD subnet, making it part of an AD Site.</description>
+      <description>&lt;p&gt;Read-on for a PowerShell command to get the Active Directory Subnet and Site from the computername or IP Address.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -22,10 +21,9 @@ Active Directory Subnets define the IP ranges included in an AD Site. A member w
       <pubDate>Sat, 30 Mar 2019 18:45:05 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/03/30/adsysteminfo/</guid>
-      <description>ADSystemInfo is a built-in COM object in Windows 7, 8.1 and 10 that simplifies lookup of Active Directory user and computer information.
- ADSystemInfo can only return information about the local computer and current user. A domain controller must be accessible when the functions are called.
-Its simple to instantiate COM objects in PowerShell. The function below shows how to use this object.
-Function Get-ADSystemInfo{ &amp;lt;# .SynopsisUsed to lookup specific AD user/computer object properties of the current session .</description>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;ADSystemInfo is a built-in COM object in Windows 7, 8.1 and 10 that simplifies lookup of Active Directory user and computer information.&lt;/p&gt;
+&lt;/blockquote&gt;</description>
     </item>
     
     <item>
@@ -34,9 +32,7 @@ Function Get-ADSystemInfo{ &amp;lt;# .SynopsisUsed to lookup specific AD user/co
       <pubDate>Sat, 16 Mar 2019 16:31:05 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/03/16/ad-nested-group-membership/</guid>
-      <description>Active Directory supports multiple levels of group nesting. A user or computer can therefore be a direct member of a group, or an indirect member via a nested group. The Windows security token used to authorise a security principlal&amp;rsquo;s access to resources includes all group memberships - direct and nested.
- The MemberOf attribute of an Active Directory user or computer object only contains the direct group memberships.
- Listing all groups (direct and nested) is neccessary when troubleshooting access to resources.</description>
+      <description>&lt;p&gt;This post lists various methods to get all the groups a Windows user is a member of (direct and through group nesting)&lt;/p&gt;</description>
     </item>
     
   </channel>

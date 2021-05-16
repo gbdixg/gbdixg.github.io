@@ -12,9 +12,8 @@
       <pubDate>Fri, 07 May 2021 18:05:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/05/07/vscodesnippets/</guid>
-      <description>Background Snippets are a great productivity feature in VSCode that allow common code blocks to be defined as templates.
-Predefined Snippets are included with most of the VSCode language extensions (see @category:&amp;ldquo;snippets&amp;rdquo; to see which ones), but they may not match your coding style or appear when you need them. Its simple to add your own Snippets and dramatically boost your productivity. Read on for the details.
-User-defined Snippets Open a language-specific Snippet file as follows:</description>
+      <description>&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+&lt;p&gt;Snippets are a great productivity feature in VSCode that allow common code blocks to be defined as templates.&lt;/p&gt;</description>
     </item>
     
   </channel>

@@ -5,16 +5,24 @@
     <link>https://write-verbose.com/blog/</link>
     <description>Recent content in Blogs on Geoff Dixon &gt; Write-Verbose</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 10 May 2021 21:11:06 +0000</lastBuildDate><atom:link href="https://write-verbose.com/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 15 May 2021 11:22:45 +0000</lastBuildDate><atom:link href="https://write-verbose.com/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Quick steps to enable WSL2 on Windows 10</title>
+      <link>https://write-verbose.com/2021/05/15/wsl2-quick/</link>
+      <pubDate>Sat, 15 May 2021 11:22:45 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2021/05/15/wsl2-quick/</guid>
+      <description>&lt;p&gt;A quick summary of the manual steps to enable WSL2&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Neo4J CMDB pt1 - MEMCM Export</title>
       <link>https://write-verbose.com/2021/05/10/memcm-powershell-export/</link>
       <pubDate>Mon, 10 May 2021 21:11:06 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/05/10/memcm-powershell-export/</guid>
-      <description>This is the first post in a series on creating a graph database CMDB.
-In part one we&amp;rsquo;ll cover exporting computer information from Microsoft Endpoint Configuration Manager (a.k.a SCCM) using PowerShell and T-SQL. MEMCM is one datasource used to create a configuration management database (CMDB) using a Neo4j graph database.
-Why a graph database? I&amp;rsquo;ll cover this in a future post, but in simple terms, relationships are the key strength of a graph DB and this is well suited to the CMDB use case.</description>
+      <description>&lt;p&gt;&lt;strong&gt;This is the first post in a series on creating a graph database CMDB.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;In part one we&amp;rsquo;ll cover exporting computer information from Microsoft Endpoint Configuration Manager (a.k.a SCCM) using PowerShell and T-SQL. MEMCM is one datasource used to create a configuration management database (CMDB) using a Neo4j graph database.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -23,9 +31,8 @@ Why a graph database? I&amp;rsquo;ll cover this in a future post, but in simple 
       <pubDate>Fri, 07 May 2021 18:05:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/05/07/vscodesnippets/</guid>
-      <description>Background Snippets are a great productivity feature in VSCode that allow common code blocks to be defined as templates.
-Predefined Snippets are included with most of the VSCode language extensions (see @category:&amp;ldquo;snippets&amp;rdquo; to see which ones), but they may not match your coding style or appear when you need them. Its simple to add your own Snippets and dramatically boost your productivity. Read on for the details.
-User-defined Snippets Open a language-specific Snippet file as follows:</description>
+      <description>&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+&lt;p&gt;Snippets are a great productivity feature in VSCode that allow common code blocks to be defined as templates.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -34,8 +41,7 @@ User-defined Snippets Open a language-specific Snippet file as follows:</descrip
       <pubDate>Sat, 13 Apr 2019 17:22:14 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/04/13/find-adsite/</guid>
-      <description>Active Directory Sites represent locations with good network connectivity. An ADSite is often created for each office or a group of offices in a metropolitan area, to generate the replication topology between Domain Controllers, and to help workstations/servers locate closest services.
-Active Directory Subnets define the IP ranges included in an AD Site. A member workstation/server will have an IP address that should fall within a defined AD subnet, making it part of an AD Site.</description>
+      <description>&lt;p&gt;Read-on for a PowerShell command to get the Active Directory Subnet and Site from the computername or IP Address.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -44,9 +50,7 @@ Active Directory Subnets define the IP ranges included in an AD Site. A member w
       <pubDate>Sat, 06 Apr 2019 18:11:01 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/04/06/export-eventlog/</guid>
-      <description>Event logs are a cornerstone of troubleshooting, but getting access to them can be difficult across the network.
- It can be faster to export a Windows event log on a remote computer, copy the .evtx file over the network and then query it locally.
- The built-in PowerShell Get-Winevent cmdlet can work against remote event logs, but it can be painfully slow to stream events when network bandwidth is limited.</description>
+      <description>&lt;p&gt;This article includes a PowerShell &lt;em&gt;Export-Eventlog&lt;/em&gt; command to quickly export a Windows event log from a remote computer and copy it to the local machine.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -55,10 +59,9 @@ Active Directory Subnets define the IP ranges included in an AD Site. A member w
       <pubDate>Sat, 30 Mar 2019 18:45:05 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/03/30/adsysteminfo/</guid>
-      <description>ADSystemInfo is a built-in COM object in Windows 7, 8.1 and 10 that simplifies lookup of Active Directory user and computer information.
- ADSystemInfo can only return information about the local computer and current user. A domain controller must be accessible when the functions are called.
-Its simple to instantiate COM objects in PowerShell. The function below shows how to use this object.
-Function Get-ADSystemInfo{ &amp;lt;# .SynopsisUsed to lookup specific AD user/computer object properties of the current session .</description>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;ADSystemInfo is a built-in COM object in Windows 7, 8.1 and 10 that simplifies lookup of Active Directory user and computer information.&lt;/p&gt;
+&lt;/blockquote&gt;</description>
     </item>
     
     <item>
@@ -67,9 +70,7 @@ Function Get-ADSystemInfo{ &amp;lt;# .SynopsisUsed to lookup specific AD user/co
       <pubDate>Sat, 16 Mar 2019 16:31:05 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/03/16/ad-nested-group-membership/</guid>
-      <description>Active Directory supports multiple levels of group nesting. A user or computer can therefore be a direct member of a group, or an indirect member via a nested group. The Windows security token used to authorise a security principlal&amp;rsquo;s access to resources includes all group memberships - direct and nested.
- The MemberOf attribute of an Active Directory user or computer object only contains the direct group memberships.
- Listing all groups (direct and nested) is neccessary when troubleshooting access to resources.</description>
+      <description>&lt;p&gt;This post lists various methods to get all the groups a Windows user is a member of (direct and through group nesting)&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -78,10 +79,7 @@ Function Get-ADSystemInfo{ &amp;lt;# .SynopsisUsed to lookup specific AD user/co
       <pubDate>Sat, 23 Feb 2019 19:28:11 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/02/23/sql-change-tracking-retention/</guid>
-      <description>If you come across this warning during a Config Manager Current Branch site upgrade, read on for the solution.
- Warning - Potential SQL performance issue caused by change tracking retention period.
- This warning was apparently added from CM current branch 1810 or later.
-Running the pre-requisite check CM Current Branch updates are initiated in the Administration &amp;gt; Updates and Servicing node of the CM console. The pre-requisiste check option will highlight any errors and warnings before the upgrade starts.</description>
+      <description>&lt;p&gt;If you come across this warning during a Config Manager Current Branch site upgrade, read on for the solution.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -90,10 +88,8 @@ Running the pre-requisite check CM Current Branch updates are initiated in the A
       <pubDate>Sat, 12 Jan 2019 19:15:04 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/01/12/diy-wireless-suppression/</guid>
-      <description>When you drop a laptop into a docking station with an Ethernet cable, you expect it to use the wired connection instead of than WIFI. This may not be the case on Windows unless wireless is supressed.
-This post will cover the problem, common 3rd-party solutions and a built-in solution using WMI and PowerShell
- Wireless Suppression prevents a WIFI connection being used when Ethernet is available.
- Why is this a problem?</description>
+      <description>&lt;p&gt;When you drop a laptop into a docking station with an Ethernet cable, you expect it to use the wired connection instead of than WIFI. This may not be the case on Windows unless wireless is supressed.&lt;/p&gt;
+&lt;p&gt;This post will cover the problem, common 3rd-party solutions and a built-in solution using WMI and PowerShell&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -102,10 +98,7 @@ This post will cover the problem, common 3rd-party solutions and a built-in solu
       <pubDate>Sun, 06 Jan 2019 19:15:04 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/01/06/powershell-toolmaking-regex/</guid>
-      <description>This post shows how to create a PowerShell Get-WLAN function by parsing the output of the built-in Windows NETSH.EXE
- PowerShell Tools are re-usable functions that can be used stand-alone or in a pipeline
- Ideally, the function is written in pure PowerShell, but sometimes its more convenient to create a wrapper script using the output of a command line tool.
-The example below creates a PowerShell tool to get information about WI-Fi connections on the local computer.</description>
+      <description>&lt;p&gt;This post shows how to create a PowerShell &lt;em&gt;Get-WLAN&lt;/em&gt; function, parsing the output of the built-in Windows NETSH.EXE using a Regular Expression&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -114,9 +107,7 @@ The example below creates a PowerShell tool to get information about WI-Fi conne
       <pubDate>Sat, 15 Dec 2018 18:24:34 +0000</pubDate>
       
       <guid>https://write-verbose.com/2018/12/15/audit-google-chrome-extensions/</guid>
-      <description>Browser extensions are supposed to be curated and vetted, but there have been many examples of malware. If you don&amp;rsquo;t already have control of extensions through a whitelist or blacklist, the first step is to find out what is in-use.
-The code below is a PowerShell function to get the installed Google Chrome browser extensions from a local or remote Windows computer.
- Chrome Browser Extensions install into the user profile and do not appear in the Add/Remove Programs list.</description>
+      <description>&lt;p&gt;This post includes a PowerShell Get-ChromeExtension script to list installed extensions on the local or remote computer.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -125,10 +116,10 @@ The code below is a PowerShell function to get the installed Google Chrome brows
       <pubDate>Sat, 24 Nov 2018 16:40:11 +0000</pubDate>
       
       <guid>https://write-verbose.com/2018/11/24/PSPam-privileged-access-management/</guid>
-      <description>Update 2019-01-12: A Microsoft security update appears to have broken this solution.
- TL;DR the following describes a DIY method for granualar assignment of elevated permissions on Windows, using PowerShell Just Enough Administration (JEA)
- Background Most users logging on to a Windows client fall into one of the following categories:
- Full administrator Standard user  Sometimes there is a need for a standard user to perform an elevated task, but granting full administrative access is undesirable.</description>
+      <description>&lt;p&gt;&lt;code&gt;Update 2019-01-12:&lt;/code&gt; &lt;a href=&#34;https://devblogs.microsoft.com/powershell/windows-security-change-affecting-powershell/&#34;&gt;A Microsoft security update&lt;/a&gt; appears to have broken this solution.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;TL;DR the following describes a DIY method for granualar assignment of elevated local permissions on Windows, using PowerShell Just Enough Administration (JEA)&lt;/p&gt;
+&lt;/blockquote&gt;</description>
     </item>
     
   </channel>

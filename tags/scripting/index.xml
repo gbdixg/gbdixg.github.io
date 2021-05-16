@@ -12,9 +12,8 @@
       <pubDate>Fri, 07 May 2021 18:05:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/05/07/vscodesnippets/</guid>
-      <description>Background Snippets are a great productivity feature in VSCode that allow common code blocks to be defined as templates.
-Predefined Snippets are included with most of the VSCode language extensions (see @category:&amp;ldquo;snippets&amp;rdquo; to see which ones), but they may not match your coding style or appear when you need them. Its simple to add your own Snippets and dramatically boost your productivity. Read on for the details.
-User-defined Snippets Open a language-specific Snippet file as follows:</description>
+      <description>&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+&lt;p&gt;Snippets are a great productivity feature in VSCode that allow common code blocks to be defined as templates.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -23,8 +22,7 @@ User-defined Snippets Open a language-specific Snippet file as follows:</descrip
       <pubDate>Sat, 13 Apr 2019 17:22:14 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/04/13/find-adsite/</guid>
-      <description>Active Directory Sites represent locations with good network connectivity. An ADSite is often created for each office or a group of offices in a metropolitan area, to generate the replication topology between Domain Controllers, and to help workstations/servers locate closest services.
-Active Directory Subnets define the IP ranges included in an AD Site. A member workstation/server will have an IP address that should fall within a defined AD subnet, making it part of an AD Site.</description>
+      <description>&lt;p&gt;Read-on for a PowerShell command to get the Active Directory Subnet and Site from the computername or IP Address.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -33,9 +31,7 @@ Active Directory Subnets define the IP ranges included in an AD Site. A member w
       <pubDate>Sat, 06 Apr 2019 18:11:01 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/04/06/export-eventlog/</guid>
-      <description>Event logs are a cornerstone of troubleshooting, but getting access to them can be difficult across the network.
- It can be faster to export a Windows event log on a remote computer, copy the .evtx file over the network and then query it locally.
- The built-in PowerShell Get-Winevent cmdlet can work against remote event logs, but it can be painfully slow to stream events when network bandwidth is limited.</description>
+      <description>&lt;p&gt;This article includes a PowerShell &lt;em&gt;Export-Eventlog&lt;/em&gt; command to quickly export a Windows event log from a remote computer and copy it to the local machine.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -44,10 +40,9 @@ Active Directory Subnets define the IP ranges included in an AD Site. A member w
       <pubDate>Sat, 30 Mar 2019 18:45:05 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/03/30/adsysteminfo/</guid>
-      <description>ADSystemInfo is a built-in COM object in Windows 7, 8.1 and 10 that simplifies lookup of Active Directory user and computer information.
- ADSystemInfo can only return information about the local computer and current user. A domain controller must be accessible when the functions are called.
-Its simple to instantiate COM objects in PowerShell. The function below shows how to use this object.
-Function Get-ADSystemInfo{ &amp;lt;# .SynopsisUsed to lookup specific AD user/computer object properties of the current session .</description>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;ADSystemInfo is a built-in COM object in Windows 7, 8.1 and 10 that simplifies lookup of Active Directory user and computer information.&lt;/p&gt;
+&lt;/blockquote&gt;</description>
     </item>
     
     <item>
@@ -56,9 +51,7 @@ Function Get-ADSystemInfo{ &amp;lt;# .SynopsisUsed to lookup specific AD user/co
       <pubDate>Sat, 16 Mar 2019 16:31:05 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/03/16/ad-nested-group-membership/</guid>
-      <description>Active Directory supports multiple levels of group nesting. A user or computer can therefore be a direct member of a group, or an indirect member via a nested group. The Windows security token used to authorise a security principlal&amp;rsquo;s access to resources includes all group memberships - direct and nested.
- The MemberOf attribute of an Active Directory user or computer object only contains the direct group memberships.
- Listing all groups (direct and nested) is neccessary when troubleshooting access to resources.</description>
+      <description>&lt;p&gt;This post lists various methods to get all the groups a Windows user is a member of (direct and through group nesting)&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -67,10 +60,8 @@ Function Get-ADSystemInfo{ &amp;lt;# .SynopsisUsed to lookup specific AD user/co
       <pubDate>Sat, 12 Jan 2019 19:15:04 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/01/12/diy-wireless-suppression/</guid>
-      <description>When you drop a laptop into a docking station with an Ethernet cable, you expect it to use the wired connection instead of than WIFI. This may not be the case on Windows unless wireless is supressed.
-This post will cover the problem, common 3rd-party solutions and a built-in solution using WMI and PowerShell
- Wireless Suppression prevents a WIFI connection being used when Ethernet is available.
- Why is this a problem?</description>
+      <description>&lt;p&gt;When you drop a laptop into a docking station with an Ethernet cable, you expect it to use the wired connection instead of than WIFI. This may not be the case on Windows unless wireless is supressed.&lt;/p&gt;
+&lt;p&gt;This post will cover the problem, common 3rd-party solutions and a built-in solution using WMI and PowerShell&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -79,10 +70,10 @@ This post will cover the problem, common 3rd-party solutions and a built-in solu
       <pubDate>Sat, 24 Nov 2018 16:40:11 +0000</pubDate>
       
       <guid>https://write-verbose.com/2018/11/24/PSPam-privileged-access-management/</guid>
-      <description>Update 2019-01-12: A Microsoft security update appears to have broken this solution.
- TL;DR the following describes a DIY method for granualar assignment of elevated permissions on Windows, using PowerShell Just Enough Administration (JEA)
- Background Most users logging on to a Windows client fall into one of the following categories:
- Full administrator Standard user  Sometimes there is a need for a standard user to perform an elevated task, but granting full administrative access is undesirable.</description>
+      <description>&lt;p&gt;&lt;code&gt;Update 2019-01-12:&lt;/code&gt; &lt;a href=&#34;https://devblogs.microsoft.com/powershell/windows-security-change-affecting-powershell/&#34;&gt;A Microsoft security update&lt;/a&gt; appears to have broken this solution.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;TL;DR the following describes a DIY method for granualar assignment of elevated local permissions on Windows, using PowerShell Just Enough Administration (JEA)&lt;/p&gt;
+&lt;/blockquote&gt;</description>
     </item>
     
   </channel>

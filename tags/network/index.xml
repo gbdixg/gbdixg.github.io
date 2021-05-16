@@ -12,8 +12,7 @@
       <pubDate>Sat, 13 Apr 2019 17:22:14 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/04/13/find-adsite/</guid>
-      <description>Active Directory Sites represent locations with good network connectivity. An ADSite is often created for each office or a group of offices in a metropolitan area, to generate the replication topology between Domain Controllers, and to help workstations/servers locate closest services.
-Active Directory Subnets define the IP ranges included in an AD Site. A member workstation/server will have an IP address that should fall within a defined AD subnet, making it part of an AD Site.</description>
+      <description>&lt;p&gt;Read-on for a PowerShell command to get the Active Directory Subnet and Site from the computername or IP Address.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -22,10 +21,8 @@ Active Directory Subnets define the IP ranges included in an AD Site. A member w
       <pubDate>Sat, 12 Jan 2019 19:15:04 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/01/12/diy-wireless-suppression/</guid>
-      <description>When you drop a laptop into a docking station with an Ethernet cable, you expect it to use the wired connection instead of than WIFI. This may not be the case on Windows unless wireless is supressed.
-This post will cover the problem, common 3rd-party solutions and a built-in solution using WMI and PowerShell
- Wireless Suppression prevents a WIFI connection being used when Ethernet is available.
- Why is this a problem?</description>
+      <description>&lt;p&gt;When you drop a laptop into a docking station with an Ethernet cable, you expect it to use the wired connection instead of than WIFI. This may not be the case on Windows unless wireless is supressed.&lt;/p&gt;
+&lt;p&gt;This post will cover the problem, common 3rd-party solutions and a built-in solution using WMI and PowerShell&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -34,10 +31,7 @@ This post will cover the problem, common 3rd-party solutions and a built-in solu
       <pubDate>Sun, 06 Jan 2019 19:15:04 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/01/06/powershell-toolmaking-regex/</guid>
-      <description>This post shows how to create a PowerShell Get-WLAN function by parsing the output of the built-in Windows NETSH.EXE
- PowerShell Tools are re-usable functions that can be used stand-alone or in a pipeline
- Ideally, the function is written in pure PowerShell, but sometimes its more convenient to create a wrapper script using the output of a command line tool.
-The example below creates a PowerShell tool to get information about WI-Fi connections on the local computer.</description>
+      <description>&lt;p&gt;This post shows how to create a PowerShell &lt;em&gt;Get-WLAN&lt;/em&gt; function, parsing the output of the built-in Windows NETSH.EXE using a Regular Expression&lt;/p&gt;</description>
     </item>
     
   </channel>

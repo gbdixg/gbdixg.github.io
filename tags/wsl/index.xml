@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>wsl on Geoff Dixon &gt; Write-Verbose</title>
+    <link>https://write-verbose.com/tags/wsl/</link>
+    <description>Recent content in wsl on Geoff Dixon &gt; Write-Verbose</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 15 May 2021 11:22:45 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/wsl/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Quick steps to enable WSL2 on Windows 10</title>
+      <link>https://write-verbose.com/2021/05/15/wsl2-quick/</link>
+      <pubDate>Sat, 15 May 2021 11:22:45 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2021/05/15/wsl2-quick/</guid>
+      <description>&lt;p&gt;A quick summary of the manual steps to enable WSL2&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

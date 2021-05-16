@@ -12,10 +12,10 @@
       <pubDate>Sat, 24 Nov 2018 16:40:11 +0000</pubDate>
       
       <guid>https://write-verbose.com/2018/11/24/PSPam-privileged-access-management/</guid>
-      <description>Update 2019-01-12: A Microsoft security update appears to have broken this solution.
- TL;DR the following describes a DIY method for granualar assignment of elevated permissions on Windows, using PowerShell Just Enough Administration (JEA)
- Background Most users logging on to a Windows client fall into one of the following categories:
- Full administrator Standard user  Sometimes there is a need for a standard user to perform an elevated task, but granting full administrative access is undesirable.</description>
+      <description>&lt;p&gt;&lt;code&gt;Update 2019-01-12:&lt;/code&gt; &lt;a href=&#34;https://devblogs.microsoft.com/powershell/windows-security-change-affecting-powershell/&#34;&gt;A Microsoft security update&lt;/a&gt; appears to have broken this solution.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;TL;DR the following describes a DIY method for granualar assignment of elevated local permissions on Windows, using PowerShell Just Enough Administration (JEA)&lt;/p&gt;
+&lt;/blockquote&gt;</description>
     </item>
     
   </channel>
