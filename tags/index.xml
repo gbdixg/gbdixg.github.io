@@ -5,7 +5,52 @@
     <link>https://write-verbose.com/tags/</link>
     <description>Recent content in Tags on Geoff Dixon &gt; Write-Verbose</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 15 May 2021 11:22:45 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 17 Jun 2021 20:11:34 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>git</title>
+      <link>https://write-verbose.com/tags/git/</link>
+      <pubDate>Thu, 17 Jun 2021 20:11:34 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/git/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>github</title>
+      <link>https://write-verbose.com/tags/github/</link>
+      <pubDate>Thu, 17 Jun 2021 20:11:34 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/github/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cmdb</title>
+      <link>https://write-verbose.com/tags/cmdb/</link>
+      <pubDate>Mon, 17 May 2021 17:45:21 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/cmdb/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>neo4j</title>
+      <link>https://write-verbose.com/tags/neo4j/</link>
+      <pubDate>Mon, 17 May 2021 17:45:21 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/neo4j/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>powershell</title>
+      <link>https://write-verbose.com/tags/powershell/</link>
+      <pubDate>Mon, 17 May 2021 17:45:21 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/powershell/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>linux</title>
       <link>https://write-verbose.com/tags/linux/</link>
@@ -34,38 +79,11 @@
     </item>
     
     <item>
-      <title>cmdb</title>
-      <link>https://write-verbose.com/tags/cmdb/</link>
-      <pubDate>Mon, 10 May 2021 21:11:06 +0000</pubDate>
-      
-      <guid>https://write-verbose.com/tags/cmdb/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>memcm</title>
       <link>https://write-verbose.com/tags/memcm/</link>
       <pubDate>Mon, 10 May 2021 21:11:06 +0000</pubDate>
       
       <guid>https://write-verbose.com/tags/memcm/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>neo4j</title>
-      <link>https://write-verbose.com/tags/neo4j/</link>
-      <pubDate>Mon, 10 May 2021 21:11:06 +0000</pubDate>
-      
-      <guid>https://write-verbose.com/tags/neo4j/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>powershell</title>
-      <link>https://write-verbose.com/tags/powershell/</link>
-      <pubDate>Mon, 10 May 2021 21:11:06 +0000</pubDate>
-      
-      <guid>https://write-verbose.com/tags/powershell/</guid>
       <description></description>
     </item>
     

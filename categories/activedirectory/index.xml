@@ -5,7 +5,20 @@
     <link>https://write-verbose.com/categories/activedirectory/</link>
     <description>Recent content in activedirectory on Geoff Dixon &gt; Write-Verbose</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 13 Apr 2019 17:22:14 +0000</lastBuildDate><atom:link href="https://write-verbose.com/categories/activedirectory/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 17 May 2021 17:45:21 +0000</lastBuildDate><atom:link href="https://write-verbose.com/categories/activedirectory/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Neo4J CMDB pt2 - Active Directory Export</title>
+      <link>https://write-verbose.com/2021/05/17/activedirectory-export/</link>
+      <pubDate>Mon, 17 May 2021 17:45:21 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2021/05/17/activedirectory-export/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;This is the second post in a series on creating a graph database CMDB.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;In this post we will export data from Microsoft Active Directory to use in the Neo4J CMDB. In a tradational on-premises Windows enterprise, there is usually a goldmine of information in AD.&lt;br&gt;
+In a later post we will import the data into Neo4J and link it to the device information from MEMCM that we exported in Part 1.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://write-verbose.com/2021/05/10/memcm-powershell-export/&#34;&gt;Part 1: Exporting data from MEMCM (SCCM)&lt;/a&gt;&lt;br&gt;
+Part 2: This article&lt;/p&gt;</description>
+    </item>
+    
     <item>
       <title>Find a computer&#39;s Active Directory Site and Subnet with PowerShell</title>
       <link>https://write-verbose.com/2019/04/13/find-adsite/</link>

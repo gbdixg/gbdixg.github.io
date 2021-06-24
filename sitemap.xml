@@ -3,27 +3,60 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://write-verbose.com/author/</loc>
-    <lastmod>2021-05-15T11:22:45+00:00</lastmod>
+    <lastmod>2021-06-17T20:11:34+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/blog/</loc>
-    <lastmod>2021-05-15T11:22:45+00:00</lastmod>
+    <lastmod>2021-06-17T20:11:34+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/categories/</loc>
-    <lastmod>2021-05-15T11:22:45+00:00</lastmod>
+    <lastmod>2021-06-17T20:11:34+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/categories/devops/</loc>
+    <lastmod>2021-06-17T20:11:34+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/author/geoff/</loc>
-    <lastmod>2021-05-15T11:22:45+00:00</lastmod>
+    <lastmod>2021-06-17T20:11:34+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/</loc>
-    <lastmod>2021-05-15T11:22:45+00:00</lastmod>
+    <lastmod>2021-06-17T20:11:34+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/git/</loc>
+    <lastmod>2021-06-17T20:11:34+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/categories/git/</loc>
+    <lastmod>2021-06-17T20:11:34+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/github/</loc>
+    <lastmod>2021-06-17T20:11:34+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/2021/06/17/git-cheatnotes/</loc>
+    <lastmod>2021-06-17T20:11:34+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/</loc>
+    <lastmod>2021-06-17T20:11:34+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/categories/activedirectory/</loc>
+    <lastmod>2021-05-17T17:45:21+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/cmdb/</loc>
+    <lastmod>2021-05-17T17:45:21+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/neo4j/</loc>
+    <lastmod>2021-05-17T17:45:21+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/2021/05/17/activedirectory-export/</loc>
+    <lastmod>2021-05-17T17:45:21+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/powershell/</loc>
+    <lastmod>2021-05-17T17:45:21+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/categories/powershell/</loc>
+    <lastmod>2021-05-17T17:45:21+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/linux/</loc>
     <lastmod>2021-05-15T11:22:45+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/2021/05/15/wsl2-quick/</loc>
-    <lastmod>2021-05-15T11:22:45+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/</loc>
     <lastmod>2021-05-15T11:22:45+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/ubuntu/</loc>
@@ -35,25 +68,13 @@
     <loc>https://write-verbose.com/categories/wsl/</loc>
     <lastmod>2021-05-15T11:22:45+00:00</lastmod>
   </url><url>
-    <loc>https://write-verbose.com/tags/cmdb/</loc>
-    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
-  </url><url>
     <loc>https://write-verbose.com/tags/memcm/</loc>
     <lastmod>2021-05-10T21:11:06+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/categories/memcm/</loc>
     <lastmod>2021-05-10T21:11:06+00:00</lastmod>
   </url><url>
-    <loc>https://write-verbose.com/tags/neo4j/</loc>
-    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
-  </url><url>
     <loc>https://write-verbose.com/2021/05/10/memcm-powershell-export/</loc>
-    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/powershell/</loc>
-    <lastmod>2021-05-10T21:11:06+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/categories/powershell/</loc>
     <lastmod>2021-05-10T21:11:06+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/sql/</loc>
@@ -75,9 +96,6 @@
     <lastmod>2020-01-17T15:22:40+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/activedirectory/</loc>
-    <lastmod>2019-04-13T17:22:14+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/categories/activedirectory/</loc>
     <lastmod>2019-04-13T17:22:14+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/coreinfrastructure/</loc>

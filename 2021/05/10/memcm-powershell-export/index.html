@@ -187,6 +187,8 @@
 
         <p><strong>This is the first post in a series on creating a graph database CMDB.</strong></p>
 <p>In part one we&rsquo;ll cover exporting computer information from Microsoft Endpoint Configuration Manager (a.k.a SCCM) using PowerShell and T-SQL. MEMCM is one datasource used to create a configuration management database (CMDB) using a Neo4j graph database.</p>
+<p>Part 1: This article<br>
+<a href="/2021/05/17/activedirectory-export/">Part 2: How to export computer information from Microsoft Active Directory using PowerShell, for use in a Neo4j CMDB</a></p>
 <p>Why a graph database? I&rsquo;ll cover this in a future post, but in simple terms, relationships are the key strength of a graph DB and this is well suited to the CMDB use case.</p>
 <h2 id="connecting-to-the-configuration-manager-database">Connecting to the Configuration Manager Database</h2>
 <p>Configuration Manager uses a Microsoft SQL Server database for it&rsquo;s Central and Primary sites. The database is named CM_&lt;Site code&gt; e.g. CM_PS1 and it contains invetory information created from WMI queries of client computers. The databases uses Windows Integrated Authentation.<br>
@@ -196,7 +198,7 @@ We need the database server name and the TCP port to connect to the database. If
 <p>Use <a href="https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms">Sql Server Management Studio (SSMS)</a> to test and develop a T-SQL query before switching to PowerShell. This query will export information to a CSV file, for import into Neo4j.</p>
 </blockquote>
 <p>Start SSMS, select <em>Windows Authentication</em> to use the logged on username. The server name field is populated using: <code>&lt;servername&gt;,&lt;port&gt;</code></p>
-<p><img src="/assets/images/memcm-powershell-export-ssms.png" alt="SSMS">|</p>
+<p><img src="/assets/images/memcm-ssms.png" alt="SSMS"></p>
 <p>Once connected to the database, click on the <em>New Query</em> button on the toolbar.
 In SSMS we need to start the query by naming the database to use. In our example, the sitecode is PS1, so the database is called CM_PS1:</p>
 <p><code>USE CM_PS1</code></p>
@@ -353,7 +355,11 @@ The other fields should be self-explanatory</p>
     }
 }
 </code></pre></div><p>In the next part of this series, we will export information from Active Directory.<br>
-In pt4, the CSV files created by the exports will be imported into the Neo4j graph database.</p>
+In pt4, the CSV files created by the exports will be imported into the Neo4j graph database.
+<br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+</blockquote>
     
 </div>
 
@@ -424,6 +430,14 @@ In pt4, the CSV files created by the exports will be imported into the Neo4j gra
                 
                 
                     <li>
+                        <a href="https://write-verbose.com/2021/06/17/git-cheatnotes/">How git stores information</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://write-verbose.com/2021/05/17/activedirectory-export/">Neo4J CMDB pt2 - Active Directory Export</a>
+                    </li>
+                
+                    <li>
                         <a href="https://write-verbose.com/2021/05/15/wsl2-quick/">Quick steps to enable WSL2 on Windows 10</a>
                     </li>
                 
@@ -433,14 +447,6 @@ In pt4, the CSV files created by the exports will be imported into the Neo4j gra
                 
                     <li>
                         <a href="https://write-verbose.com/2021/05/07/vscodesnippets/">Custom Snippets in VSCode</a>
-                    </li>
-                
-                    <li>
-                        <a href="https://write-verbose.com/2019/04/13/find-adsite/">Find a computer&#39;s Active Directory Site and Subnet with PowerShell</a>
-                    </li>
-                
-                    <li>
-                        <a href="https://write-verbose.com/2019/04/06/export-eventlog/">Export Remote Eventlog with PowerShell</a>
                     </li>
                 
             </ul>
@@ -454,12 +460,12 @@ In pt4, the CSV files created by the exports will be imported into the Neo4j gra
                 
                 <li>
                     <a href="/categories/powershell">Powershell
-                        (10)</a>
+                        (11)</a>
                 </li>
                 
                 <li>
                     <a href="/categories/activedirectory">Activedirectory
-                        (3)</a>
+                        (4)</a>
                 </li>
                 
                 <li>
@@ -469,6 +475,16 @@ In pt4, the CSV files created by the exports will be imported into the Neo4j gra
                 
                 <li>
                     <a href="/categories/browser">Browser
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/devops">Devops
+                        (1)</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/git">Git
                         (1)</a>
                 </li>
                 
@@ -489,16 +505,6 @@ In pt4, the CSV files created by the exports will be imported into the Neo4j gra
                 
                 <li>
                     <a href="/categories/security">Security
-                        (1)</a>
-                </li>
-                
-                <li>
-                    <a href="/categories/troubleshooting">Troubleshooting
-                        (1)</a>
-                </li>
-                
-                <li>
-                    <a href="/categories/vscode">Vscode
                         (1)</a>
                 </li>
                 

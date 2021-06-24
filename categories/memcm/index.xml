@@ -13,7 +13,9 @@
       
       <guid>https://write-verbose.com/2021/05/10/memcm-powershell-export/</guid>
       <description>&lt;p&gt;&lt;strong&gt;This is the first post in a series on creating a graph database CMDB.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;In part one we&amp;rsquo;ll cover exporting computer information from Microsoft Endpoint Configuration Manager (a.k.a SCCM) using PowerShell and T-SQL. MEMCM is one datasource used to create a configuration management database (CMDB) using a Neo4j graph database.&lt;/p&gt;</description>
+&lt;p&gt;In part one we&amp;rsquo;ll cover exporting computer information from Microsoft Endpoint Configuration Manager (a.k.a SCCM) using PowerShell and T-SQL. MEMCM is one datasource used to create a configuration management database (CMDB) using a Neo4j graph database.&lt;/p&gt;
+&lt;p&gt;Part 1: This article&lt;br&gt;
+&lt;a href=&#34;https://write-verbose.com/2021/05/17/activedirectory-export/&#34;&gt;Part 2: How to export computer information from Microsoft Active Directory using PowerShell, for use in a Neo4j CMDB&lt;/a&gt;&lt;/p&gt;</description>
     </item>
     
     <item>

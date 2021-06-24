@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>github on Geoff Dixon &gt; Write-Verbose</title>
+    <link>https://write-verbose.com/tags/github/</link>
+    <description>Recent content in github on Geoff Dixon &gt; Write-Verbose</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 17 Jun 2021 20:11:34 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/github/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How git stores information</title>
+      <link>https://write-verbose.com/2021/06/17/git-cheatnotes/</link>
+      <pubDate>Thu, 17 Jun 2021 20:11:34 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2021/06/17/git-cheatnotes/</guid>
+      <description>&lt;p&gt;An understanding of git internals helps with day-to-day use and is essential if you need to get yourself out of an unexpected state. This article covers the basics of how git works, allowing you to explore further on your own.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
