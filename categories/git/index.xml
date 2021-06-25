@@ -12,7 +12,7 @@
       <pubDate>Thu, 17 Jun 2021 20:11:34 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/06/17/git-cheatnotes/</guid>
-      <description>&lt;p&gt;An understanding of git internals helps with day-to-day use and is essential if you need to get yourself out of an unexpected state. This article covers the basics of how git works, allowing you to explore further on your own.&lt;/p&gt;</description>
+      <description>&lt;p&gt;The version control system GIT can seem complex, but an understanding of the internal working can help with day-to-day use and is essential to get yourself out of an unexpected state. This article covers the basics of how git works, exploring the files in the object database and laying a foundation for you to explore futher on your own.&lt;/p&gt;</description>
     </item>
     
   </channel>

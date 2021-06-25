@@ -152,7 +152,7 @@
 
         
             
-                <span class="readingTime">4 min read</span>
+                <span class="readingTime">5 min read</span>
             
         
 
@@ -185,32 +185,48 @@
     
         
 
-        <p>An understanding of git internals helps with day-to-day use and is essential if you need to get yourself out of an unexpected state. This article covers the basics of how git works, allowing you to explore further on your own.</p>
+        <p>The version control system GIT can seem complex, but an understanding of the internal working can help with day-to-day use and is essential to get yourself out of an unexpected state. This article covers the basics of how git works, exploring the files in the object database and laying a foundation for you to explore futher on your own.</p>
 <h2 id="how-are-objects-stored-in-the-repo">How are objects stored in the repo?</h2>
+<p>GIT stores information in the hidden .git folder in the root of the project. This folder is created when a repository is initialized using <code>git init</code></p>
 <blockquote>
-<p><em>Commits</em>, <em>Trees</em> and <em>Blobs</em> are stored in the .git/objects folder.</p>
+<p>Commits, trees and blobs are the fundamental objects in GIT.</p>
 </blockquote>
-<p>Commits are pointers to a point in time, trees represent folders and blobs represent files. They are all stored in files named after the SHA1 hash.<br>
-To avoid storing everything in one folder, git creates subfolders under /objects that are the first two characters of the SHA1. The filename is the remaining characters of the hash.<br>
+<p><em>Commits</em>, <em>Trees</em> and <em>Blobs</em> are stored in the .git/objects folder:</p>
+<ul>
+<li>Commits are a point in time reference to a tree</li>
+<li>Trees represent folders</li>
+<li>Blobs represent files</li>
+</ul>
+<h2 id="using-sha1-hashes">Using SHA1 hashes</h2>
+<p>Items are all stored under the.git/objects folder in files named after the SHA1 hash checksum of the object. Since checksum hashes are calculated from the content, the objects in the database cannot change - they are immutable.</p>
+<p>When there is a new commit, GIT uses the hash values to determine which files have been modfied. New files are added as new blobs and modified files are also added as new blobs. Unchanged files are just referenced, keeping the existing blob.</p>
+<p>To avoid storing everything in one folder, git creates subfolders under .git/objects that are the first two characters of the SHA1 hash. The filename in the folder is the remaining characters of the hash.<br>
 For example:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmd" data-lang="cmd">ls 
-/.git/objects/00
-/.git/objects/00/24a57c6cee77755693e0514f244b1cfa5e645d
-/.git/objects/00/5b63f2cf1d596fa3f88834b98272a9d1bf9fc3
-/.git/objects/00/f823e0b5420e1051c80e0b37922409125e9156
-/.git/objects/01
-/.git/objects/01/28a8cb2ac88861ec18599c0b05f9481bdd3600
-/.git/objects/01/8c65d03d8269df96a7da4c3de1a62cd1d1c0ab
-/.git/objects/02
-/.git/objects/02/188f346460de1876df7dac2669360396f84a58
-</code></pre></div><p>In the above, the full SHA1 of the final item is 02188f346460de1876df7dac2669360396f84a58</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">❯ ls .git/objects
+
+<span style="color:#ae81ff">00</span>
+00/24a57c6cee77755693e0514f244b1cfa5e645d
+00/5b63f2cf1d596fa3f88834b98272a9d1bf9fc3
+00/f823e0b5420e1051c80e0b37922409125e9156
+<span style="color:#ae81ff">01</span>
+01/28a8cb2ac88861ec18599c0b05f9481bdd3600
+01/8c65d03d8269df96a7da4c3de1a62cd1d1c0ab
+<span style="color:#ae81ff">02</span>
+02/188f346460de1876df7dac2669360396f84a58
+</code></pre></div><p>In the above example, there are three subfolders under .git/objects, called &ldquo;00&rdquo;, &ldquo;01&rdquo; and &ldquo;02&rdquo;.
+The full SHA1 hash of any item is constructed by adding the parent folder name to the filename.<br>
+So the final file listed above has the full hash of <span style="color:lightgreen">02</span>188f346460de1876df7dac2669360396f84a58</p>
 <h2 id="exploring-git-objects-using-git-cat-file">Exploring git objects using <code>git cat-file</code></h2>
 <p>The objects inside the git repo are often compressed, but can be viewed with <code>git cat-file</code><br>
 Specify the object hash and either:<br>
 -t = show the object type<br>
--p = print the contents<br>
-You only need part of the hash e.g. the following is a commit under the object folder:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">❯ git cat-file 0b4271c56 -t
+-p = print the contents</p>
+<p>You only need part of the hash when using most GIT commands e.g. the following is a commit found under the object folder:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">❯ git log --oneline
+0b4271c56 <span style="color:#f92672">(</span>HEAD -&gt; master<span style="color:#f92672">)</span> Updated summaries. Added article
+...
+❯ 
+❯ git cat-file 0b4271c56 -t
 commit
 </code></pre></div><h3 id="whats-in-a-commit-object">What&rsquo;s in a commit object?</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">❯ git cat-file 0b4271c56 -p
@@ -220,9 +236,14 @@ author G Dixon &lt;GBDixg@LOCAL.HOME&gt; <span style="color:#ae81ff">1621179226<
 committer G Dixon &lt;GBDixg@LOCAL.HOME&gt; <span style="color:#ae81ff">1621179226</span> +0100
 
 Updated summaries. Added article
-</code></pre></div><p>The commit contains a hash reference to the root tree (folder). If it isn&rsquo;t the first commit in the repo, then it also has the hash of the parent commit. It then has the global info for the author, and finally the commit message.</p>
+</code></pre></div><ul>
+<li>The <em>tree</em> line above is a hash reference to the root tree (folder).</li>
+<li>The <em>parent</em> line is the hash of the parent commit (unless this is the first commit).</li>
+<li>Author and committer are the global info for the operator who created the commit</li>
+<li>Finally there is the commit message.</li>
+</ul>
 <h3 id="whats-in-a-tree-object">What&rsquo;s in a tree object?</h3>
-<p>We can view the contents of a tree object in the same way e.g. using the hash of the root tree above:</p>
+<p>We can view the contents of a tree object in the same way e.g. using the hash of the tree in the commit above:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">❯ git cat-file -p 30b4d42bbe
 <span style="color:#ae81ff">100644</span> blob d298be107f27247a24d24f8f78c55d42359007be    .gitignore
 <span style="color:#ae81ff">100644</span> blob e3720ce5ced245ef02620afca619727c001e85bf    404.html
@@ -237,9 +258,9 @@ blob
 ❯ 
 ❯ git cat-file -p d298be107
 public/
-</code></pre></div><p>The blob finally contains the actual content, rather than a reference.</p>
+</code></pre></div><p>The blob finally contains the actual content, rather than a reference. In this case, the .gitignore file contains a single line with a folder to exclude from the repo (public/)</p>
 <h3 id="what-about-branches">What about Branches?</h3>
-<p>Branches are very simple in git. They are just references to a commit.</p>
+<p>Branches are very simple in GIT. They are just references to a commit.</p>
 <p>Branch objects aren&rsquo;t compressed so we can look at the contents of the file directly (without needing to use git cat-file). Local branches are stored in the .git/refs/heads folder:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">❯ cat .git/refs/heads/main
 0b4271c561e6c7ad5dcf788afdc29bebbf11e171
@@ -271,14 +292,13 @@ ref: refs/heads/main
 <li>A blob is the actual content</li>
 </ul>
 <h2 id="what-are-the-four-areas-git-uses">What are the four areas GIT uses?</h2>
-<h3 id="1-working">1) Working</h3>
-<p>Where new files and changes start</p>
-<h3 id="2-index-staging">2) Index (Staging)</h3>
-<p>Files that you want to be included in the project must be staged using <code>git add</code></p>
-<h3 id="3-repository">3) Repository</h3>
-<p>Committed changes are added to the repository. Objects in the repository are imutable. They can be added or removed but not changed.</p>
-<h3 id="4-stash">4) Stash</h3>
-<p>An optional staorage area used to save working area and index when you need to interupt your flow and work on something else in the project for a while.</p>
+<p>GIT uses four areas to manage data:</p>
+<ul>
+<li>Stash</li>
+<li>Working area</li>
+<li>Index (a.k.a. staging)</li>
+<li>Repository</li>
+</ul>
 <p>Understanding git means understanding how commands move data between the four areas and how they affect the repository. I&rsquo;ll explore this more in a future post.</p>
 <p><img src="/assets/images/gitnotes-git1.jpg" alt="FourAreas"></p>
 <p><br/><br/></p>
