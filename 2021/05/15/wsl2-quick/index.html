@@ -152,7 +152,7 @@
 
         
             
-                <span class="readingTime">1 min read</span>
+                <span class="readingTime">2 min read</span>
             
         
 
@@ -180,7 +180,13 @@
     
         
 
-        <p>A quick summary of the manual steps to enable WSL2</p>
+        <p>Windows Subsystem for Linux (WSL) is a fantastic DEV and TEST environment, providing seamless integration for Linux apps and shells running on Windows 10.</p>
+<p>Version 2 enhances the features and performance further and is available on Windows 10 1903 and higher.</p>
+<p>The following is a quick summary of the manual steps to enable WSL2 in Windows 10.</p>
+<h2 id="windows-insider-builds">Windows Insider Builds</h2>
+<p>At the time of writing, Microsoft is making it much simpler to install and enable WSL2 using a single command. This option is only available in Insider Builds 20262 and higher.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">wsl --install
+</code></pre></div><p>For the stable release versions of Windows 10, the following manual steps are required.</p>
 <h2 id="enable-virtualization-support">Enable virtualization support</h2>
 <p>This is separate to the Hyper-V optional feature, but does use the same architecture.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cmd" data-lang="cmd">dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart

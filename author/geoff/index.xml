@@ -34,7 +34,9 @@ Part 2: This article&lt;/p&gt;</description>
       <pubDate>Sat, 15 May 2021 11:22:45 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/05/15/wsl2-quick/</guid>
-      <description>&lt;p&gt;A quick summary of the manual steps to enable WSL2&lt;/p&gt;</description>
+      <description>&lt;p&gt;Windows Subsystem for Linux (WSL) is a fantastic DEV and TEST environment, providing seamless integration for Linux apps and shells running on Windows 10.&lt;/p&gt;
+&lt;p&gt;Version 2 enhances the features and performance further and is available on Windows 10 1903 and higher.&lt;/p&gt;
+&lt;p&gt;The following is a quick summary of the manual steps to enable WSL2 in Windows 10.&lt;/p&gt;</description>
     </item>
     
     <item>
