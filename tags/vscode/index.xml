@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>vscode on Write-Verbose</title>
+    <link>https://write-verbose.com/tags/vscode/</link>
+    <description>Recent content in vscode on Write-Verbose</description>
+    <image>
+      <url>https://write-verbose.com/papermod-cover.png</url>
+      <link>https://write-verbose.com/papermod-cover.png</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 07 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/vscode/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Create custom code snippets in VSCode</title>
+      <link>https://write-verbose.com/2021/05/07/vscodesnippets/</link>
+      <pubDate>Fri, 07 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2021/05/07/vscodesnippets/</guid>
+      <description>&lt;h2 id=&#34;background&#34;&gt;BACKGROUND&lt;/h2&gt;
+&lt;p&gt;VSCode snippets are a productivity feature allowing blocks of code to be inserted with a couple of keystrokes or tab completion. Its simple to add your own Snippets and dramatically boost your productivity. Read on for the details.&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<h2 id="background">BACKGROUND</h2>
+<p>VSCode snippets are a productivity feature allowing blocks of code to be inserted with a couple of keystrokes or tab completion. Its simple to add your own Snippets and dramatically boost your productivity. Read on for the details.</p>
+<blockquote>
+<p>All paths and keyboard shortcuts in this article assume VSCode is running on Windows</p>
+</blockquote>
+<p>Predefined Snippets are included with most of the VSCode language extensions (use @category:&ldquo;snippets&rdquo; in the extensions pane to see which ones). However, they may not match your coding style, or have trigger text that suits you. User-defined snippets allow complete customisation. They also support variables that are replaced with required values on insert, making them perfect for boilerplate code.</p>
+<h2 id="editing-user-defined-snippets">EDITING USER-DEFINED SNIPPETS</h2>
+<p>Open a language-specific Snippet file as follows (example using PowerShell):</p>
+<p><code>File &gt; Preferences &gt; User Snippets &gt; PowerShell</code></p>
+<p>A .json file is displayed, empty at first.</p>
+<p>A Snippet is made up of the following elements</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>&ldquo;Function template&rdquo;</td>
+<td>The name is shown by Intellisense if there is no description</td>
+</tr>
+<tr>
+<td>prefix</td>
+<td>[&ldquo;ft&rdquo;,&ldquo;function&rdquo;]</td>
+<td>One or more trigger words that activate intellisense (uses substring matching)</td>
+</tr>
+<tr>
+<td>body</td>
+<td>[&ldquo;function Verb-Noun {\r&rdquo;,&quot;[cmdletbinding()]\r&quot;]</td>
+<td>The template code to be inserted</td>
+</tr>
+<tr>
+<td>description</td>
+<td>Advanced function boilerplate</td>
+<td>Optional description displayed by intellisense</td>
+</tr>
+<tr>
+<td>placeholder</td>
+<td>${1:Verb-Noun}</td>
+<td>An element within the body that is replaced by the user after insertion. The number represents the tab stop position. The text is the default value that is replaced</td>
+</tr>
+<tr>
+<td>choices</td>
+<td>${1|one,two,three|}</td>
+<td>This placeholder will prompt to choose one of the options between the pipe characters</td>
+</tr>
+<tr>
+<td>$0</td>
+<td>[&ldquo;while($i -lt 10){\r&rdquo;,&quot;\t$0\r&quot;,&quot;}&quot;]</td>
+<td>A special placeholder that always comes last and ends insertion mode</td>
+</tr>
+</tbody>
+</table>
+<h3 id="snippet-example">Snippet example</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="s2">&#34;Advanced function&#34;</span><span class="err">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"> <span class="nt">&#34;prefix&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;fa&#34;</span><span class="p">,</span><span class="s2">&#34;function&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">	<span class="s2">&#34;body&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;Function ${1:Verb-Noun}{\r&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;[cmdletBinding()]\r&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;param(\r&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;    \r&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;)\r&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;BEGIN{\r&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;\r&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;}\r&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;\r&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;PROCESS{\r&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;$0\r&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;}\r&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;\r&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;END{\r&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;\r&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;}\r&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;\r&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;}&#34;</span>
+</span></span><span class="line"><span class="cl"> <span class="p">],</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;description&#34;</span><span class="p">:</span> <span class="s2">&#34;Advanced function boilerplate&#34;</span>
+</span></span></code></pre></div><p>Note the use of a JSON array for the body and control characters for new lines. This is quite laborious to create by hand, but VSCode extensions can make this much easier&hellip;</p>
+<h3 id="marketplace-snippet-extension">Marketplace Snippet Extension</h3>
+<p>There are a number of extensions in the VSCode marketplace that will create a Snippet from highlighted code in the editor.</p>
+<p>For example, <a href="https://marketplace.visualstudio.com/items?itemName=ryanolsonx.snippet-creator">Snippet Creator</a> will automatically detetect the in-use language and then prompt for the Snippet prefix and description.  You can then edit the Snippet to fine-tune it.</p>
+<h3 id="snippet-scope">Snippet Scope</h3>
+<p><strong>Language-specific</strong></p>
+<p>Most Snippets will be created in a language-specific Snippet file and will only prompt for insertion when using that language e.g.<br>
+        <code>%APPDATA%\Code\User\snippetsPowershell.json</code></p>
+<p><strong>Global</strong></p>
+<p>There is also a global Snippets file that applies to all languages. This file does not exist by default but can be created from <code>File &gt; Preferences &gt; User Snippets &gt; New Global Snippets file</code>. The file can have any name, but always ends in <code>.code-snippets</code>. For example:<br>
+        <code>%APPDATA%\Code\User\snippets\GlobalSnippets.code-snippets</code></p>
+<p>The global Snippets can use an additional property called <em>Scope</em> to limit them to a list of languages. If it isn&rsquo;t specified, they are available to all.</p>
+<p><strong>Project-specific</strong></p>
+<p>If a global Snippets file is placed in the <code>.vscode</code> folder at the root of a project, it is scoped only to that project.  It can still use the scope property to further limit Snippets to specific languages.</p>
+<h2 id="keyboard-shortcut">Keyboard Shortcut</h2>
+<p>Use <code>File &gt; Preferences &gt; Keyboard Shortcuts &gt; Open Keyboard Shortcuts (JSON)</code> to assign a shortcut to a Snippet. Custom shortcuts are saved in the file <code>%AppData%\Code\User\keybindings.json</code></p>
+<p>If the Snippet is not in the Global Snippets file, the langId is used to specify a language specific Snippet:</p>
+<h3 id="keybinding-example">Keybinding example</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;key&#34;</span><span class="p">:</span> <span class="s2">&#34;cmd+k 1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;command&#34;</span><span class="p">:</span> <span class="s2">&#34;editor.action.insertSnippet&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;when&#34;</span><span class="p">:</span> <span class="s2">&#34;editorTextFocus&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;args&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;langId&#34;</span><span class="p">:</span> <span class="s2">&#34;csharp&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;NewClass&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h2 id="hiding-snippets">Hiding Snippets</h2>
+<p>Hiding Snippets is useful when there is a lot of noise in the Intellisense prompts. This can occur when you create a user snippet with the same trigger as a language extension snippet.</p>
+<blockquote>
+<ul>
+<li>Open the insert Snippet dialog using CTRL + ALT + J</li>
+<li>Start typing the tigger characters to show the Snippet options in the list</li>
+<li>Hover over each item and click the Hide from Intellisense option on the right hand side</li>
+</ul>
+</blockquote>
+<h2 id="extension-snippets">Extension Snippets</h2>
+<p>I don&rsquo;t recommend trying to edit or remove extension Snippets. Changes are likely to get overwritten when the extension updates.</p>
+<p>For information, extension Snippets are stored under <code>%USERPROFILE%\.vscode\extensions</code>. For example the Microsoft PowerShell extension Snippets are at:</p>
+<p><code>%USERPROFILE%\.vscode\extensions\ms-vscode.powershell-2021.2.2\snippets\PowerShell.json</code></p>
+<p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
+  </channel>
+</rss>

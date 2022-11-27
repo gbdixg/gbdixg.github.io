@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>m365 on Write-Verbose</title>
+    <link>https://write-verbose.com/tags/m365/</link>
+    <description>Recent content in m365 on Write-Verbose</description>
+    <image>
+      <url>https://write-verbose.com/papermod-cover.png</url>
+      <link>https://write-verbose.com/papermod-cover.png</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 11 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/m365/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Migrate home drives to OneDrive with Microsoft Migration Manager - Pt2</title>
+      <link>https://write-verbose.com/2022/06/11/migration-manager-notes2/</link>
+      <pubDate>Sat, 11 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2022/06/11/migration-manager-notes2/</guid>
+      <description>More things I learned migrating home drives to OneDrive with Migration Manager</description>
+      <content:encoded><![CDATA[<p>Part two of &ldquo;Notes from the Field&rdquo; for a home drive to OneDrive for Business migration, looking at network routing, multi-geo considerations and scheduling issues.</p>
+<h2 id="be-aware-of-network-routing">BE AWARE OF NETWORK ROUTING</h2>
+<p>Although the migration tool uses a source UNC path and destination OneDrive URL, files are actually uploaded to Azure blobs before being transferred to OneDrive<br>
+e.g. *.blob.core.windows.net</p>
+<p>There is a list of <a href="https://learn.microsoft.com/en-us/sharepointmigration/mm-prerequisites">required endpoints</a>, and it&rsquo;s important to determine if the migration traffic will route out through the enterprise proxy servers, or go direct e.g. through an ExpressRoute link. This routing will be specific to your network setup.</p>
+<h3 id="use-agent-groups-in-an-enterprise-network">Use &ldquo;Agent Groups&rdquo; in an enterprise network</h3>
+<blockquote>
+<p>Agent Groups are a logical grouping within Migration Manager, allowing each migration to use a specific agent or agent(s)</p>
+</blockquote>
+<p>Carefully consider the network location of each on-prem migration agent, to optimises the traffic flow and minimise bandwidth impact. The two key considerations are:</p>
+<ul>
+<li>proximity to the home drive file server</li>
+<li>proximity to the Azure/Internet egress link.</li>
+</ul>
+<p>Assign each agent to an Agent Group based on its location. Use the Agent Group option when scheduling a migration to control which agent is used for a specific migration batch.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">SPO Admin Portal <span class="p">&gt;</span> Migration <span class="p">&gt;</span> File Shares <span class="p">&gt;</span> Agents <span class="p">&gt;</span> Select an Agent <span class="p">&gt;</span> Edit <span class="p">&gt;</span> Agent Group
+</span></span></code></pre></div><h3 id="scanning-always-uses-the-default-agent-group">Scanning always uses the Default agent group</h3>
+<p>Scanning is a pre-migration activity used to identify home drive data issues such as &lsquo;path too long&rsquo;.<br>
+While migration tasks can use agent groups, scanning tasks cannot. Scanning automatically uses the Default Agent group.<br>
+If the default group has no agents the scanning task will just wait indefinitely for an agent to be added back to the Default group.</p>
+<h3 id="group-migration-batches-by-location">Group migration batches by location</h3>
+<p>When you use the bulk migration option, the portal imports a CSV file and assigns all entries to the same Migration Agent.
+If you are carrying out migrations in multiple locations, you need to group them by location and split into separate CSV files to make efficient use of the network..</p>
+<h3 id="run-satelite-geo-migrations-separately">Run Satelite-geo migrations separately</h3>
+<p>If you are in a multi-geo tenant, don&rsquo;t mix geolocations in the same migration batch. Migration to a satellite geo needs a modified process with dedicated or modified agent config.</p>
+<p>If you are signed into the SharePoint Online Admin portal &ldquo;central geo&rdquo;, switch to the relevant &ldquo;satellite geo&rdquo; using the link in the top left. The go to  Migrations &gt; File Shares. Initially there will be no agents listed.</p>
+<p>Run the agentsetup.exe on the migration server and pause on the first screen of the setup wizard. If the agent is already installed, re-run setup to modify the configuration.</p>
+<p>With the setup wizard open, edit the following file:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl"><span class="nv">%temp%</span>\SPMigrationAgentSetup\SPMigrationAgentSetup\Microsoft.SharePoint.Migration.ClientShared.dll.config
+</span></span></code></pre></div><p>Under AppSettings, add the following:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl"><span class="p">&lt;</span>add key=GeoLocation value=<span class="s2">&#34;FRA&#34;</span> /&gt;
+</span></span></code></pre></div><p>The value must be a <a href="https://learn.microsoft.com/en-us/microsoft-365/enterprise/microsoft-365-multi-geo?view=o365-worldwide#microsoft-365-multi-geo-availability">valid Azure tenant location code</a> that is already enabled in your tenant.</p>
+<p>Save the file and continue the setup wizard. The Migration Manager agent will register in the satellite geo and be visible in the SPO Admin Portal for the relevant Geolocation.</p>
+<h2 id="timezone-headaches">TIMEZONE HEADACHES</h2>
+<p>Migration tasks can either start immediately or at a specified time. However, the time used in the Migration Manager portal is the time zone tenant home location, not the local time of the administrator accessing the portal.<br>
+To schedule a migration outside business hours, the administrator must take account of the local time where the agent is based and convert it to the tenant home time zone.</p>
+<p>Scanning tasks don&rsquo;t have a scheduling option. They just start immediately, although they use a lot less bandwidth.</p>
+<h2 id="false-positive-scan-warnings">FALSE POSITIVE SCAN WARNINGS</h2>
+<p>Temporary MS Office files create false positive warnings in the scanning tab and scan reports. There is no way to ignore the false positives.</p>
+<p>The purpose of home drive scanning is to highlight problems such as incompatible file names and long paths. However, it is hard to filter out unimportant issues:</p>
+<ol>
+<li>
+<p>Numerous files beginning with tilde are flagged as warnings in every report - e.g. &ldquo;~budget 2020.xlsx&rdquo;. These temporary files created by MS Office are often not cleaned-up when a document is closed, but it is safe to skip them during migration.</p>
+</li>
+<li>
+<p>If folder redirection to the home drive is enabled, the scan will flag a warning on every instance of desktop.ini. Again these warnings can be safely ignored as the files are recreated by Windows if needed.</p>
+</li>
+</ol>
+<p>This isn&rsquo;t to say that the pre-migration scan is a waste of time. It does have some benefits:</p>
+<ul>
+<li>
+<p>confirms the Migration Manager service account has access to the home drive</p>
+</li>
+<li>
+<p>provides statistics such as overall home drive size and number of files</p>
+</li>
+<li>
+<p>highlights long path issues</p>
+</li>
+</ul>
+<h2 id="complex-migration-scheduling">COMPLEX MIGRATION SCHEDULING</h2>
+<p>There is nothing in Migration Manager help with user scheduling. Scheduling is required because there is some user impact:</p>
+<ul>
+<li>User communciation should explain what is changing and link to more information (FAQs, OneDrive training material etc)</li>
+<li>Ideally users log off prior to the data copy to prevent issues with files locked in-use</li>
+<li>Remote users may need to use PLAP VPN to ensure the home drive mapping is removed at next logon</li>
+<li>Post-migration support may be required to help users with the changes (removal of home drive and new data location)</li>
+</ul>
+<p>If your IT department does not have any scheduling software, you will most likely end-up using spredasheets.</p>
+<h2 id="juggling-csv-files">JUGGLING CSV FILES</h2>
+<p>An enterprise will need to use the &ldquo;bulk migration&rdquo; option in Migration Manager to migrate large numbers of home drives at a time. This option uses a CSV import to specify source UNC paths and target OneDrive URLs. The CSV must be a set format and a template can be downloaded for this purpose.</p>
+<p>The pre-migration file share scan step also uses a CSV file, but unfortuately it uses different fields and headers.</p>
+<p>The additional migration steps are likely to also be driven from a list such as a CSV file e.g.</p>
+<ul>
+<li>Pre-provisioning OneDrives that don&rsquo;t already exist</li>
+<li>Removing Active Directory user homeDirectory and homeDrive</li>
+<li>Updating folder redirection policies</li>
+<li>Updating home drive ACLs or file shares to prevent post-migration access</li>
+</ul>
+<p>With multiple CSV files in-play and last minute changes to schedules, user scheduling can be complex in its own right.</p>
+<h2 id="summary">SUMMARY</h2>
+<p>Microsoft Migration Manager is a free but basic migration tool. By the time you have discovered its limitations, you may wish you had paid for an ISV product instead.</p>
+<p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>Migrate home drives to OneDrive with Microsoft Migration Manager - Pt1</title>
+      <link>https://write-verbose.com/2022/06/04/migration-manager-notes1/</link>
+      <pubDate>Sat, 04 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2022/06/04/migration-manager-notes1/</guid>
+      <description>Things I learned migrating home drives to OneDrive with Migration Manager.</description>
+      <content:encoded><![CDATA[<p>Part one of &ldquo;Notes from the Field&rdquo; for a home drive to OneDrive for Business migration using Microsoft Migration Manager, covering migration tool considerations, architecture and access requirements.</p>
+<h2 id="tool-selection">TOOL SELECTION</h2>
+<p>Migration Manager comes from the Microsoft purchase of <a href="https://mover.io/index.html">Mover.io</a> in 2019. It is presented as an Enterprise migration tool that puts more structure around the migration process than the more basic SharePoint Migration Tool. However, be prepared for limited configuration and customisation options. As a basic guide consider the following tool choices for file share migration:</p>
+<ul>
+<li>SharePoint Migration Tool : Ad hoc data migrations</li>
+<li>Migration Manager : Large scale migrations using repetitive process</li>
+<li>3rd Party Tool : When you need a lot of control or have a complex process</li>
+</ul>
+<h2 id="what-are-complex-requirements">WHAT ARE COMPLEX REQUIREMENTS?</h2>
+<p>Migration Manager focuses on the data migration, but for most companies, this is only part of the story. Consider the following:</p>
+<ul>
+<li>How to move off folder redirection and offline files</li>
+<li>Removing the home drive mapping</li>
+<li>Cleaning-up or restricting access to home drives</li>
+</ul>
+<p>A 3rd-party tool, could be more suitable if you are looking to automate as much of the process as possible.For example, <a href="https://sharegate.com/blog/easier-onedrive-for-business-migration">ShareGate Migration Tool</a> provides a PowerShell interface.</p>
+<p>Migration Manager is still attractive as it&rsquo;s effectively free as part of an enterprise M365 license.</p>
+<h2 id="architecture">ARCHITECTURE</h2>
+<p>Migration Manager consists of the following components:</p>
+<h3 id="agents">Agents</h3>
+<p>Migration Manager agents run on-premises and perform the data migration, reading data from home drives and copying it to OneDrive for Business.<br>
+The agent can be installed directly on a file server (assuming it is a Windows Server), but the recommended deployment is on a dedicated server.</p>
+<p>The agent sends heartbeat information to the SharePoint Online (SPO) Admin Portal and downloads scanning and migration tasks in return.</p>
+<h3 id="sharepoint-online-admin-portal">SharePoint Online Admin Portal</h3>
+<p>The SPO Admin Portal is used to manage the agents and assign migration tasks to them. The &ldquo;Migration&rdquo; blade has tabs for scanning, agents and migrations.</p>
+<h3 id="file-shares">File shares</h3>
+<p>File shares are host the data being migrated. The migration agent service account needs read access to the data and acceses it over SMB.</p>
+<h3 id="proxy-server">Proxy server</h3>
+<p>The migration agent communicates with an SPO Admin portal endpoint and the Azure blob service over HTTPs. If the company does not have an Express Route, traffic is likely to go through an enterprise proxy server.</p>
+<h2 id="a-lot-of-elevated-access">A LOT OF ELEVATED ACCESS</h2>
+<blockquote>
+<p>If you work with strict security controls, be prepared for Migraton Manager&rsquo;s privileged access requirements:</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Account</th>
+<th>Permission</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cloud service account</td>
+<td>SharePoint Administrator</td>
+<td>Agent communication with SPO Admin portal</td>
+</tr>
+<tr>
+<td>Cloud service account</td>
+<td>OD4B Site Collection Admin</td>
+<td>Agent write access to OneDrives</td>
+</tr>
+<tr>
+<td>On-prem service account</td>
+<td>Read Access to Home Drives</td>
+<td>Agent read access to home drives</td>
+</tr>
+<tr>
+<td>I.T. admin account</td>
+<td>SharePoint Administrator</td>
+<td>Scheduling scans and migrations in the SPO Admin portal</td>
+</tr>
+</tbody>
+</table>
+<h3 id="why-sharepoint-administrator">Why SharePoint Administrator?</h3>
+<p>Under the hood, OneDrive for Business is a personal SharePoint site and from an administrative perspective, Microsoft has done very little to separate OneDrive for Business from SharePoint Online.</p>
+<p>There is no OneDrive-specific RBAC. To manage OD4B, you need to be a SharePoint Administrator, and Migration Manager is operated through a blade in the SharePoint Online Admin Console.
+The technicians managing and monitoring the data migrations will need the SharePoint Administrator role and so will the Service Account used by the migration agent.</p>
+<h3 id="sharepoint-administrator-role-is-not-enough">SharePoint Administrator role is not enough</h3>
+<blockquote>
+<p>A SharePoint Administrator cannot copy data to OneDrive by default, but they can grant themselves the additional rights needed</p>
+</blockquote>
+<p>By default, only the owner (user) has access to OneDrive for Business. One option is to define a OD4B Secondary Admin group at the tenant level, but this will only apply to new OneDrives as they are provisioned.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">SPO Admin Portal <span class="p">&gt;</span> Advanced <span class="p">&gt;</span> More Features <span class="p">&gt;</span> Setup My Sites <span class="p">&gt;</span> Secondary Owner
+</span></span></code></pre></div><p>For already provisioned OneDrives, use a script to grant the <em>SiteCollectionAdmin</em> permission on each OneDrive to a group containing the Migration Manager cloud service account.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="nb">Connect-SPOService</span> <span class="n">-URL</span> <span class="nv">$AdminURL</span>
+</span></span><span class="line"><span class="cl"><span class="nb">Set-SPOUser</span> <span class="n">-Site</span> <span class="nv">$UsersOneDriveURL</span> <span class="n">-LoginName</span> <span class="nv">$CloudServiceAccountorGroup</span> <span class="n">-IsSiteCollectionAdmin</span> <span class="nv">$True</span>
+</span></span></code></pre></div><p><strong>NOTE</strong>: This command normally expects a user account as the LoginName. If using a group name, it must be in <a href="https://social.technet.microsoft.com/wiki/contents/articles/13921.sharepoint-20102013-claims-encoding.aspx">claims encoded</a> format.</p>
+<p>Part two in this series will look at network routing, multi-geo considerations and scheduling issues.</p>
+<p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
+  </channel>
+</rss>

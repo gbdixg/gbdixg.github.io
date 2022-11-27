@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://write-verbose.com/sitemap.xml

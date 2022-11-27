@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>wsl on Write-Verbose</title>
+    <link>https://write-verbose.com/tags/wsl/</link>
+    <description>Recent content in wsl on Write-Verbose</description>
+    <image>
+      <url>https://write-verbose.com/papermod-cover.png</url>
+      <link>https://write-verbose.com/papermod-cover.png</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 15 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/wsl/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>WSL2 on Windows 10 - quick setup</title>
+      <link>https://write-verbose.com/2021/05/15/wsl2-quick/</link>
+      <pubDate>Sat, 15 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2021/05/15/wsl2-quick/</guid>
+      <description>&lt;p&gt;Windows Subsystem for Linux (WSL) is a fantastic Dev and Test environment, providing seamless integration for Linux apps and shells running on Windows 10. This post is a quick summary of the manual steps to enable WSL2 in Windows 10.&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<p>Windows Subsystem for Linux (WSL) is a fantastic Dev and Test environment, providing seamless integration for Linux apps and shells running on Windows 10. This post is a quick summary of the manual steps to enable WSL2 in Windows 10.</p>
+<h2 id="windows-insider-builds">Windows Insider Builds</h2>
+<p>At the time of writing, Microsoft is making it much simpler to install and enable WSL2 using a single command. This option is only available in Insider Builds 20262 and higher.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">wsl --install
+</span></span></code></pre></div><p>For the stable release versions of Windows 10, the following manual steps are required.</p>
+<h2 id="enable-virtualization-support">Enable virtualization support</h2>
+<p>This is separate to the Hyper-V optional feature, but does use the same architecture.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+</span></span></code></pre></div><h2 id="enable-wsl-feature">Enable WSL feature</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+</span></span></code></pre></div><h2 id="wsl-kernel-update-package">WSL kernel update package</h2>
+<p>This is required because Microsoft removed the previously included Linux kernel from Windows. It now gets updated and patched through Windows Update</p>
+<p><a href="https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi">Download and install the update package</a></p>
+<h2 id="set-the-default-version">Set the default version</h2>
+<p>Make sure everything is version 2</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="n">wsl</span> <span class="p">-</span><span class="n">-set-default-version</span> <span class="n">2</span>
+</span></span></code></pre></div><h2 id="install-the-required-distro">Install the required distro</h2>
+<p>Ubuntu is the most reliable on Windows at the time of writing</p>
+<p><a href="https://www.microsoft.com/en-gb/p/ubuntu-2004-lts/9n6svws3rx71">Ubuntu 20.04 LTS</a></p>
+<h2 id="create-username">Create username</h2>
+<p>Start the distro from the Start Menu shortcut. When prompted, specify a username and password.</p>
+<p>The user is automatically added to the Sudo group.</p>
+<h2 id="update-packages-in-the-distro">Update packages in the distro</h2>
+<p>Launch Ubuntu and start a terminal shell</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt-get update
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">sudo apt-get upgrade
+</span></span></code></pre></div><h2 id="check-you-are-running-version-2">Check you are running version 2</h2>
+<p>Windows 10 PowerShell:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="n">wsl</span> <span class="p">-</span><span class="n">-list</span> <span class="n">-v</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="n">NAME</span>                   <span class="n">STATE</span>           <span class="n">VERSION</span>
+</span></span><span class="line"><span class="cl"><span class="p">*</span> <span class="nb">docker-desktop</span><span class="n">-data</span>    <span class="n">Running</span>         <span class="n">2</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Ubuntu</span><span class="p">-</span><span class="n">20</span><span class="p">.</span><span class="n">04</span>           <span class="n">Running</span>         <span class="n">2</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">docker-desktop</span>         <span class="n">Running</span>         <span class="n">2</span>
+</span></span></code></pre></div><h2 id="location-of-the-vhdx-file">Location of the .vhdx file</h2>
+<p>The virtual disk containing the Linux OS is located here:</p>
+<p><code>%LOCALAPPDATA%\Packages\CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc\LocalState\ext4.vhdx</code></p>
+<p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
+  </channel>
+</rss>

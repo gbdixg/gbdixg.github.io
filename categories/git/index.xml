@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>git on Write-Verbose</title>
+    <link>https://write-verbose.com/categories/git/</link>
+    <description>Recent content in git on Write-Verbose</description>
+    <image>
+      <url>https://write-verbose.com/papermod-cover.png</url>
+      <link>https://write-verbose.com/papermod-cover.png</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 27 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/categories/git/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GIT branches - merging, rebasing and squashing commits</title>
+      <link>https://write-verbose.com/2021/06/27/gitbranches/</link>
+      <pubDate>Sun, 27 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2021/06/27/gitbranches/</guid>
+      <description>&lt;p&gt;This article focuses on common GIT actions that affect branches, such as merging, rebasing branches and squashing local commits.&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<p>This article focuses on common GIT actions that affect branches, such as merging, rebasing branches and squashing local commits.</p>
+<h2 id="merge">MERGE</h2>
+<p>Merging brings changes from one branch into another. A feature branch is often created to work on a particular update. When complete, the branch needs to be merged back into &ldquo;main&rdquo;. The process would be as follows:</p>
+<p>First switch to the main branch using either <code>git switch main</code> or <code>git checkout main</code>.<br>
+Next merge the featureA branch into main using <code>git merge featureA</code>.</p>
+<p>GIT will create a new commit with the merged changes. This is a special commit as it has two parents - the previous commit on main and the previous commit on the featureA branch. The main branch is updated to point to this new commit and HEAD continues to point to main. FeatureA still points to the last commit on that branch.</p>
+<h2 id="conflicts">CONFLICTS</h2>
+<p>If a conflict is detected during a merge, GIT will interupt the process and prompt for user action<br>
+GIT will be in a special state where it expects the conflict to be resolved before continuing.<br>
+<code>git status</code> at this point shows the message &ldquo;you have unmerged paths&hellip;fix conflicts and run <code>git commit</code>&hellip;use <code>git merge --abort</code> to abort the merge&rdquo;.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">❯ git status
+</span></span><span class="line"><span class="cl">On branch master
+</span></span><span class="line"><span class="cl">You have unmerged paths.
+</span></span><span class="line"><span class="cl">  <span class="o">(</span>fix conflicts and run <span class="s2">&#34;git commit&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Unmerged paths:
+</span></span><span class="line"><span class="cl">  <span class="o">(</span>use <span class="s2">&#34;git add &lt;file&gt;...&#34;</span> to mark resolution<span class="o">)</span>
+</span></span><span class="line"><span class="cl">        both modified:   consolidate.py
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">no changes added to commit <span class="o">(</span>use <span class="s2">&#34;git add&#34;</span> and/or <span class="s2">&#34;git commit -a&#34;</span><span class="o">)</span>
+</span></span></code></pre></div><p>GIT will display the files that have conflicts.  The problem can be resolved at the command line, but a graphical diff tool such as <a href="https://www.perforce.com/products/helix-core-apps/merge-diff-tool-p4merge">p4merge</a> may be better.</p>
+<p>If you open the files in a basic text editor you will see GIT has marked the conflicts.<br>
+In the example below, the file &ldquo;consolidate.py&rdquo; is in conflict. GIT has updated the file with markers showing the lines that need attendtion. The HEAD section shows the lines as they appear in the current branch (main).  Then there is a section break and directly below are the same lines as they appear in the <em>featureA</em> branch.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">import sys
+</span></span><span class="line"><span class="cl"><span class="o">&lt;&lt;&lt;&lt;&lt;&lt;</span>&lt; HEAD
+</span></span><span class="line"><span class="cl"><span class="nv">name</span><span class="o">=</span><span class="nb">read</span> <span class="s2">&#34;Enter your name&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">age</span><span class="o">=</span><span class="nb">read</span> <span class="s2">&#34;Enter your age&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="o">=======</span>
+</span></span><span class="line"><span class="cl"><span class="nb">read</span> <span class="s2">&#34;Please enter your name&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">read</span> <span class="s2">&#34;Enter your age&#34;</span>
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt;&gt;&gt;&gt;&gt; featureA
+</span></span></code></pre></div><p>To resolve the conflict, manually edit the file so it reflects the desired state and remove the markers and section break.<br>
+Save the file,  add it to the GIT index, then commit the change to complete the merge, as shown below:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">❯ git add consolidate.py
+</span></span><span class="line"><span class="cl">❯ 
+</span></span><span class="line"><span class="cl">❯ git commit
+</span></span><span class="line"><span class="cl"><span class="o">[</span>main 1aca0e1<span class="o">]</span> Introduce featureA that enables user input
+</span></span></code></pre></div><p>In summary:</p>
+<ol>
+<li>Switch to the branch you are merging into (e.g. <code>git switch main</code>)</li>
+<li>Merge the required branch into the current branch (i.e. <code>git merge feature1</code>)</li>
+<li>Fix any conflict by editing the file</li>
+<li>Add the updated file to the index (<code>git add &lt;file&gt;</code>)</li>
+<li>Commit to complete the merge (<code>git commit</code>)</li>
+</ol>
+<h2 id="fast-forward-merge">FAST FORWARD MERGE</h2>
+<p>A fast foward merge occurs automatically when git moves a branch without having to create a new commit. It just re-uses an existing commit.<br>
+The most common case is when you want to merge a feature branch into main, but then continue working on the Feature branch with the latest updates from main.<br>
+When you first merge the branch into main, GIT creates a new commit on main that has two parents - the previous commit on main and the previous commit on the branch.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">❯ git switch main
+</span></span><span class="line"><span class="cl">❯ git merge featureA
+</span></span></code></pre></div><p>The status is now:</p>
+<ul>
+<li>main branch: contains the latest changes and any conflict resolutions</li>
+<li>featureA branch: contains the working feature before the merge into main</li>
+</ul>
+<p>To continue developing on featureA, you need to merge main back into the featureA branch so it has the latest updates</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">❯ git switch featureA
+</span></span><span class="line"><span class="cl">❯ git merge main
+</span></span></code></pre></div><p>At this point, GIT realises that there is already a commit that has the merged contents of featureA and main, so it just re-uses this commit.  The merge message shows it performed a &ldquo;fast-forward merge&rdquo;</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">❯ git merge main
+</span></span><span class="line"><span class="cl">Updating 68a874e..1aca0e1
+</span></span><span class="line"><span class="cl">Fast-forward
+</span></span><span class="line"><span class="cl"> consolidate.py <span class="p">|</span> <span class="m">6</span> +++---
+</span></span><span class="line"><span class="cl"> orders.py      <span class="p">|</span> <span class="m">4</span> ++++
+</span></span><span class="line"><span class="cl"> <span class="m">2</span> files changed, <span class="m">7</span> insertions<span class="o">(</span>+<span class="o">)</span>, <span class="m">3</span> deletions<span class="o">(</span>-<span class="o">)</span>
+</span></span></code></pre></div><h2 id="detached-head">DETACHED HEAD</h2>
+<p>HEAD is a reference to a branch or a commit. Normally HEAD points to the current branch and thereby indirectly to the latest commit on that branch.  <em>Detached head</em> is a state where the HEAD is not referencing a branch, it is pointing to an older commit.</p>
+<p>Why would this happen?  Perhaps you want to do some experimentation without creating a branch.  You would checkout a commit rather than creating a branch.  At this point HEAD is no longer tracking a branch and so it is detached. It acts like a temporary branch. After making some commits, you could do one of the following:</p>
+<p>a) Switch back to a branch<br>
+b) Put a branch on the current commit</p>
+<p>If you switch back to a branch, any previous commits outside a branch are isolated in the object database and are not referenced by any branch. Eventually they will be removed by the GIT garbage collector.</p>
+<p>Alternatively, <code>git branch &lt;branchname&gt;</code> can be used to put a branch on the current commit. At this point it is like any other branch and HEAD is no longer detached.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">❯ git checkout 460ce0e
+</span></span><span class="line"><span class="cl">Note: switching to <span class="s1">&#39;460ce0e&#39;</span>.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">You are in <span class="s1">&#39;detached HEAD&#39;</span> state. You can look around, make experimental
+</span></span><span class="line"><span class="cl">changes and commit them, and you can discard any commits you make in this
+</span></span><span class="line"><span class="cl">state without impacting any branches by switching back to a branch.
+</span></span></code></pre></div><h2 id="rebase">REBASE</h2>
+<p>Rebase is an alternative to a merge.  It changes the base of a branch, effectively adding it to the top of another branch as if the changes were sequential rather than created in parallel.</p>
+<p>The rebase process looks at the first commit that is shared by two branches and uses the next commit as the base of the branch being rebased.  It detaches this branch and re-attaches it to the head of the other branch. Under the hood, the commits do not actually move, new commits are created that are copies of the original commits on the branch. GIT moves the branch and the original commits become orphaned and eventually garbage collected.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">&gt; git switch featureA <span class="c1"># make featureA the current branch</span>
+</span></span><span class="line"><span class="cl">&gt;
+</span></span><span class="line"><span class="cl">&gt; git rebase main <span class="c1"># rebase the featureA branch onto main</span>
+</span></span></code></pre></div><h3 id="why-use-rebase">Why use Rebase?</h3>
+<p>Rebase can help to simplify the history of a project. If there is a lot of merging it can complicate the history.<br>
+Howver, use with caution. Rebased history is not the true history, so merging is safer.</p>
+<h3 id="squashing-commits">Squashing commits</h3>
+<p><em>Squashing</em> re-writes the GIT history, making two or more commits appear as if they were a single commit. Why would you want to do this?  Developers often commit very frequently when working locally on a feature, but don&rsquo;t want to complicate the shared history with all these individual commits.  Squashing commits before merging or pushing to an origin repo simplifies the history in a large project.</p>
+<p>The interactive mode of <code>git rebase</code> is used to squash commits. This is totally different to the basic use of rebase. A starting point commit must be specified as we don&rsquo;t normally want to edit the entire history. The starting point is excluded from the list and the interactive mode starts from the next commit.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">&gt; git rebase --interactive 80f137
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">pick fd4d8d9 Updates Adsense css
+</span></span><span class="line"><span class="cl">pick 8d41123 Adds adsense css
+</span></span><span class="line"><span class="cl">pick 9b2aafa Adds article
+</span></span><span class="line"><span class="cl">pick 32735fb Fixes error in  post
+</span></span><span class="line"><span class="cl">pick 7f0063a Fixes typo
+</span></span><span class="line"><span class="cl">pick c85a17f Adds article
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Rebase 55a0831..c85a17f onto 55a0831 (6 commands)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Commands:</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># p, pick &lt;commit&gt; = use commit</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># r, reword &lt;commit&gt; = use commit, but edit the commit message</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># e, edit &lt;commit&gt; = use commit, but stop for amending</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># s, squash &lt;commit&gt; = use commit, but meld into previous commit</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># f, fixup &lt;commit&gt; = like &#34;squash&#34;, but discard this commit&#39;s log message</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># x, exec &lt;command&gt; = run command (the rest of the line) using shell</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># b, break = stop here (continue rebase later with &#39;git rebase --continue&#39;)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># d, drop &lt;commit&gt; = remove commit</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># l, label &lt;label&gt; = label current HEAD with a name</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># t, reset &lt;label&gt; = reset HEAD to a label</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># m, merge [-C &lt;commit&gt; | -c &lt;commit&gt;] &lt;label&gt; [# &lt;oneline&gt;]</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># .       create a merge commit using the original merge commit&#39;s</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># .       message (or the oneline, if no original merge commit was</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># .       specified). Use -c &lt;commit&gt; to reword the commit message.</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># These lines can be re-ordered; they are executed from top to bottom.</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># If you remove a line here THAT COMMIT WILL BE LOST.</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># However, if you remove everything, the rebase will be aborted.</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#</span>
+</span></span></code></pre></div><p>An interactive editor opens as shown above.  The commits are listed (in reverse order compared to most git commands). The editor gives the commands - such as pick, reword etc.</p>
+<p>By default all commits are on a line that starts with &ldquo;pick&rdquo;. Editing these lines will modify the history.<br>
+For example, you can move entire lines to change the order of commits.
+Changing &ldquo;pick&rdquo; to &ldquo;squash&rdquo;  will cause the commit to be merged with the one above and GIT will prompt to select or edit one of the two commit messages.</p>
+<h3 id="the-golden-rule-of-rebase">The golden rule of Rebase</h3>
+<p>Rebasing can lead to problems when sharing a repo across a team. The purpose of the rebase is to simplify history, but it can lead to duplication in the GIT multi-master sharing model.  The golden rule is therefore:</p>
+<blockquote>
+<p>Never rebase shared commits. Only use rebase for commits that have not yet been shared.</p>
+</blockquote>
+<h2 id="ammending-a-commit">Ammending a commit</h2>
+<p>If you want to update the latest commit to add additional files, add them to the index then use the <code>--ammend</code> option on <code>git commit</code>. This will create a new commit with the additional files and leave the previous commit as an orphan that will eventually get garbage collected. You can only use this option to update the latest commit.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">&gt; git commit --ammend 
+</span></span></code></pre></div><h2 id="tags">TAGS</h2>
+<p>Tags are labels for a commit. Tags are normally used to mark releases.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">❯ git tag version1_0 -a -m <span class="s2">&#34;First version. Basic features&#34;</span> <span class="c1"># Create a new annotated tag</span>
+</span></span><span class="line"><span class="cl">❯ 
+</span></span><span class="line"><span class="cl">❯ git tag version2_0 <span class="c1"># Create a lightweight tag (not annotated)</span>
+</span></span><span class="line"><span class="cl">❯ 
+</span></span><span class="line"><span class="cl">❯ git tag <span class="c1"># get a list of tags</span>
+</span></span></code></pre></div><p>Tags are rederences to a commit, but unlike branches, tags never move.</p>
+<h2 id="clone">CLONE</h2>
+<p><code>git clone</code> is used to copy an existing repository into an empty local folder. The copy contains the working files and the full GIT history.<br>
+The existing repo can be local or remote. It can be referenced by an SSH or HTTP address. By default, it will clone the branch HEAD is pointing to, but this can be modified using the <code>-branch</code> option.</p>
+<p>The command is mostly used to clone a repo from a hosting service such as Github - so it can be edited locally and then pushed back up to Github.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">❯ git clone https://github.com/myaccount/myrepo <span class="c1"># clone a repo from Github into the current local folder</span>
+</span></span></code></pre></div><p>The source repo is registered as a &ldquo;remote&rdquo; called <em>origin</em> by default. <code>git status</code> will show if the local branch is ahead or behind the remote branch.</p>
+<p>The information about the remote repo is stored in the /git/config file. The remote branches are tracked by objects in the <em>.git/refs/remotes folder</em>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">❯ git show-ref main <span class="c1"># show all branches that have main in the name and the commit they are pointing to</span>
+</span></span><span class="line"><span class="cl">8195805D refs/heads/main
+</span></span><span class="line"><span class="cl">B05DB506 refs/remotes/origin/main
+</span></span></code></pre></div><p>If the local repo is in-sync with the remote, they will be pointing to the same commit, i.e. the hashes above would be the same.</p>
+<p>The <code>git clone -bare</code> option will clone the history but not the working area. It will also not setup the original source as a remote. This  can be used to create a central repo that is just a source for cloning and not worked on directly.</p>
+<h2 id="push--fetch--pull">PUSH / FETCH / PULL</h2>
+<p><code>git push</code> is used to send local changes to the remote origin repo.  But what happens if there have been other changes on the remote before we push and we now have a conflict?</p>
+<p>The answer is to fetch the remote changes and resolve the conflict locally before pushing. There is a comand to get the latest changes from the remote - <code>git fetch</code>, but rather than fetching and then merging in two steps, the <code>git pull</code> command peforms a fetch and merge in one command.</p>
+<p>When working with a remote, you should always pull before pushing.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">❯ git pull origin
+</span></span></code></pre></div><p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
+  </channel>
+</rss>
