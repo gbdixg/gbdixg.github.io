@@ -94,10 +94,10 @@ The next two lines show assign symbols to the two versions of the index.md file 
     
     <item>
       <title>GIT branches - merging, rebasing and squashing commits</title>
-      <link>https://write-verbose.com/2021/06/27/gitbranches/</link>
+      <link>https://write-verbose.com/2021/06/27/usinggit/</link>
       <pubDate>Sun, 27 Jun 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://write-verbose.com/2021/06/27/gitbranches/</guid>
+      <guid>https://write-verbose.com/2021/06/27/usinggit/</guid>
       <description>&lt;p&gt;This article focuses on common GIT actions that affect branches, such as merging, rebasing branches and squashing local commits.&lt;/p&gt;</description>
       <content:encoded><![CDATA[<p>This article focuses on common GIT actions that affect branches, such as merging, rebasing branches and squashing local commits.</p>
 <h2 id="merge">MERGE</h2>
