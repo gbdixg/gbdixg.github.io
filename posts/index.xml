@@ -9,7 +9,292 @@
       <link>https://write-verbose.com/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 11 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 18 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Avoid excess permissions with a custom app to access MSGraph PowerShell</title>
+      <link>https://write-verbose.com/2023/03/19/AzureAppRegistration/</link>
+      <pubDate>Sat, 18 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2023/03/19/AzureAppRegistration/</guid>
+      <description>&lt;p&gt;A step by step guide to registering a custom Azure application for interactive MSGraph PowerShell. The example will create an app for use with the &lt;a href=&#34;https://write-verbose.com/2023/03/18/Show-Win32AppUI/&#34;&gt;Show-Win32AppUI tool&lt;/a&gt;.&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<p>A step by step guide to registering a custom Azure application for interactive MSGraph PowerShell. The example will create an app for use with the <a href="/2023/03/18/Show-Win32AppUI/">Show-Win32AppUI tool</a>.</p>
+<h1 id="why-use-a-custom-app">Why use a custom app?</h1>
+<p>The Microsoft Graph enables access to a wide scope of Azure / Microsoft 365 providers and resources. A compromised Global Administrator account or errant script could cause widespread damage very quickly.</p>
+<p>A custom Azure application can limit MS Graph access to specific requirements of a PowerShell script, reducing the risk.</p>
+<h1 id="disable-user-consent">Disable user consent</h1>
+<p>The first step is to prevent users granting application consent. User consent is enabled by default and presents a risk of unwanted access to company data.</p>
+<p>In the <a href="https://aad.portal.azure.com/">Azure AD portal</a>, navigate to <strong>Enterprise applications</strong> and then <strong>Consent and permissions</strong>.</p>
+<p>Many companies change the setting to <strong>Do not allow user consent</strong>. Note that this does create an admin overhead, so you could look into the advanced options of defining low-risk permissions or using conditional access.</p>
+<p><img loading="lazy" src="/img/CustomApp0.png" alt="User consent"  />
+</p>
+<p>The following admin roles can then grant application consent:</p>
+<ul>
+<li>Cloud App Administrators</li>
+<li>Global Administrators</li>
+</ul>
+<h1 id="clean-up-microsoft-graph-powershell">Clean-up Microsoft Graph PowerShell</h1>
+<p>If you want to implement Custom Apps for access to MSGraph, you should first review and remove excess permissions from the <em>Microsoft Graph PowerShell</em> app. Over time administrators may have consented to more and more permissions.</p>
+<p>It isn&rsquo;t possible to remove permissions or revoke consent in the admin portal, but it does provide the PowerShell commands.</p>
+<p>In the <a href="https://aad.portal.azure.com/">Azure AD portal</a>, navigate to <strong>Enterprise applications</strong><br>
+In the <em>All applications</em> view, select <strong>Microsoft Graph PowerShell</strong> and then <strong>Permissions</strong><br>
+Click <strong>Review Permissions</strong></p>
+<p><img loading="lazy" src="/img/CustomApp05.png" alt="User consent"  />
+</p>
+<p>Select <strong>This application has more permissions that I want</strong>. The following PowerShell is displayed (uses the AzureAD module):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Connect-AzureAD</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Get Service Principal using objectId</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$sp</span> <span class="p">=</span> <span class="nb">Get-AzureADServicePrincipal</span> <span class="n">-ObjectId</span> <span class="s2">&#34;1aded007-dfd1-49cc-8b70-9923a4f53a05&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Get all delegated permissions for the service principal</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$spOAuth2PermissionsGrants</span> <span class="p">=</span> <span class="nb">Get-AzureADOAuth2PermissionGrant</span> <span class="n">-All</span> <span class="vm">$true</span><span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="py">clientId</span> <span class="o">-eq</span> <span class="nv">$sp</span><span class="p">.</span><span class="py">ObjectId</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Remove all delegated permissions</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$spOAuth2PermissionsGrants</span> <span class="p">|</span> <span class="nb">ForEach-Object</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">Remove-AzureADOAuth2PermissionGrant</span> <span class="n">-ObjectId</span> <span class="nv">$_</span><span class="p">.</span><span class="py">ObjectId</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Get all application permissions for the service principal</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$spApplicationPermissions</span> <span class="p">=</span> <span class="nb">Get-AzureADServiceAppRoleAssignedTo</span> <span class="n">-ObjectId</span> <span class="nv">$sp</span><span class="p">.</span><span class="py">ObjectId</span> <span class="n">-All</span> <span class="vm">$true</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="py">PrincipalType</span> <span class="o">-eq</span> <span class="s2">&#34;ServicePrincipal&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Remove all delegated permissions</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$spApplicationPermissions</span> <span class="p">|</span> <span class="nb">ForEach-Object</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">Remove-AzureADServiceAppRoleAssignment</span> <span class="n">-ObjectId</span> <span class="nv">$_</span><span class="p">.</span><span class="py">PrincipalId</span> <span class="n">-AppRoleAssignmentId</span> <span class="nv">$_</span><span class="p">.</span><span class="py">objectId</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h1 id="custom-app-step-by-step">Custom app Step by Step</h1>
+<p>The following steps create a new application with delegated API access to MSGraph, suitable for use from a PowerShell script. The permissions are specific to the <a href="/2023/03/18/Show-Win32AppUI/">Show-Win32AppUI</a></p>
+<p>Open the <a href="https://aad.portal.azure.com/">Azure AD portal</a> and select <strong>App registrations</strong></p>
+<p>Click on <strong>New Registration</strong> to start the process</p>
+<p><img loading="lazy" src="/img/CustomApp1.png" alt="New registration"  />
+</p>
+<p>Enter a name for the application and select the <strong>single tenant</strong> option. Do not enter a redirect URI at this stage.</p>
+<p><img loading="lazy" src="/img/CustomApp2.png" alt="App Name"  />
+</p>
+<p>Click on <strong>Register</strong></p>
+<p>The application is created and the admin center shows the <em>Overview</em> page.</p>
+<p>Click <strong>Add a Redirect URI</strong></p>
+<p><img loading="lazy" src="/img/CustomApp3.png" alt="App Name"  />
+</p>
+<p>The authentication step is displayed. Click on <strong>Add a platform</strong></p>
+<p><img loading="lazy" src="/img/CustomApp4.png" alt="App Name"  />
+</p>
+<p>Select <strong>Mobile and desktop applications</strong></p>
+<p><img loading="lazy" src="/img/CustomApp5.png" alt="App Name"  />
+</p>
+<p>Enable the <em>nativeclient</em> URI to support PowerShell 5.1 scripts. Add a custom redirect URI of <em>http://localhost</em> to support PowerShell 7.x scripts.</p>
+<p><img loading="lazy" src="/img/CustomApp6.png" alt="App Name"  />
+</p>
+<p>Click <strong>Configure</strong> to save the URIs</p>
+<p>Now back on the Authentication page, ensure the following options are set:</p>
+<ul>
+<li>Supported account types = <strong>Accounts in this organizational directory only</strong></li>
+<li>Allow public client flows = <strong>No</strong></li>
+</ul>
+<p><img loading="lazy" src="/img/CustomApp7.png" alt="App Name"  />
+</p>
+<p>Click <strong>API permissions</strong> in the left pane</p>
+<p>User.Read delegated access is already assigned by default.  Click <strong>Add a permission</strong></p>
+<p><img loading="lazy" src="/img/CustomApp8.png" alt="App Name"  />
+</p>
+<p>Select the <strong>Microsoft Graph</strong> API</p>
+<p><img loading="lazy" src="/img/CustomApp9.png" alt="App Name"  />
+</p>
+<p>Select <strong>Delegated permissions</strong></p>
+<p><img loading="lazy" src="/img/CustomApp10.png" alt="App Name"  />
+</p>
+<p>Search for each of the following delegated permissions, enable and click <strong>Add permissions</strong></p>
+<ul>
+<li>DeviceManagementApps.ReadWrite.All</li>
+</ul>
+<p><img loading="lazy" src="/img/CustomApp11.png" alt="App Name"  />
+</p>
+<p>Repeat the process to add permissions for the following:</p>
+<ul>
+<li>Group.ReadWrite.All</li>
+<li>GroupMember.ReadWrite.All</li>
+<li>Directory.AccessAsUser.All</li>
+</ul>
+<p>The API permissions page will show the list of added permissions with a warning that consent is <em>not granted</em>.<br>
+Click <strong>Grant admin consent for <tenant></strong></p>
+<p><img loading="lazy" src="/img/CustomApp12.png" alt="App Name"  />
+</p>
+<p>The warnings will be replaced by a green tick.</p>
+<p>Return to the application <strong>Overview</strong> page and note the <em>Application (client) ID</em> - this will be used to authenticate</p>
+<h1 id="add-assignment-restrictions">Add assignment restrictions</h1>
+<p>By default anyone in the tenant can access the application (although they need Role permissions to make changes in Azure AD and Intune). This step will limit access to a specific group.</p>
+<p>View the <strong>Properties</strong> page of the app and change <strong>Assignment required</strong> to <em>Yes</em></p>
+<p><img loading="lazy" src="/img/CustomApp125.png" alt="App Name"  />
+</p>
+<p>Next click on <strong>Users and groups</strong> then <strong>add user/group</strong>. Select the required Azure AD group and <em>Assign</em>. Only members of this group can authenticate using the app.</p>
+<p><img loading="lazy" src="/img/CustomApp126.png" alt="App Name"  />
+</p>
+<h1 id="authenticating-using-the-custom-app">Authenticating using the custom app</h1>
+<p><em>Delegated consent</em> uses the intersection of application permissions and user permissions to authorise access. i.e. the authenticated user must have the required permissions as well as the application.</p>
+<p>Use interactive authentication to provide credentials with the required role permissions. Interactive auth prompts using the familiar browser page:</p>
+<p><img loading="lazy" src="/img/CustomApp13.png" alt="App Name"  />
+</p>
+<p>Examples of PowerShell authentication using the app are below:</p>
+<h2 id="msalps-authentication">MSAL.PS authentication</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nv">$TenantID</span> <span class="p">=</span> <span class="p">&lt;</span><span class="n">your</span> <span class="n">tenant</span> <span class="n">ID</span> <span class="n">obtained</span> <span class="n">from</span> <span class="n">the</span> <span class="n">AAD</span> <span class="n">Overview</span> <span class="n">page</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$ClientID</span> <span class="p">=</span> <span class="p">&lt;</span><span class="n">application</span> <span class="n">ID</span> <span class="n">of</span> <span class="n">the</span> <span class="n">custom</span> <span class="n">app</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">$Token</span> <span class="p">=</span> <span class="nb">Get-MSALToken</span> <span class="n">-TenantID</span> <span class="nv">$TenantID</span> <span class="n">-ClientID</span> <span class="nv">$ClientID</span> <span class="n">-Interactive</span>
+</span></span></code></pre></div><h2 id="intunewin32app-authentication">IntuneWin32App authentication</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nv">$TenantID</span> <span class="p">=</span> <span class="p">&lt;</span><span class="n">your</span> <span class="n">tenant</span> <span class="n">ID</span> <span class="n">obtained</span> <span class="n">from</span> <span class="n">the</span> <span class="n">AAD</span> <span class="n">Overview</span> <span class="n">page</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$ClientID</span> <span class="p">=</span> <span class="p">&lt;</span><span class="n">application</span> <span class="n">ID</span> <span class="n">of</span> <span class="n">the</span> <span class="n">custom</span> <span class="n">app</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">Connect-MSIntuneGraph</span> <span class="n">-TenantID</span> <span class="nv">$TenantID</span> <span class="n">-ClientID</span> <span class="nv">$ClientID</span> <span class="n">-Interactive</span>
+</span></span></code></pre></div><p>The Connect-MSIntuneGraph command in the IntuneWin32App module creates global variables to store the token for later use:</p>
+<ul>
+<li>$Global:AuthenticationHeader</li>
+<li>$Global:AccessToken</li>
+</ul>
+<p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>Create Intune Win32Apps with a GUI front-end</title>
+      <link>https://write-verbose.com/2023/03/18/Show-Win32AppUI/</link>
+      <pubDate>Sat, 18 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2023/03/18/Show-Win32AppUI/</guid>
+      <description>&lt;p&gt;A GUI tool for end-to-end creation of Win32 Apps in Microsoft Intune.&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<p>A GUI tool for end-to-end creation of Win32 Apps in Microsoft Intune.</p>
+<p>This post provides details of &ldquo;Show-Win32AppUI&rdquo;, a GUI tool that simplifies the end-to-end process of creating Win32 Apps in Intune.</p>
+<p>The GitHub source is <a href="https://github.com/gbdixg/Show-Win32AppUI">available here</a>.  Instructions for setup and use are below.</p>
+<p><img loading="lazy" src="/img/Show-Win32AppUI.gif" alt="Show-Win32AppUI"  />
+</p>
+<p>This isn&rsquo;t a one size fits all community tool. You will likely need to modify it to meet your needs. However, its written in PowerShell and has code comments and blog posts to make editing simpler.</p>
+<h1 id="setup">SETUP</h1>
+<h2 id="modules">Modules</h2>
+<p><em>Show-Win32AppUI</em> depends on two PowerShell modules. Install these modules if you don&rsquo;t already have them.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">MSAL</span><span class="p">.</span><span class="nb">PS
+</span></span></span><span class="line"><span class="cl"><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">IntuneWin32App</span>
+</span></span></code></pre></div><p>The most recent tested versions are listed below:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">MSAL</span><span class="p">.</span><span class="nb">PS </span><span class="n">-RequiredVersion</span> <span class="mf">4.37</span><span class="p">.</span><span class="py">0</span><span class="p">.</span><span class="py">0</span>
+</span></span><span class="line"><span class="cl"><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">IntuneWin32App</span> <span class="n">-RequiredVersion</span> <span class="mf">1.4</span><span class="p">.</span><span class="py">0</span>
+</span></span></code></pre></div><h2 id="tenant-id">Tenant ID</h2>
+<p>Update the $TenantID on line 4 of <em>Show-Win32AppUI.ps1</em> to use your required Azure tenant. Your tenant ID is available from the <a href="https://aad.portal.azure.com/">Azure AD portal</a> <em>Overview</em> page.</p>
+<h2 id="azure-client-app">Azure Client App</h2>
+<p>An Azure Client App is used with interactive authentication to access the Microsoft Graph. There are two setup steps required:</p>
+<ol>
+<li><strong>Specify the Azure application</strong><br>
+By default, the tool will use the built-in <em>Microsoft Graph PowerShell</em> enterprise application. However, I recommend creating a custom Azure app in your own tenant. A step by step guide to creating a custom app is available <a href="/2023/03/19/AzureAppRegistration/">here</a>.</li>
+</ol>
+<blockquote>
+<p>If using a custom app, update <em>Show-Win32AppUI.ps1</em> to set the $ClientID variable on line 6 to match the client ID (a.k.a Application ID) of your app.</p>
+</blockquote>
+<ol start="2">
+<li><strong>Consent to the required permissions on behalf of your tenant</strong><br>
+Whether you use a custom app or Microsoft Graph PowerShell, the app must be configured with the required API permissions and consent must be granted. The <strong>delegated</strong> permissions are listed below. A step by step for setting these permissions can be found in the second part of <a href="/2023/03/19/AzureAppRegistration/">this article</a>.</li>
+</ol>
+<ul>
+<li>Directory.AccessAsUser.All</li>
+<li>DeviceManagementApps.ReadWrite.All</li>
+<li>Group.ReadWrite.All</li>
+<li>GroupMember.ReadWrite.All</li>
+<li>User.Read</li>
+</ul>
+<h2 id="user-permissions">User permissions</h2>
+<p><em>Delegated consent</em> uses the intersection of application permissions and user permissions to authorise access. i.e. the authenticated user must have the required permissions as well as the application. When using the app, authenticate using an Azure account with <em>one</em> of the following roles:</p>
+<ul>
+<li>Intune Administrator</li>
+<li>Global Administrator</li>
+</ul>
+<h2 id="workstation-permissions">Workstation permissions</h2>
+<p>The tool does not need administrative access to the client workstation. Internet access is required, to download the <a href="https://github.com/Microsoft/Microsoft-Win32-Content-Prep-Tool">Win32 Content Prep tool</a> on first use.</p>
+<h2 id="powershell-script-execution">PowerShell script execution</h2>
+<p>PowerShell script execution is disabled on Windows clients by default. Use one of the methods below to allow script execution on the workstation.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">set-executionpolicy</span> <span class="n">Unrestricted</span>
+</span></span></code></pre></div><p>or</p>
+<pre tabindex="0"><code class="language-CMD" data-lang="CMD">powershell -executionpolicy bypass -file &lt;path to script&gt;
+</code></pre><h1 id="launch-the-tool">Launch the tool</h1>
+<p>Start a PowerShell 5.1 or Pwsh 7.x console and execute the script as follows:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="p">.\</span><span class="nb">Show-Win32AppUI</span><span class="p">.</span><span class="py">ps1</span>
+</span></span></code></pre></div><p>To show debug information in the console add the <em>WriteHost</em> switch:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="p">.\</span><span class="nb">Show-Win32AppUI</span><span class="p">.</span><span class="py">ps1</span> <span class="n">-WriteHost</span>
+</span></span></code></pre></div><h1 id="using-the-tool">Using the tool</h1>
+<table>
+  <tr>
+    <td><h3>Page1 - Package</h3>
+    Use the file dialog to select the main <b>Setup File</b> - .msi, .exe or .ps1.<br>
+    For an .msi file, the setup and uninstall automatically uses MSIEXEC, defaulting to a quiet install/uninstall and verbose logging.<br>
+    For an .exe file, the setup parameters default to /S, but you should check the vendor information and replace this as appropriate.<br>
+    For a .ps1 file, setup and uninstall defaults to -noprofile and -executionpolicy bypass.<br><br>
+    The package <b>source folder</b> is the folder containing the setup file. All the files in this folder are packaged into an .intunewin file in a later step.<br><br>
+    The tool creates installation wrapper scripts called install.ps1 and uninstall.ps1 in the package source folder. Existing files with these names are overwritten.<br><br>
+    The <i>Next</i> button is only available when required fields have been completed.
+    </td>
+    <td width="450"><img src="/img/Win32AppUI-Page1.png" alt="1" width = "450px" height = "850px"></td>
+   </tr>
+   <tr>
+      <td><h3>Page2 - Deployment</h3>
+      The <b>Display Name</b> is built from the Publisher, App Name, Version and Package Number. If the language is changed from the default or the <i>Bitness</i> is changed to x86, these are also included in the Display Name<br><br>
+      For .msi and .exe files, the fields are populated with information from the setup file, but can be edited as required.<br><br>
+      If there is already an Intune application with the same Display Name a warning will appear in the status bar. The simplest solution is to increment the Package Number.<br><br>
+      The <i>Next</i> button is only available when required fields have been completed.
+      </td>
+      <td width="450"><img src="/img/Win32AppUI-Page2.png" alt="2" width = "450px" height = "850px"></td>
+  </tr>
+  <tr>
+    <td><h3>Page3 - Assignment</h3>
+    <b>Assignment Groups</b> shows the names of three AAD groups for <i>Required Install, Available Install and Uninstall</i>. The group name suffix is based on the App Name from Page 2 and cannot be edited here.<br><br>
+    The Owner must be a UPN of an AAD user. Start typing a name in the top box to see a list of options. Select a name and click Add. The Owner is set on the properties of the Win32App and the AAD groups.<br><br>
+    The Dependency and Supercedence lists are populated with existing Win32 Apps. Select from the list if these options are needed. Currently you can only select one of these options due to a limitation in the IntuneWin32App module.<br><br>
+    Click on the Logo box to select a image file for display with the application in the Company Portal.<br><br>
+    The <i>Next</i> button is only available when required fields have been completed.
+    </td>
+    <td width="450"><img src="/img/Win32AppUI-Page3.png" alt="3" width = "450px" height = "850px"></td>
+  </tr>
+  <tr>
+    <td><h3>Page3 - Implement</h3>
+    The final page follows a step-by-step approach to creating the Win32 App.<br><br>
+    <b>Create Wrapper Scripts</b> creates an install.ps1 and uninstall.ps1 file in the package source folder.<br><br>
+    <b>Create Intunewin Package</b> uses the Win32 Content Prep Tool to build an .intunewin file in the Output Folder.<br><br>
+    <b>Create App Groups</b> creates three AAD groups for Required Install, Available Install and Uninstall. If the groups already exist they are re-used.<br><br>
+    <b>Create Win32 App</b> creates the Win32 App in Intune and uploads the .intunewin file. This step can take some time depending on the package size.<br><br>
+    <b>Configure Dependency / Configure Supercedence</b> modifies the Win32 App in Intune. These steps are skipped if they are set to None.<br><br>
+    <b>Configure Assignment</b> modifies the Win32 App in Intune to add the assignment groups created in the earlier step.
+    </td>
+    <td width="450"><img src="/img/Win32AppUI-Page4.png" alt="4" width = "450px" height = "850px"></td>
+  </tr>
+</table>
+<h1 id="troubleshooting">Troubleshooting</h1>
+<p>The tool creates a debug log on every run with detailed information and error messages. The default LogFolder is C:\Temp, but can be modified on Line 8 of Show-Win32AppUI.ps1.</p>
+<p>The -WriteHost switch will also show the debug output in the console.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="p">.\</span><span class="nb">Show-Win32AppUI</span><span class="p">.</span><span class="py">ps1</span> <span class="n">-writehost</span>
+</span></span></code></pre></div><p><img loading="lazy" src="/img/Win32AppUI-WriteHost.png" alt="WriteHost"  />
+</p>
+<h1 id="options">Options</h1>
+<p>The variables section in Show-Win32AppUI.ps1 allows default settings to be modified. The following section is at Line 50:</p>
+<p><img loading="lazy" src="/img/Win32AppUI-Defaults.png" alt="WriteHost"  />
+</p>
+<h1 id="detection-method">Detection Method</h1>
+<p>The Win32 app detection is hardcoded to use a file exists method. The <em>Install.ps1</em> script wrapper creates a &ldquo;.ps1.tag&rdquo; file under the %PROGRAMDATA% folder and <em>Uninstall.ps1</em> deletes it - a detection method <a href="https://oofhours.com/2020/05/18/two-for-one-updated-autopilot-branding-and-update-os-scripts/">first suggested by Michael Niehaus</a></p>
+<h1 id="credits">Credits</h1>
+<ul>
+<li>
+<p>Show-Win32AppUI is a front-end to the excellent <a href="https://github.com/MSEndpointMgr/IntuneWin32App">IntuneWin32App module</a>. Full credit to the contributors of this project.</p>
+</li>
+<li>
+<p>The <a href="https://github.com/AzureAD/MSAL.PS">MSAL.PS module</a> has simplified the transition from ADAL to MSAL authentication.</p>
+</li>
+<li>
+<p><a href="https://learn-powershell.net/">Boe Prox</a> for PowerShell Runspace tips</p>
+</li>
+<li>
+<p><a href="https://smsagent.blog/blog-posts/">SMSAgent</a> for PowerShell WPF tips</p>
+</li>
+</ul>
+<p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
     <item>
       <title>Migrate home drives to OneDrive with Microsoft Migration Manager - Pt2</title>
       <link>https://write-verbose.com/2022/06/11/migration-manager-notes2/</link>
@@ -188,7 +473,7 @@ The technicians managing and monitoring the data migrations will need the ShareP
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">SPO Admin Portal <span class="p">&gt;</span> Advanced <span class="p">&gt;</span> More Features <span class="p">&gt;</span> Setup My Sites <span class="p">&gt;</span> Secondary Owner
 </span></span></code></pre></div><p>For already provisioned OneDrives, use a script to grant the <em>SiteCollectionAdmin</em> permission on each OneDrive to a group containing the Migration Manager cloud service account.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="nb">Connect-SPOService</span> <span class="n">-URL</span> <span class="nv">$AdminURL</span>
-</span></span><span class="line"><span class="cl"><span class="nb">Set-SPOUser</span> <span class="n">-Site</span> <span class="nv">$UsersOneDriveURL</span> <span class="n">-LoginName</span> <span class="nv">$CloudServiceAccountorGroup</span> <span class="n">-IsSiteCollectionAdmin</span> <span class="nv">$True</span>
+</span></span><span class="line"><span class="cl"><span class="nb">Set-SPOUser</span> <span class="n">-Site</span> <span class="nv">$UsersOneDriveURL</span> <span class="n">-LoginName</span> <span class="nv">$CloudServiceAccountorGroup</span> <span class="n">-IsSiteCollectionAdmin</span> <span class="vm">$True</span>
 </span></span></code></pre></div><p><strong>NOTE</strong>: This command normally expects a user account as the LoginName. If using a group name, it must be in <a href="https://social.technet.microsoft.com/wiki/contents/articles/13921.sharepoint-20102013-claims-encoding.aspx">claims encoded</a> format.</p>
 <p>Part two in this series will look at network routing, multi-geo considerations and scheduling issues.</p>
 <p><br/><br/></p>
@@ -390,7 +675,7 @@ Save the file,  add it to the GIT index, then commit the change to complete the 
 <li>Commit to complete the merge (<code>git commit</code>)</li>
 </ol>
 <h2 id="fast-forward-merge">FAST FORWARD MERGE</h2>
-<p>A fast foward merge occurs automatically when git moves a branch without having to create a new commit. It just re-uses an existing commit.<br>
+<p>A fast forward merge occurs automatically when git moves a branch without having to create a new commit. It just re-uses an existing commit.<br>
 The most common case is when you want to merge a feature branch into main, but then continue working on the Feature branch with the latest updates from main.<br>
 When you first merge the branch into main, GIT creates a new commit on main that has two parents - the previous commit on main and the previous commit on the branch.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">❯ git switch main
@@ -825,7 +1110,7 @@ Local branches are stored in the .git/refs/heads folder:</p>
 <p><a href="https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi">Download and install the update package</a></p>
 <h2 id="set-the-default-version">Set the default version</h2>
 <p>Make sure everything is version 2</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="n">wsl</span> <span class="p">-</span><span class="n">-set-default-version</span> <span class="n">2</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="n">wsl</span> <span class="p">-</span><span class="n">-set-default-version</span> <span class="mf">2</span>
 </span></span></code></pre></div><h2 id="install-the-required-distro">Install the required distro</h2>
 <p>Ubuntu is the most reliable on Windows at the time of writing</p>
 <p><a href="https://www.microsoft.com/en-gb/p/ubuntu-2004-lts/9n6svws3rx71">Ubuntu 20.04 LTS</a></p>
@@ -842,9 +1127,9 @@ Local branches are stored in the .git/refs/heads folder:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="n">wsl</span> <span class="p">-</span><span class="n">-list</span> <span class="n">-v</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">  <span class="n">NAME</span>                   <span class="n">STATE</span>           <span class="n">VERSION</span>
-</span></span><span class="line"><span class="cl"><span class="p">*</span> <span class="nb">docker-desktop</span><span class="n">-data</span>    <span class="n">Running</span>         <span class="n">2</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Ubuntu</span><span class="p">-</span><span class="n">20</span><span class="p">.</span><span class="n">04</span>           <span class="n">Running</span>         <span class="n">2</span>
-</span></span><span class="line"><span class="cl">  <span class="nb">docker-desktop</span>         <span class="n">Running</span>         <span class="n">2</span>
+</span></span><span class="line"><span class="cl"><span class="p">*</span> <span class="nb">docker-desktop</span><span class="n">-data</span>    <span class="n">Running</span>         <span class="mf">2</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Ubuntu</span><span class="p">-</span><span class="mf">20.04</span>           <span class="n">Running</span>         <span class="mf">2</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">docker-desktop</span>         <span class="n">Running</span>         <span class="mf">2</span>
 </span></span></code></pre></div><h2 id="location-of-the-vhdx-file">Location of the .vhdx file</h2>
 <p>The virtual disk containing the Linux OS is located here:</p>
 <p><code>%LOCALAPPDATA%\Packages\CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc\LocalState\ext4.vhdx</code></p>
@@ -1009,31 +1294,31 @@ If a company populates subnet descriptions with useful information, it can also 
 <p>AD Administrators may define a <a href="https://blog.mindcore.dk/2013/07/catch-all-or-super-subnet-in-sites-and/">catch-all subnet</a> with a wide address range. By default if the IP address is within more than one subnet, the output will only include the smallest range. Use the -AllMatches parameter to see everything.</p>
 <p><img loading="lazy" src="/img/find-adsite1.png" alt="Find-ADSite"  />
 </p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="k">Function</span> <span class="nb">Find-ADSite</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="kd">Function</span><span class="w"> </span><span class="nb">Find-ADSite</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="cm">&lt;#
-</span></span></span><span class="line"><span class="cl"><span class="cm"> </span><span class="sd">.Synopsis</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .</span><span class="sd">Synopsis</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">  Used to get the Active Directory subnet and the site it is assigned to for a Windows computer/IP address
-</span></span></span><span class="line"><span class="cl"><span class="cm"> </span><span class="sd">.Description</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .</span><span class="sd">Description</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">  Requires only standard user read access to AD and can determine the ADSite for a local or remote computer
-</span></span></span><span class="line"><span class="cl"><span class="cm"> </span><span class="sd">.PARAMETER</span><span class="cm">  IPAddress
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .PARAMETER  IPAddress
 </span></span></span><span class="line"><span class="cl"><span class="cm">  Specifies the IP Address for the subnet/site lookup in as a .NET System.Net.IPAddress
 </span></span></span><span class="line"><span class="cl"><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">  When this parameter is used, the computername is not specified.
-</span></span></span><span class="line"><span class="cl"><span class="cm"> </span><span class="sd">.PARAMETER</span><span class="cm">  Computername
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .PARAMETER  Computername
 </span></span></span><span class="line"><span class="cl"><span class="cm">  Specifies a computername for the subnet/site lookup.
 </span></span></span><span class="line"><span class="cl"><span class="cm">  The computername is resolved to an IP address before performing the subnet query.
 </span></span></span><span class="line"><span class="cl"><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">  Defaults to %COMPUTERNAME%
 </span></span></span><span class="line"><span class="cl"><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">  When this parameter is used, the IPAddress and IP are not specified.
-</span></span></span><span class="line"><span class="cl"><span class="cm"> </span><span class="sd">.PARAMETER</span><span class="cm">  DC
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .PARAMETER  DC
 </span></span></span><span class="line"><span class="cl"><span class="cm">  A specific domain controller in the current users domain for the subnet query
 </span></span></span><span class="line"><span class="cl"><span class="cm">  If not specified, standard DC locator methods are used.
-</span></span></span><span class="line"><span class="cl"><span class="cm"> </span><span class="sd">.PARAMETER</span><span class="cm">  AllMatches
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .PARAMETER  AllMatches
 </span></span></span><span class="line"><span class="cl"><span class="cm">  A switch parameter that causes the subnet query to return all matching subnets in AD
 </span></span></span><span class="line"><span class="cl"><span class="cm">  This is not normally used as the default behaviour (only the most specific match is returned) is usually prefered.
 </span></span></span><span class="line"><span class="cl"><span class="cm">  This switch will include &#34;catch-all&#34; subnets that may be defined to accomodate missing subnets
-</span></span></span><span class="line"><span class="cl"><span class="cm"> </span><span class="sd">.Example</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .</span><span class="sd">Example</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">  PS C:\&gt;Find-ADSite -ComputerName PC123456789
 </span></span></span><span class="line"><span class="cl"><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">  ComputerName      : PC123456789
@@ -1044,40 +1329,40 @@ If a company populates subnet descriptions with useful information, it can also 
 </span></span></span><span class="line"><span class="cl"><span class="cm">  ADSiteDescription : London
 </span></span></span><span class="line"><span class="cl"><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm"> </span><span class="sd">.Notes</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .</span><span class="sd">Notes</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">  Version:        1.1
 </span></span></span><span class="line"><span class="cl"><span class="cm">#&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">(</span><span class="n">DefaultParameterSetName</span> <span class="p">=</span> <span class="s2">&#34;byHost&#34;</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="nb">CmdletBinding</span><span class="p">(</span><span class="na">DefaultParameterSetName</span> <span class="p">=</span> <span class="s2">&#34;byHost&#34;</span><span class="p">)]</span>
 </span></span><span class="line"><span class="cl">    <span class="k">Param</span><span class="p">(</span>
-</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Position</span> <span class="p">=</span> <span class="n">0</span><span class="p">,</span> <span class="k">ValueFromPipeline</span> <span class="p">=</span> <span class="nv">$true</span><span class="p">,</span> <span class="k">ValueFromPipelineByPropertyName</span> <span class="p">=</span> <span class="nv">$True</span><span class="p">,</span> <span class="k">ParameterSetName</span> <span class="p">=</span> <span class="s2">&#34;byHost&#34;</span><span class="p">)]</span>
-</span></span><span class="line"><span class="cl">        <span class="no">[string]</span><span class="nv">$ComputerName</span> <span class="p">=</span> <span class="nv">$Env:COMPUTERNAME</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="nb">Parameter</span><span class="p">(</span><span class="na">Position</span> <span class="p">=</span> <span class="mf">0</span><span class="p">,</span> <span class="na">ValueFromPipeline</span> <span class="p">=</span> <span class="vm">$true</span><span class="p">,</span> <span class="na">ValueFromPipelineByPropertyName</span> <span class="p">=</span> <span class="vm">$True</span><span class="p">,</span> <span class="na">ParameterSetName</span> <span class="p">=</span> <span class="s2">&#34;byHost&#34;</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="no">string</span><span class="p">]</span><span class="nv">$ComputerName</span> <span class="p">=</span> <span class="nv">$Env:COMPUTERNAME</span>
 </span></span><span class="line"><span class="cl">        <span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Position</span> <span class="p">=</span> <span class="n">0</span><span class="p">,</span> <span class="k">ValueFromPipeline</span> <span class="p">=</span> <span class="nv">$true</span><span class="p">,</span> <span class="k">ValueFromPipelineByPropertyName</span> <span class="p">=</span> <span class="nv">$True</span><span class="p">,</span> <span class="k">Mandatory</span> <span class="p">=</span> <span class="nv">$True</span><span class="p">,</span> <span class="k">ParameterSetName</span> <span class="p">=</span> <span class="s2">&#34;byIPAddress&#34;</span><span class="p">)]</span>
-</span></span><span class="line"><span class="cl">        <span class="no">[System.Net.IPAddress]</span><span class="nv">$IPAddress</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="nb">Parameter</span><span class="p">(</span><span class="na">Position</span> <span class="p">=</span> <span class="mf">0</span><span class="p">,</span> <span class="na">ValueFromPipeline</span> <span class="p">=</span> <span class="vm">$true</span><span class="p">,</span> <span class="na">ValueFromPipelineByPropertyName</span> <span class="p">=</span> <span class="vm">$True</span><span class="p">,</span> <span class="na">Mandatory</span> <span class="p">=</span> <span class="vm">$True</span><span class="p">,</span> <span class="na">ParameterSetName</span> <span class="p">=</span> <span class="s2">&#34;byIPAddress&#34;</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="no">System.Net.IPAddress</span><span class="p">]</span><span class="nv">$IPAddress</span>
 </span></span><span class="line"><span class="cl">        <span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Position</span> <span class="p">=</span> <span class="n">1</span><span class="p">)]</span>
-</span></span><span class="line"><span class="cl">        <span class="no">[string]</span><span class="nv">$DC</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="nb">Parameter</span><span class="p">(</span><span class="na">Position</span> <span class="p">=</span> <span class="mf">1</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="no">string</span><span class="p">]</span><span class="nv">$DC</span>
 </span></span><span class="line"><span class="cl">        <span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="k">Parameter</span><span class="p">()]</span>
-</span></span><span class="line"><span class="cl">        <span class="no">[switch]</span><span class="nv">$AllMatches</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="nb">Parameter</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="no">switch</span><span class="p">]</span><span class="nv">$AllMatches</span>
 </span></span><span class="line"><span class="cl">    <span class="p">)</span>
 </span></span><span class="line"><span class="cl">    <span class="k">PROCESS</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="k">switch</span> <span class="p">(</span><span class="nv">$pscmdlet</span><span class="p">.</span><span class="k">ParameterSetName</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">switch</span> <span class="p">(</span><span class="nv">$pscmdlet</span><span class="p">.</span><span class="na">ParameterSetName</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">            <span class="s2">&#34;byHost&#34;</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">                <span class="k">try</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Resolved</span> <span class="p">=</span> <span class="no">[system.net.dns]</span><span class="p">::</span><span class="n">GetHostByName</span><span class="p">(</span><span class="nv">$Computername</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                    <span class="no">[System.Net.IPAddress]</span><span class="nv">$IP</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$Resolved</span><span class="p">.</span><span class="n">AddressList</span><span class="p">)[</span><span class="n">0</span><span class="p">]</span> <span class="o">-as</span> <span class="no">[System.Net.IPAddress]</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$Resolved</span> <span class="p">=</span> <span class="p">[</span><span class="no">system.net.dns</span><span class="p">]::</span><span class="n">GetHostByName</span><span class="p">(</span><span class="nv">$Computername</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">[</span><span class="no">System.Net.IPAddress</span><span class="p">]</span><span class="nv">$IP</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$Resolved</span><span class="p">.</span><span class="n">AddressList</span><span class="p">)[</span><span class="mf">0</span><span class="p">]</span> <span class="o">-as</span> <span class="p">[</span><span class="no">System.Net.IPAddress</span><span class="p">]</span>
 </span></span><span class="line"><span class="cl">                <span class="p">}</span><span class="k">catch</span><span class="p">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="nb">Write-Warning</span> <span class="s2">&#34;$ComputerName :: Unable to resolve name to an IP Address&#34;</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$IP</span> <span class="p">=</span> <span class="nv">$Null</span>
+</span></span><span class="line"><span class="cl">                    <span class="nb">Write-Warning</span> <span class="s2">&#34;</span><span class="nv">$ComputerName</span><span class="s2"> :: Unable to resolve name to an IP Address&#34;</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$IP</span> <span class="p">=</span> <span class="vm">$Null</span>
 </span></span><span class="line"><span class="cl">                <span class="p">}</span>
 </span></span><span class="line"><span class="cl">            <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">            <span class="s2">&#34;byIPAddress&#34;</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">                <span class="k">try</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Resolved</span> <span class="p">=</span> <span class="no">[system.net.dns]</span><span class="p">::</span><span class="n">GetHostByAddress</span><span class="p">(</span><span class="nv">$IPAddress</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$ComputerName</span> <span class="p">=</span> <span class="nv">$Resolved</span><span class="p">.</span><span class="n">HostName</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$Resolved</span> <span class="p">=</span> <span class="p">[</span><span class="no">system.net.dns</span><span class="p">]::</span><span class="n">GetHostByAddress</span><span class="p">(</span><span class="nv">$IPAddress</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$ComputerName</span> <span class="p">=</span> <span class="nv">$Resolved</span><span class="p">.</span><span class="py">HostName</span>
 </span></span><span class="line"><span class="cl">                <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">                    <span class="c"># Write-Warning &#34;$IP :: Could not be resolved to a hostname&#34;</span>
 </span></span><span class="line"><span class="cl">                    <span class="nv">$ComputerName</span> <span class="p">=</span> <span class="s2">&#34;Unable to resolve&#34;</span>
@@ -1093,60 +1378,60 @@ If a company populates subnet descriptions with useful information, it can also 
 </span></span><span class="line"><span class="cl">            <span class="c"># The masks are converted into the number of Bits to allow conversion to CIDR format</span>
 </span></span><span class="line"><span class="cl">            <span class="c"># The script tries to lookup every possible range/subnet bits combination and keeps going until it finds a hit in AD</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="no">[psobject[]]</span><span class="nv">$MatchedSubnets</span> <span class="p">=</span> <span class="p">@()</span>
+</span></span><span class="line"><span class="cl">            <span class="p">[</span><span class="no">psobject[]</span><span class="p">]</span><span class="nv">$MatchedSubnets</span> <span class="p">=</span> <span class="vm">@</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="k">For</span> <span class="p">(</span><span class="nv">$bit</span> <span class="p">=</span> <span class="n">30</span> <span class="p">;</span> <span class="nv">$bit</span> <span class="o">-ge</span> <span class="n">1</span><span class="p">;</span> <span class="nv">$bit</span><span class="p">--)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">For</span> <span class="p">(</span><span class="nv">$bit</span> <span class="p">=</span> <span class="mf">30</span> <span class="p">;</span> <span class="nv">$bit</span> <span class="o">-ge</span> <span class="mf">1</span><span class="p">;</span> <span class="nv">$bit</span><span class="p">--)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                <span class="no">[int]</span><span class="nv">$octet</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Truncate</span><span class="p">((</span><span class="nv">$bit</span> <span class="p">-</span> <span class="n">1</span> <span class="p">)</span> <span class="p">/</span> <span class="n">8</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                <span class="nv">$net</span> <span class="p">=</span> <span class="no">[byte[]]</span><span class="p">@()</span>
+</span></span><span class="line"><span class="cl">                <span class="p">[</span><span class="no">int</span><span class="p">]</span><span class="nv">$octet</span> <span class="p">=</span> <span class="p">[</span><span class="no">math</span><span class="p">]::</span><span class="n">Truncate</span><span class="p">((</span><span class="nv">$bit</span> <span class="p">-</span> <span class="mf">1</span> <span class="p">)</span> <span class="p">/</span> <span class="mf">8</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$net</span> <span class="p">=</span> <span class="p">[</span><span class="no">byte[]</span><span class="p">]</span><span class="vm">@</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                <span class="k">for</span> <span class="p">(</span><span class="nv">$o</span> <span class="p">=</span> <span class="n">0</span><span class="p">;</span> <span class="nv">$o</span> <span class="o">-le</span> <span class="n">3</span><span class="p">;</span> <span class="nv">$o</span><span class="p">++)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$ba</span> <span class="p">=</span> <span class="nv">$ip</span><span class="p">.</span><span class="n">GetAddressBytes</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">                <span class="k">for</span> <span class="p">(</span><span class="nv">$o</span> <span class="p">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nv">$o</span> <span class="o">-le</span> <span class="mf">3</span><span class="p">;</span> <span class="nv">$o</span><span class="p">++)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$ba</span> <span class="p">=</span> <span class="nv">$ip</span><span class="p">.</span><span class="py">GetAddressBytes</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="p">(</span><span class="nv">$o</span> <span class="o">-lt</span> <span class="nv">$Octet</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">                        <span class="nv">$Net</span> <span class="p">+=</span> <span class="nv">$ba</span><span class="p">[</span><span class="nv">$o</span><span class="p">]</span>
 </span></span><span class="line"><span class="cl">                    <span class="p">}</span> <span class="k">ELSEIF</span> <span class="p">(</span><span class="nv">$o</span> <span class="o">-eq</span> <span class="nv">$octet</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                        <span class="nv">$factor</span> <span class="p">=</span> <span class="n">8</span> <span class="p">+</span> <span class="nv">$Octet</span> <span class="p">*</span> <span class="n">8</span> <span class="p">-</span> <span class="nv">$bit</span>
-</span></span><span class="line"><span class="cl">                        <span class="nv">$Divider</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">pow</span><span class="p">(</span><span class="n">2</span><span class="p">,</span> <span class="nv">$factor</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                        <span class="nv">$value</span> <span class="p">=</span> <span class="nv">$divider</span> <span class="p">*</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Truncate</span><span class="p">(</span><span class="nv">$ba</span><span class="p">[</span><span class="nv">$o</span><span class="p">]</span> <span class="p">/</span> <span class="nv">$divider</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                        <span class="nv">$factor</span> <span class="p">=</span> <span class="mf">8</span> <span class="p">+</span> <span class="nv">$Octet</span> <span class="p">*</span> <span class="mf">8</span> <span class="p">-</span> <span class="nv">$bit</span>
+</span></span><span class="line"><span class="cl">                        <span class="nv">$Divider</span> <span class="p">=</span> <span class="p">[</span><span class="no">math</span><span class="p">]::</span><span class="n">pow</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span> <span class="nv">$factor</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                        <span class="nv">$value</span> <span class="p">=</span> <span class="nv">$divider</span> <span class="p">*</span> <span class="p">[</span><span class="no">math</span><span class="p">]::</span><span class="n">Truncate</span><span class="p">(</span><span class="nv">$ba</span><span class="p">[</span><span class="nv">$o</span><span class="p">]</span> <span class="p">/</span> <span class="nv">$divider</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">                        <span class="nv">$Net</span> <span class="p">+=</span> <span class="nv">$value</span>
 </span></span><span class="line"><span class="cl">                    <span class="p">}</span> <span class="k">ELSE</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                        <span class="nv">$Net</span> <span class="p">+=</span> <span class="n">0</span>
+</span></span><span class="line"><span class="cl">                        <span class="nv">$Net</span> <span class="p">+=</span> <span class="mf">0</span>
 </span></span><span class="line"><span class="cl">                    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">                <span class="p">}</span> <span class="c">#Next</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                <span class="c">#Format network in CIDR notation</span>
-</span></span><span class="line"><span class="cl">                <span class="nv">$Network</span> <span class="p">=</span> <span class="no">[string]</span><span class="p">::</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="nv">$net</span><span class="p">)</span> <span class="p">+</span> <span class="s2">&#34;/$bit&#34;</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$Network</span> <span class="p">=</span> <span class="p">[</span><span class="no">string</span><span class="p">]::</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="nv">$net</span><span class="p">)</span> <span class="p">+</span> <span class="s2">&#34;/</span><span class="nv">$bit</span><span class="s2">&#34;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                <span class="c"># Try to find this Network in AD Subnets list</span>
-</span></span><span class="line"><span class="cl">                <span class="nb">Write-Verbose</span> <span class="s2">&#34;Trying : $Network&#34;</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">Write-Verbose</span> <span class="s2">&#34;Trying : </span><span class="nv">$Network</span><span class="s2">&#34;</span>
 </span></span><span class="line"><span class="cl">                <span class="k">try</span><span class="p">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$de</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">DirectoryServices</span><span class="p">.</span><span class="n">DirectoryEntry</span><span class="p">(</span><span class="s2">&#34;LDAP://&#34;</span> <span class="p">+</span> <span class="nv">$DC</span> <span class="p">+</span> <span class="s2">&#34;rootDSE&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Root</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">DirectoryServices</span><span class="p">.</span><span class="n">DirectoryEntry</span><span class="p">(</span><span class="s2">&#34;LDAP://$DC</span><span class="p">$(</span><span class="nv">$de</span><span class="p">.</span><span class="n">configurationNamingContext</span><span class="p">)</span><span class="s2">&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$ds</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Directoryservices</span><span class="p">.</span><span class="n">DirectorySearcher</span><span class="p">(</span><span class="nv">$root</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$ds</span><span class="p">.</span><span class="k">filter</span> <span class="p">=</span> <span class="s2">&#34;(CN=$Network)&#34;</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Result</span> <span class="p">=</span> <span class="nv">$ds</span><span class="p">.</span><span class="n">findone</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$de</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="py">DirectoryServices</span><span class="p">.</span><span class="py">DirectoryEntry</span><span class="p">(</span><span class="s2">&#34;LDAP://&#34;</span> <span class="p">+</span> <span class="nv">$DC</span> <span class="p">+</span> <span class="s2">&#34;rootDSE&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$Root</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="py">DirectoryServices</span><span class="p">.</span><span class="py">DirectoryEntry</span><span class="p">(</span><span class="s2">&#34;LDAP://</span><span class="nv">$DC</span><span class="p">$(</span><span class="nv">$de</span><span class="p">.</span><span class="n">configurationNamingContext</span><span class="p">)</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$ds</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="py">Directoryservices</span><span class="p">.</span><span class="py">DirectorySearcher</span><span class="p">(</span><span class="nv">$root</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$ds</span><span class="p">.</span><span class="k">filter</span> <span class="p">=</span> <span class="s2">&#34;(CN=</span><span class="nv">$Network</span><span class="s2">)&#34;</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$Result</span> <span class="p">=</span> <span class="nv">$ds</span><span class="p">.</span><span class="py">findone</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">                <span class="p">}</span><span class="k">catch</span><span class="p">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Result</span> <span class="p">=</span> <span class="nv">$null</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$Result</span> <span class="p">=</span> <span class="vm">$null</span>
 </span></span><span class="line"><span class="cl">                <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="nv">$Result</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="nb">write-verbose</span> <span class="s2">&#34;AD Site found for $IP&#34;</span>
+</span></span><span class="line"><span class="cl">                    <span class="nb">write-verbose</span> <span class="s2">&#34;AD Site found for </span><span class="nv">$IP</span><span class="s2">&#34;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                    <span class="c"># Try to split out AD Site from LDAP path</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$SiteDN</span> <span class="p">=</span> <span class="nv">$Result</span><span class="p">.</span><span class="n">GetDirectoryEntry</span><span class="p">().</span><span class="n">siteObject</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$SiteDe</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">-TypeName</span> <span class="n">System</span><span class="p">.</span><span class="n">DirectoryServices</span><span class="p">.</span><span class="n">DirectoryEntry</span><span class="p">(</span><span class="s2">&#34;LDAP://$SiteDN&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$ADSite</span> <span class="p">=</span> <span class="nv">$SiteDe</span><span class="p">.</span><span class="n">Name</span><span class="p">[</span><span class="n">0</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$ADSiteDescription</span> <span class="p">=</span> <span class="nv">$SiteDe</span><span class="p">.</span><span class="n">Description</span><span class="p">[</span><span class="n">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$SiteDN</span> <span class="p">=</span> <span class="nv">$Result</span><span class="p">.</span><span class="py">GetDirectoryEntry</span><span class="p">().</span><span class="py">siteObject</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$SiteDe</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">-TypeName</span> <span class="n">System</span><span class="p">.</span><span class="py">DirectoryServices</span><span class="p">.</span><span class="py">DirectoryEntry</span><span class="p">(</span><span class="s2">&#34;LDAP://</span><span class="nv">$SiteDN</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$ADSite</span> <span class="p">=</span> <span class="nv">$SiteDe</span><span class="p">.</span><span class="n">Name</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$ADSiteDescription</span> <span class="p">=</span> <span class="nv">$SiteDe</span><span class="p">.</span><span class="n">Description</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                    <span class="nv">$MatchedSubnets</span> <span class="p">+=</span> <span class="no">[PSCustomObject][Ordered]</span><span class="p">@{</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$MatchedSubnets</span> <span class="p">+=</span> <span class="p">[</span><span class="no">PSCustomObject][Ordered</span><span class="p">]</span><span class="vm">@</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">                        <span class="n">ComputerName</span> <span class="p">=</span> <span class="nv">$ComputerName</span>
-</span></span><span class="line"><span class="cl">                        <span class="n">IPAddress</span>    <span class="p">=</span> <span class="nv">$IP</span><span class="p">.</span><span class="n">ToString</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">                        <span class="n">ADSubnetName</span> <span class="p">=</span> <span class="p">$(</span><span class="nv">$Result</span><span class="p">.</span><span class="n">properties</span><span class="p">.</span><span class="n">name</span><span class="p">).</span><span class="n">ToString</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">                        <span class="n">ADSubnetDesc</span> <span class="p">=</span> <span class="s2">&#34;</span><span class="p">$(</span><span class="nv">$Result</span><span class="p">.</span><span class="n">properties</span><span class="p">.</span><span class="n">description</span><span class="p">)</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">IPAddress</span>    <span class="p">=</span> <span class="nv">$IP</span><span class="p">.</span><span class="py">ToString</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">ADSubnetName</span> <span class="p">=</span> <span class="vm">$</span><span class="p">(</span><span class="nv">$Result</span><span class="p">.</span><span class="py">properties</span><span class="p">.</span><span class="n">name</span><span class="p">).</span><span class="py">ToString</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">ADSubnetDesc</span> <span class="p">=</span> <span class="s2">&#34;</span><span class="p">$(</span><span class="nv">$Result</span><span class="p">.</span><span class="py">properties</span><span class="p">.</span><span class="n">description</span><span class="p">)</span><span class="s2">&#34;</span>
 </span></span><span class="line"><span class="cl">                        <span class="n">ADSiteName</span>       <span class="p">=</span> <span class="nv">$ADSite</span>
 </span></span><span class="line"><span class="cl">                        <span class="n">ADSiteDescription</span> <span class="p">=</span> <span class="nv">$ADSiteDescription</span>
 </span></span><span class="line"><span class="cl">                    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$bFound</span> <span class="p">=</span> <span class="nv">$true</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$bFound</span> <span class="p">=</span> <span class="vm">$true</span>
 </span></span><span class="line"><span class="cl">                <span class="p">}</span><span class="c">#endif</span>
 </span></span><span class="line"><span class="cl">            <span class="p">}</span><span class="c">#next</span>
 </span></span><span class="line"><span class="cl">
@@ -1160,13 +1445,13 @@ If a company populates subnet descriptions with useful information, it can also 
 </span></span><span class="line"><span class="cl">            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                <span class="c"># Only output the subnet with the largest mask bits</span>
-</span></span><span class="line"><span class="cl">                <span class="no">[Int32]</span><span class="nv">$MaskBits</span> <span class="p">=</span> <span class="n">0</span> <span class="c"># initial value</span>
+</span></span><span class="line"><span class="cl">                <span class="p">[</span><span class="no">Int32</span><span class="p">]</span><span class="nv">$MaskBits</span> <span class="p">=</span> <span class="mf">0</span> <span class="c"># initial value</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                <span class="k">Foreach</span> <span class="p">(</span><span class="nv">$MatchedSubnet</span> <span class="k">in</span> <span class="nv">$MatchedSubnets</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="p">(</span><span class="nv">$MatchedSubnet</span><span class="p">.</span><span class="n">ADSubnetName</span> <span class="o">-match</span> <span class="s2">&#34;\/(?&lt;Bits&gt;\d+)$&#34;</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                        <span class="no">[Int32]</span><span class="nv">$ThisMaskBits</span> <span class="p">=</span> <span class="nv">$Matches</span><span class="p">[</span><span class="s1">&#39;Bits&#39;</span><span class="p">]</span>
-</span></span><span class="line"><span class="cl">                        <span class="nb">Write-Verbose</span> <span class="s2">&#34;ThisMaskBits = &#39;$ThisMaskBits&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="p">(</span><span class="nv">$MatchedSubnet</span><span class="p">.</span><span class="py">ADSubnetName</span> <span class="o">-match</span> <span class="s2">&#34;\/(?&lt;Bits&gt;\d+)$&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">[</span><span class="no">Int32</span><span class="p">]</span><span class="nv">$ThisMaskBits</span> <span class="p">=</span> <span class="nv">$Matches</span><span class="p">[</span><span class="s1">&#39;Bits&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">                        <span class="nb">Write-Verbose</span> <span class="s2">&#34;ThisMaskBits = &#39;</span><span class="nv">$ThisMaskBits</span><span class="s2">&#39;&#34;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                        <span class="k">if</span> <span class="p">(</span><span class="nv">$ThisMaskBits</span> <span class="o">-gt</span> <span class="nv">$MaskBits</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">                            <span class="c"># This is a more specific subnet</span>
@@ -1185,12 +1470,12 @@ If a company populates subnet descriptions with useful information, it can also 
 </span></span><span class="line"><span class="cl">            <span class="p">}</span><span class="c">#endif</span>
 </span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="nb">Write-Verbose</span> <span class="s2">&#34;AD Subnet not found for $IP&#34;</span>
-</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="nv">$IP</span> <span class="o">-eq</span> <span class="nv">$null</span><span class="p">)</span> <span class="p">{</span><span class="nv">$IP</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span><span class="p">}</span> <span class="c"># required to prevent exception on ToString() below</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">Write-Verbose</span> <span class="s2">&#34;AD Subnet not found for </span><span class="nv">$IP</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="nv">$IP</span> <span class="o">-eq</span> <span class="vm">$null</span><span class="p">)</span> <span class="p">{</span><span class="nv">$IP</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span><span class="p">}</span> <span class="c"># required to prevent exception on ToString() below</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="nb">New-Object</span> <span class="n">-TypeName</span> <span class="n">PSObject</span> <span class="n">-Property</span> <span class="p">@{</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">New-Object</span> <span class="n">-TypeName</span> <span class="n">PSObject</span> <span class="n">-Property</span> <span class="vm">@</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">                <span class="n">ComputerName</span> <span class="p">=</span> <span class="nv">$ComputerName</span>
-</span></span><span class="line"><span class="cl">                <span class="n">IPAddress</span>    <span class="p">=</span> <span class="nv">$IP</span><span class="p">.</span><span class="n">ToString</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">                <span class="n">IPAddress</span>    <span class="p">=</span> <span class="nv">$IP</span><span class="p">.</span><span class="py">ToString</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">                <span class="n">ADSubnetName</span> <span class="p">=</span> <span class="s2">&#34;Not found&#34;</span>
 </span></span><span class="line"><span class="cl">                <span class="n">ADSubnetDesc</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
 </span></span><span class="line"><span class="cl">                <span class="n">ADSiteName</span>   <span class="p">=</span> <span class="s2">&#34;&#34;</span>
@@ -1220,131 +1505,131 @@ If a company populates subnet descriptions with useful information, it can also 
 <p>The PowerShell <strong>Get-Winevent</strong> command can work against remote event logs, but it can be painfully slow over the network. Copying an entire exported log (.evtx file) across the same connection is much faster. Get-Winevent can still be used with the <em>-path</em> parameter to query the locally copied .evtx file.</p>
 <h2 id="powershell-script">PowerShell Script</h2>
 <p><strong>wevtutil.exe</strong> is Windows .exe that can export event logs.  The PowerShell function below uses wevtutil to export one ore more event logs and copy them locally. The computer name is pre-pended to the log name.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="k">Function</span> <span class="nb">Export-EventLog</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="kd">Function</span><span class="w"> </span><span class="nb">Export-EventLog</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">	<span class="cm">&lt;#
-</span></span></span><span class="line"><span class="cl"><span class="cm">		</span><span class="sd">.SYNOPSIS</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">SYNOPSIS</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">			Exports a remote event log to a file.
 </span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">		</span><span class="sd">.DESCRIPTION</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">DESCRIPTION</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">			Uses wevtutil.exe to perform the export on the remote computer
 </span></span></span><span class="line"><span class="cl"><span class="cm">			The log(s) are saved to c:\Windows\Temp and then moved over the network to the local computer
 </span></span></span><span class="line"><span class="cl"><span class="cm">			The resulting log file is $Path\$computername-$logname.evtx
 </span></span></span><span class="line"><span class="cl"><span class="cm">			The file can then be opened in Windows Event Viewer or queried directly using &#34;Get-Winevent -Path....&#34;
 </span></span></span><span class="line"><span class="cl"><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">			The remote computer must be online and the Windows Firewall must allow inbound RPC and SMB connections
-</span></span></span><span class="line"><span class="cl"><span class="cm">		</span><span class="sd">.PARAMETER</span><span class="cm">  Computername
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.PARAMETER  Computername
 </span></span></span><span class="line"><span class="cl"><span class="cm">			The name of the remote computer.
-</span></span></span><span class="line"><span class="cl"><span class="cm">		</span><span class="sd">.PARAMETER</span><span class="cm">  Logname
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.PARAMETER  Logname
 </span></span></span><span class="line"><span class="cl"><span class="cm">			The name(s) of the log file to export.
-</span></span></span><span class="line"><span class="cl"><span class="cm">		</span><span class="sd">.PARAMETER</span><span class="cm">  Path
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.PARAMETER  Path
 </span></span></span><span class="line"><span class="cl"><span class="cm">			The local folder path where the output file will be saved
 </span></span></span><span class="line"><span class="cl"><span class="cm">			Default = %TEMP%
-</span></span></span><span class="line"><span class="cl"><span class="cm">		</span><span class="sd">.PARAMETER</span><span class="cm">  RemotePath
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.PARAMETER  RemotePath
 </span></span></span><span class="line"><span class="cl"><span class="cm">			The remote folder path used to stage the exported file prior to moving it to the local folder path.
 </span></span></span><span class="line"><span class="cl"><span class="cm">			Environment variables are not supported.
 </span></span></span><span class="line"><span class="cl"><span class="cm">			Default = C:\Windows\Temp
-</span></span></span><span class="line"><span class="cl"><span class="cm">		</span><span class="sd">.EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">EXAMPLE</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">			PS C:\&gt; Export-EventLog -Computername &#34;PC654321&#34;
 </span></span></span><span class="line"><span class="cl"><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">			This command will export the System and Application event logs from the remote computer PC654321
 </span></span></span><span class="line"><span class="cl"><span class="cm">			The logs will be exported to c:\windows\temp on the remote computer then moved to
 </span></span></span><span class="line"><span class="cl"><span class="cm">			c:\temp on the local computer
-</span></span></span><span class="line"><span class="cl"><span class="cm">		</span><span class="sd">.EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">EXAMPLE</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">			PS C:\&gt; Export-EventLog -Computername &#34;PC654321&#34; -LogName &#34;System&#34;,&#34;Security&#34;
 </span></span></span><span class="line"><span class="cl"><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">			This command will export the System and Security event logs from the remote computer PC654321
-</span></span></span><span class="line"><span class="cl"><span class="cm">		</span><span class="sd">.EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">EXAMPLE</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">			PS C:\&gt; &#34;PC654321&#34; | Export-EventLog -LogName &#34;Application&#34;,&#34;Security&#34;
 </span></span></span><span class="line"><span class="cl"><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">			This command will export the Application and Security event logs from the remote computer PC654321
-</span></span></span><span class="line"><span class="cl"><span class="cm">		</span><span class="sd">.EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">EXAMPLE</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">			PS C:\&gt; Get-Winevent -Computername $Computer -Listlog * -EA 0 | Where{$_.RecordCount -gt 0} | Export-EventLog -Computername $Computer
 </span></span></span><span class="line"><span class="cl"><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">			This command will export all the event logs from the remote computer represented by the $computer variable
-</span></span></span><span class="line"><span class="cl"><span class="cm">		</span><span class="sd">.NOTES</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">NOTES</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">			Version: 1.0
 </span></span></span><span class="line"><span class="cl"><span class="cm">	#&gt;</span>
-</span></span><span class="line"><span class="cl">	<span class="p">[</span><span class="k">CmdletBinding</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">	<span class="p">[</span><span class="nb">CmdletBinding</span><span class="p">()]</span>
 </span></span><span class="line"><span class="cl">	<span class="k">param</span><span class="p">(</span>
-</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="k">parameter</span><span class="p">(</span><span class="k">position</span> <span class="p">=</span> <span class="n">0</span><span class="p">,</span> <span class="k">valuefromPipeline</span> <span class="p">=</span> <span class="nv">$true</span><span class="p">,</span> <span class="k">valuefrompipelinebypropertyname</span> <span class="p">=</span> <span class="nv">$true</span><span class="p">)]</span>
-</span></span><span class="line"><span class="cl">		<span class="no">[string[]]</span><span class="nv">$Computername</span> <span class="p">=</span> <span class="nv">$Env:COMPUTERNAME</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="nb">parameter</span><span class="p">(</span><span class="na">position</span> <span class="p">=</span> <span class="mf">0</span><span class="p">,</span> <span class="na">valuefromPipeline</span> <span class="p">=</span> <span class="vm">$true</span><span class="p">,</span> <span class="na">valuefrompipelinebypropertyname</span> <span class="p">=</span> <span class="vm">$true</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="no">string[]</span><span class="p">]</span><span class="nv">$Computername</span> <span class="p">=</span> <span class="nv">$Env:COMPUTERNAME</span>
 </span></span><span class="line"><span class="cl">		<span class="p">,</span>
-</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="k">parameter</span><span class="p">(</span><span class="k">position</span> <span class="p">=</span> <span class="n">1</span><span class="p">,</span> <span class="k">valuefrompipelinebypropertyname</span> <span class="p">=</span> <span class="nv">$true</span><span class="p">)]</span>
-</span></span><span class="line"><span class="cl">		<span class="no">[string[]]</span><span class="nv">$LogName</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&#34;System&#34;</span><span class="p">,</span> <span class="s2">&#34;Application&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="nb">parameter</span><span class="p">(</span><span class="na">position</span> <span class="p">=</span> <span class="mf">1</span><span class="p">,</span> <span class="na">valuefrompipelinebypropertyname</span> <span class="p">=</span> <span class="vm">$true</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="no">string[]</span><span class="p">]</span><span class="nv">$LogName</span> <span class="p">=</span> <span class="vm">@</span><span class="p">(</span><span class="s2">&#34;System&#34;</span><span class="p">,</span> <span class="s2">&#34;Application&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">		<span class="p">,</span>
-</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="k">parameter</span><span class="p">(</span><span class="k">position</span> <span class="p">=</span> <span class="n">2</span><span class="p">)]</span>
-</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="n">ValidateScript</span><span class="p">(</span> <span class="p">{</span> <span class="nb">Test-Path</span> <span class="nv">$_</span> <span class="n">-PathType</span> <span class="s1">&#39;Container&#39;</span> <span class="p">})]</span>
-</span></span><span class="line"><span class="cl">		<span class="no">[string]</span><span class="nv">$Path</span> <span class="p">=</span> <span class="nv">$ENV:TEMP</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="nb">parameter</span><span class="p">(</span><span class="na">position</span> <span class="p">=</span> <span class="mf">2</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="nb">ValidateScript</span><span class="p">(</span> <span class="p">{</span> <span class="nb">Test-Path</span> <span class="nv">$_</span> <span class="n">-PathType</span> <span class="s1">&#39;Container&#39;</span> <span class="p">})]</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="no">string</span><span class="p">]</span><span class="nv">$Path</span> <span class="p">=</span> <span class="nv">$ENV:TEMP</span>
 </span></span><span class="line"><span class="cl">		<span class="p">,</span>
-</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="k">parameter</span><span class="p">(</span><span class="k">position</span> <span class="p">=</span> <span class="n">3</span><span class="p">)]</span>
-</span></span><span class="line"><span class="cl">		<span class="no">[string]</span><span class="nv">$RemotePath</span> <span class="p">=</span> <span class="s2">&#34;C:\Windows\Temp&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="nb">parameter</span><span class="p">(</span><span class="na">position</span> <span class="p">=</span> <span class="mf">3</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="no">string</span><span class="p">]</span><span class="nv">$RemotePath</span> <span class="p">=</span> <span class="s2">&#34;C:\Windows\Temp&#34;</span>
 </span></span><span class="line"><span class="cl">	<span class="p">)</span>
 </span></span><span class="line"><span class="cl">	<span class="k">PROCESS</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">		<span class="k">Foreach</span> <span class="p">(</span><span class="nv">$Name</span> <span class="k">in</span> <span class="nv">$Computername</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">			<span class="nb">Write-Progress</span> <span class="n">-id</span> <span class="n">1</span> <span class="n">-Activity</span> <span class="s2">&#34;Computer &#34;</span> <span class="n">-Status</span> <span class="s2">&#34;$Name&#34;</span>
+</span></span><span class="line"><span class="cl">			<span class="nb">Write-Progress</span> <span class="n">-id</span> <span class="mf">1</span> <span class="n">-Activity</span> <span class="s2">&#34;Computer &#34;</span> <span class="n">-Status</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			<span class="k">If</span> <span class="p">(</span><span class="nb">Test-Connection</span> <span class="n">-ComputerName</span> <span class="nv">$Name</span> <span class="n">-Count</span> <span class="n">1</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">If</span> <span class="p">(</span><span class="nb">Test-Connection</span> <span class="n">-ComputerName</span> <span class="nv">$Name</span> <span class="n">-Count</span> <span class="mf">1</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">				<span class="nv">$LogName</span> <span class="p">|</span> <span class="nb">ForEach-Object</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">					<span class="nv">$Log</span> <span class="p">=</span> <span class="nv">$_</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">					<span class="nv">$Output</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">PSObject</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Computername</span><span class="p">,</span> <span class="n">LogName</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">Result</span>
-</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span><span class="p">.</span><span class="n">Computername</span> <span class="p">=</span> <span class="nv">$Name</span>
-</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span><span class="p">.</span><span class="n">LogName</span> <span class="p">=</span> <span class="nv">$Log</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span><span class="p">.</span><span class="py">Computername</span> <span class="p">=</span> <span class="nv">$Name</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span><span class="p">.</span><span class="py">LogName</span> <span class="p">=</span> <span class="nv">$Log</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">					<span class="k">if</span> <span class="p">((</span><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="nv">$Log</span> <span class="n">-ComputerName</span> <span class="nv">$Name</span> <span class="n">-MaxEvents</span> <span class="n">1</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span> <span class="p">|</span> <span class="nb">Measure-Object</span><span class="p">).</span><span class="n">Count</span> <span class="o">-lt</span> <span class="n">1</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">						<span class="nb">Write-Warning</span> <span class="n">-Message</span> <span class="s2">&#34;$Name::$log log is empty. Skipping export&#34;</span>
+</span></span><span class="line"><span class="cl">					<span class="k">if</span> <span class="p">((</span><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="nv">$Log</span> <span class="n">-ComputerName</span> <span class="nv">$Name</span> <span class="n">-MaxEvents</span> <span class="mf">1</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span> <span class="p">|</span> <span class="nb">Measure-Object</span><span class="p">).</span><span class="py">Count</span> <span class="o">-lt</span> <span class="mf">1</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">						<span class="nb">Write-Warning</span> <span class="n">-Message</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log is empty. Skipping export&#34;</span>
 </span></span><span class="line"><span class="cl">						<span class="k">return</span>
 </span></span><span class="line"><span class="cl">					<span class="p">}</span>
-</span></span><span class="line"><span class="cl">					<span class="nv">$OutputFileName</span> <span class="p">=</span> <span class="s2">&#34;$Name-</span><span class="p">$(</span><span class="nv">$Log</span> <span class="o">-replace</span> <span class="s2">&#34;/&#34;</span><span class="p">,</span><span class="s2">&#34;-&#34;</span><span class="p">)</span><span class="s2">.evtx&#34;</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$OutputFileName</span> <span class="p">=</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">-</span><span class="p">$(</span><span class="nv">$Log</span> <span class="o">-replace</span> <span class="s2">&#34;/&#34;</span><span class="p">,</span><span class="s2">&#34;-&#34;</span><span class="p">)</span><span class="s2">.evtx&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">					<span class="nb">Write-Progress</span> <span class="n">-id</span> <span class="n">2</span> <span class="n">-ParentId</span> <span class="n">1</span> <span class="n">-Activity</span> <span class="s2">&#34;Exporting&#34;</span> <span class="n">-Status</span> <span class="s2">&#34;$Log&#34;</span>
+</span></span><span class="line"><span class="cl">					<span class="nb">Write-Progress</span> <span class="n">-id</span> <span class="mf">2</span> <span class="n">-ParentId</span> <span class="mf">1</span> <span class="n">-Activity</span> <span class="s2">&#34;Exporting&#34;</span> <span class="n">-Status</span> <span class="s2">&#34;</span><span class="nv">$Log</span><span class="s2">&#34;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">					<span class="k">if</span> <span class="p">(</span><span class="nv">$Name</span> <span class="o">-eq</span> <span class="nv">$Env:COMPUTERNAME</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">						<span class="nb">Write-Verbose</span> <span class="s2">&#34;Local computer...&#34;</span>
-</span></span><span class="line"><span class="cl">						<span class="nv">$Cmd</span> <span class="p">=</span> <span class="s2">&#34;</span><span class="p">$(</span><span class="nv">$Env:windir</span><span class="p">)</span><span class="s2">\system32\wevtutil.exe epl &#39;$Log&#39; &#39;$Path\$OutputFileName&#39; /r:$Name /ow:True 2&gt;&amp;1&#34;</span>
+</span></span><span class="line"><span class="cl">						<span class="nv">$Cmd</span> <span class="p">=</span> <span class="s2">&#34;</span><span class="p">$(</span><span class="nv">$Env:windir</span><span class="p">)</span><span class="s2">\system32\wevtutil.exe epl &#39;</span><span class="nv">$Log</span><span class="s2">&#39; &#39;</span><span class="nv">$Path</span><span class="s2">\</span><span class="nv">$OutputFileName</span><span class="s2">&#39; /r:</span><span class="nv">$Name</span><span class="s2"> /ow:True 2&gt;&amp;1&#34;</span>
 </span></span><span class="line"><span class="cl">						<span class="nv">$CmdResult</span> <span class="p">=</span> <span class="nb">Invoke-Expression</span> <span class="n">-Command</span> <span class="nv">$cmd</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">						<span class="k">if</span> <span class="p">(</span><span class="nv">$CmdResult</span> <span class="o">-eq</span> <span class="nv">$Null</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">							<span class="nb">Write-Verbose</span> <span class="s2">&#34;$Name::$log log export to &#39;$path&#39; = &#39;Success&#39;&#34;</span>
-</span></span><span class="line"><span class="cl">							<span class="nv">$Output</span><span class="p">.</span><span class="n">Result</span> <span class="p">=</span> <span class="s2">&#34;Success&#34;</span>
+</span></span><span class="line"><span class="cl">						<span class="k">if</span> <span class="p">(</span><span class="nv">$CmdResult</span> <span class="o">-eq</span> <span class="vm">$Null</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">							<span class="nb">Write-Verbose</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;</span><span class="nv">$path</span><span class="s2">&#39; = &#39;Success&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="nv">$Output</span><span class="p">.</span><span class="py">Result</span> <span class="p">=</span> <span class="s2">&#34;Success&#34;</span>
 </span></span><span class="line"><span class="cl">						<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">							<span class="nb">Write-Error</span> <span class="s2">&#34;$Name::$log log export to &#39;$path&#39; = &#39;$CmdResult&#39;&#34;</span>
-</span></span><span class="line"><span class="cl">							<span class="nv">$Output</span><span class="p">.</span><span class="n">Result</span> <span class="p">=</span> <span class="s2">&#34;Error - $CMDResult&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="nb">Write-Error</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;</span><span class="nv">$path</span><span class="s2">&#39; = &#39;</span><span class="nv">$CmdResult</span><span class="s2">&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="nv">$Output</span><span class="p">.</span><span class="py">Result</span> <span class="p">=</span> <span class="s2">&#34;Error - </span><span class="nv">$CMDResult</span><span class="s2">&#34;</span>
 </span></span><span class="line"><span class="cl">						<span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">					<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">						<span class="nb">Write-Verbose</span> <span class="s2">&#34;Remote computer...&#34;</span>
 </span></span><span class="line"><span class="cl">						<span class="c"># Wevtutil LogName filepath /r:&lt;remote computer&gt; /ow:&lt;Overwrite true/false&gt;</span>
-</span></span><span class="line"><span class="cl">						<span class="nv">$Cmd</span> <span class="p">=</span> <span class="s2">&#34;</span><span class="p">$(</span><span class="nv">$Env:windir</span><span class="p">)</span><span class="s2">\system32\wevtutil.exe epl &#39;$Log&#39; &#39;$RemotePath\$OutputFileName&#39; /r:$Name /ow:True 2&gt;&amp;1&#34;</span>
+</span></span><span class="line"><span class="cl">						<span class="nv">$Cmd</span> <span class="p">=</span> <span class="s2">&#34;</span><span class="p">$(</span><span class="nv">$Env:windir</span><span class="p">)</span><span class="s2">\system32\wevtutil.exe epl &#39;</span><span class="nv">$Log</span><span class="s2">&#39; &#39;</span><span class="nv">$RemotePath</span><span class="s2">\</span><span class="nv">$OutputFileName</span><span class="s2">&#39; /r:</span><span class="nv">$Name</span><span class="s2"> /ow:True 2&gt;&amp;1&#34;</span>
 </span></span><span class="line"><span class="cl">						<span class="nv">$CmdResult</span> <span class="p">=</span> <span class="nb">Invoke-Expression</span> <span class="n">-Command</span> <span class="nv">$cmd</span>
-</span></span><span class="line"><span class="cl">						<span class="k">if</span> <span class="p">(</span><span class="nv">$CmdResult</span> <span class="o">-eq</span> <span class="nv">$Null</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">						<span class="k">if</span> <span class="p">(</span><span class="nv">$CmdResult</span> <span class="o">-eq</span> <span class="vm">$Null</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">							<span class="c"># Convert &lt;Drive&gt;:\ to \&lt;Drive&gt;$ for remote connection</span>
 </span></span><span class="line"><span class="cl">							<span class="nv">$RemoteUNC</span> <span class="p">=</span> <span class="nv">$RemotePath</span> <span class="o">-Replace</span> <span class="s1">&#39;(?&lt;Drive&gt;[A-Za-z]+):&#39;</span><span class="p">,</span> <span class="s1">&#39;${Drive}$$&#39;</span> <span class="c"># c:\ = c$\</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">							<span class="nb">Write-Verbose</span> <span class="s2">&#34;$Name::$log log export to &#39;\\$Name\$RemoteUNC\$OutputFileName&#39; = &#39;Success&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="nb">Write-Verbose</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;\\</span><span class="nv">$Name</span><span class="s2">\</span><span class="nv">$RemoteUNC</span><span class="s2">\</span><span class="nv">$OutputFileName</span><span class="s2">&#39; = &#39;Success&#39;&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">							<span class="nb">Write-Progress</span> <span class="n">-id</span> <span class="n">3</span> <span class="n">-ParentId</span> <span class="n">1</span> <span class="n">-Activity</span> <span class="s2">&#34;Copying&#34;</span> <span class="n">-Status</span> <span class="s2">&#34;$Log&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="nb">Write-Progress</span> <span class="n">-id</span> <span class="mf">3</span> <span class="n">-ParentId</span> <span class="mf">1</span> <span class="n">-Activity</span> <span class="s2">&#34;Copying&#34;</span> <span class="n">-Status</span> <span class="s2">&#34;</span><span class="nv">$Log</span><span class="s2">&#34;</span>
 </span></span><span class="line"><span class="cl">							<span class="k">Try</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">								<span class="nb">move-item</span> <span class="n">-path</span> <span class="s2">&#34;filesystem::\\$Name\$RemoteUNC\$OutputFileName&#34;</span> <span class="n">-Dest</span> <span class="nv">$Path</span> <span class="n">-Force</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
-</span></span><span class="line"><span class="cl">								<span class="nb">Write-Verbose</span> <span class="s2">&#34;$Name::$log log move to &#39;$path&#39; = Success&#34;</span>
-</span></span><span class="line"><span class="cl">								<span class="nv">$Output</span><span class="p">.</span><span class="n">Result</span> <span class="p">=</span> <span class="s2">&#34;Success&#34;</span>
+</span></span><span class="line"><span class="cl">								<span class="nb">move-item</span> <span class="n">-path</span> <span class="s2">&#34;filesystem::\\</span><span class="nv">$Name</span><span class="s2">\</span><span class="nv">$RemoteUNC</span><span class="s2">\</span><span class="nv">$OutputFileName</span><span class="s2">&#34;</span> <span class="n">-Dest</span> <span class="nv">$Path</span> <span class="n">-Force</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+</span></span><span class="line"><span class="cl">								<span class="nb">Write-Verbose</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log move to &#39;</span><span class="nv">$path</span><span class="s2">&#39; = Success&#34;</span>
+</span></span><span class="line"><span class="cl">								<span class="nv">$Output</span><span class="p">.</span><span class="py">Result</span> <span class="p">=</span> <span class="s2">&#34;Success&#34;</span>
 </span></span><span class="line"><span class="cl">							<span class="p">}</span> <span class="k">Catch</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">								<span class="nb">Write-Error</span> <span class="s2">&#34;$Name::$log log move to &#39;$path&#39; failed - &#39;$_&#39;&#34;</span>
-</span></span><span class="line"><span class="cl">								<span class="nv">$Output</span><span class="p">.</span><span class="n">Result</span> <span class="p">=</span> <span class="s2">&#34;Error - &#39;$_&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">								<span class="nb">Write-Error</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log move to &#39;</span><span class="nv">$path</span><span class="s2">&#39; failed - &#39;</span><span class="nv">$_</span><span class="s2">&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">								<span class="nv">$Output</span><span class="p">.</span><span class="py">Result</span> <span class="p">=</span> <span class="s2">&#34;Error - &#39;</span><span class="nv">$_</span><span class="s2">&#39;&#34;</span>
 </span></span><span class="line"><span class="cl">							<span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">						<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">							<span class="nb">Write-Error</span> <span class="s2">&#34;$Name::$log log export to &#39;\\$Name\$RemotePath&#39; = &#39;$CmdResult&#39;&#34;</span>
-</span></span><span class="line"><span class="cl">							<span class="nv">$Result</span> <span class="p">=</span> <span class="s2">&#34;Error - $CMDResult&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="nb">Write-Error</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;\\</span><span class="nv">$Name</span><span class="s2">\</span><span class="nv">$RemotePath</span><span class="s2">&#39; = &#39;</span><span class="nv">$CmdResult</span><span class="s2">&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="nv">$Result</span> <span class="p">=</span> <span class="s2">&#34;Error - </span><span class="nv">$CMDResult</span><span class="s2">&#34;</span>
 </span></span><span class="line"><span class="cl">						<span class="p">}</span>
 </span></span><span class="line"><span class="cl">					<span class="p">}</span><span class="c">#end if</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span><span class="p">.</span><span class="n">Path</span> <span class="p">=</span> <span class="s2">&#34;$Path\$OutputFileName&#34;</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span><span class="p">.</span><span class="py">Path</span> <span class="p">=</span> <span class="s2">&#34;</span><span class="nv">$Path</span><span class="s2">\</span><span class="nv">$OutputFileName</span><span class="s2">&#34;</span>
 </span></span><span class="line"><span class="cl">					<span class="nv">$Output</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">				<span class="p">}</span><span class="c">#foreach logname</span>
 </span></span><span class="line"><span class="cl">			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">				<span class="nb">Write-Warning</span> <span class="n">-Message</span> <span class="s2">&#34;$Name :: ping failed&#34;</span>
+</span></span><span class="line"><span class="cl">				<span class="nb">Write-Warning</span> <span class="n">-Message</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2"> :: ping failed&#34;</span>
 </span></span><span class="line"><span class="cl">			<span class="p">}</span>
 </span></span><span class="line"><span class="cl">		<span class="p">}</span> <span class="c">#foreach Name</span>
 </span></span><span class="line"><span class="cl">	<span class="p">}</span><span class="c">#process</span>
@@ -1374,14 +1659,14 @@ If a company populates subnet descriptions with useful information, it can also 
 <p><img loading="lazy" src="/img/adsysteminfo.png" alt="Get-ADSystemInfo"  />
 </p>
 <h2 id="powershell-script">POWERSHELL SCRIPT</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="k">Function</span> <span class="nb">Get-ADSystemInfo</span><span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="kd">Function</span><span class="w"> </span><span class="nb">Get-ADSystemInfo</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="cm">&lt;#
-</span></span></span><span class="line"><span class="cl"><span class="cm">	</span><span class="sd">.Synopsis</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">	.</span><span class="sd">Synopsis</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">		Used to lookup specific AD user/computer object properties of the current session
-</span></span></span><span class="line"><span class="cl"><span class="cm">	</span><span class="sd">.Description</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">	.</span><span class="sd">Description</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">		Uses &#34;ADSystemInfo&#34; COM object to get Active Directory attributes for the current user and computer
 </span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">	</span><span class="sd">.Example</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">	.</span><span class="sd">Example</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">		PS C:\&gt;Get-ADSystemInfo
 </span></span></span><span class="line"><span class="cl"><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">		ComputerDN      : CN=EGBLHCNU335BQCG,OU=GBR,OU=Workstations,OU=EU,OU=Regions,DC=mycompany,DC=com
@@ -1394,13 +1679,13 @@ If a company populates subnet descriptions with useful information, it can also 
 </span></span></span><span class="line"><span class="cl"><span class="cm">		SchemaRoleOwner : CN=527616-NAADCP01,CN=Servers,CN=Global,CN=Sites,CN=Configuration,DC=mycompany,DC=com
 </span></span></span><span class="line"><span class="cl"><span class="cm">		UserDN          : CN=gdixon2,OU=Users,OU=GBR,OU=Accounts,OU=EU,OU=Regions,DC=mycompany,DC=com
 </span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">	</span><span class="sd">.Notes</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">	.</span><span class="sd">Notes</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">		Version:        1.0
 </span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">	</span><span class="sd">.Link</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">	.</span><span class="sd">Link</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">		http://msdn.microsoft.com/en-us/library/aa705962(VS.85).aspx
 </span></span></span><span class="line"><span class="cl"><span class="cm">#&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="k">CmdletBinding</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nb">CmdletBinding</span><span class="p">()]</span>
 </span></span><span class="line"><span class="cl"><span class="k">Param</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">	<span class="k">Process</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">
@@ -1409,17 +1694,17 @@ If a company populates subnet descriptions with useful information, it can also 
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">			<span class="nv">$obj</span> <span class="p">=</span> <span class="nb">new-object</span> <span class="n">-com</span> <span class="n">ADSystemInfo</span>
-</span></span><span class="line"><span class="cl">			<span class="nv">$type</span> <span class="p">=</span> <span class="nv">$obj</span><span class="p">.</span><span class="n">gettype</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$type</span> <span class="p">=</span> <span class="nv">$obj</span><span class="p">.</span><span class="py">gettype</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			<span class="nv">$Output</span><span class="p">.</span><span class="n">ComputerDN</span> <span class="p">=</span> <span class="nv">$type</span><span class="p">.</span><span class="n">InvokeMember</span><span class="p">(</span><span class="s2">&#34;ComputerName&#34;</span><span class="p">,</span><span class="s2">&#34;GetProperty&#34;</span><span class="p">,</span><span class="nv">$null</span><span class="p">,</span><span class="nv">$obj</span><span class="p">,</span><span class="nv">$null</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">			<span class="nv">$Output</span><span class="p">.</span><span class="n">SiteName</span> <span class="p">=</span> <span class="nv">$type</span><span class="p">.</span><span class="n">InvokeMember</span><span class="p">(</span><span class="s2">&#34;sitename&#34;</span><span class="p">,</span><span class="s2">&#34;GetProperty&#34;</span><span class="p">,</span><span class="nv">$null</span><span class="p">,</span><span class="nv">$obj</span><span class="p">,</span><span class="nv">$null</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">			<span class="nv">$Output</span><span class="p">.</span><span class="n">DomainDNSName</span> <span class="p">=</span> <span class="nv">$type</span><span class="p">.</span><span class="n">InvokeMember</span><span class="p">(</span><span class="s2">&#34;DomainDNSName&#34;</span><span class="p">,</span><span class="s2">&#34;GetProperty&#34;</span><span class="p">,</span><span class="nv">$null</span><span class="p">,</span><span class="nv">$obj</span><span class="p">,</span><span class="nv">$null</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">			<span class="nv">$Output</span><span class="p">.</span><span class="n">DomainShortName</span> <span class="p">=</span> <span class="nv">$type</span><span class="p">.</span><span class="n">InvokeMember</span><span class="p">(</span><span class="s2">&#34;DomainShortName&#34;</span><span class="p">,</span><span class="s2">&#34;GetProperty&#34;</span><span class="p">,</span><span class="nv">$null</span><span class="p">,</span><span class="nv">$obj</span><span class="p">,</span><span class="nv">$null</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">			<span class="nv">$Output</span><span class="p">.</span><span class="n">ForestDNSName</span> <span class="p">=</span> <span class="nv">$type</span><span class="p">.</span><span class="n">InvokeMember</span><span class="p">(</span><span class="s2">&#34;ForestDNSName&#34;</span><span class="p">,</span><span class="s2">&#34;GetProperty&#34;</span><span class="p">,</span><span class="nv">$null</span><span class="p">,</span><span class="nv">$obj</span><span class="p">,</span><span class="nv">$null</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">			<span class="nv">$Output</span><span class="p">.</span><span class="n">IsNativeMode</span> <span class="p">=</span> <span class="nv">$type</span><span class="p">.</span><span class="n">InvokeMember</span><span class="p">(</span><span class="s2">&#34;IsNativeMode&#34;</span><span class="p">,</span><span class="s2">&#34;GetProperty&#34;</span><span class="p">,</span><span class="nv">$null</span><span class="p">,</span><span class="nv">$obj</span><span class="p">,</span><span class="nv">$null</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">			<span class="nv">$Output</span><span class="p">.</span><span class="n">PDCRoleOwner</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$type</span><span class="p">.</span><span class="n">InvokeMember</span><span class="p">(</span><span class="s2">&#34;PDCRoleOwner&#34;</span><span class="p">,</span><span class="s2">&#34;GetProperty&#34;</span><span class="p">,</span><span class="nv">$null</span><span class="p">,</span><span class="nv">$obj</span><span class="p">,</span><span class="nv">$null</span><span class="p">)</span> <span class="o">-replace</span> <span class="s2">&#34;CN=NTDS Settings,&#34;</span><span class="p">,</span><span class="s2">&#34;&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">			<span class="nv">$Output</span><span class="p">.</span><span class="n">SchemaRoleOwner</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$type</span><span class="p">.</span><span class="n">InvokeMember</span><span class="p">(</span><span class="s2">&#34;SchemaRoleOwner&#34;</span><span class="p">,</span><span class="s2">&#34;GetProperty&#34;</span><span class="p">,</span><span class="nv">$null</span><span class="p">,</span><span class="nv">$obj</span><span class="p">,</span><span class="nv">$null</span><span class="p">)</span> <span class="o">-replace</span> <span class="s2">&#34;CN=NTDS Settings,&#34;</span><span class="p">,</span><span class="s2">&#34;&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">			<span class="nv">$Output</span><span class="p">.</span><span class="n">UserDN</span> <span class="p">=</span> <span class="nv">$type</span><span class="p">.</span><span class="n">InvokeMember</span><span class="p">(</span><span class="s2">&#34;UserName&#34;</span><span class="p">,</span><span class="s2">&#34;GetProperty&#34;</span><span class="p">,</span><span class="nv">$null</span><span class="p">,</span><span class="nv">$obj</span><span class="p">,</span><span class="nv">$null</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$Output</span><span class="p">.</span><span class="py">ComputerDN</span> <span class="p">=</span> <span class="nv">$type</span><span class="p">.</span><span class="py">InvokeMember</span><span class="p">(</span><span class="s2">&#34;ComputerName&#34;</span><span class="p">,</span><span class="s2">&#34;GetProperty&#34;</span><span class="p">,</span><span class="vm">$null</span><span class="p">,</span><span class="nv">$obj</span><span class="p">,</span><span class="vm">$null</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$Output</span><span class="p">.</span><span class="py">SiteName</span> <span class="p">=</span> <span class="nv">$type</span><span class="p">.</span><span class="py">InvokeMember</span><span class="p">(</span><span class="s2">&#34;sitename&#34;</span><span class="p">,</span><span class="s2">&#34;GetProperty&#34;</span><span class="p">,</span><span class="vm">$null</span><span class="p">,</span><span class="nv">$obj</span><span class="p">,</span><span class="vm">$null</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$Output</span><span class="p">.</span><span class="py">DomainDNSName</span> <span class="p">=</span> <span class="nv">$type</span><span class="p">.</span><span class="py">InvokeMember</span><span class="p">(</span><span class="s2">&#34;DomainDNSName&#34;</span><span class="p">,</span><span class="s2">&#34;GetProperty&#34;</span><span class="p">,</span><span class="vm">$null</span><span class="p">,</span><span class="nv">$obj</span><span class="p">,</span><span class="vm">$null</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$Output</span><span class="p">.</span><span class="py">DomainShortName</span> <span class="p">=</span> <span class="nv">$type</span><span class="p">.</span><span class="py">InvokeMember</span><span class="p">(</span><span class="s2">&#34;DomainShortName&#34;</span><span class="p">,</span><span class="s2">&#34;GetProperty&#34;</span><span class="p">,</span><span class="vm">$null</span><span class="p">,</span><span class="nv">$obj</span><span class="p">,</span><span class="vm">$null</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$Output</span><span class="p">.</span><span class="py">ForestDNSName</span> <span class="p">=</span> <span class="nv">$type</span><span class="p">.</span><span class="py">InvokeMember</span><span class="p">(</span><span class="s2">&#34;ForestDNSName&#34;</span><span class="p">,</span><span class="s2">&#34;GetProperty&#34;</span><span class="p">,</span><span class="vm">$null</span><span class="p">,</span><span class="nv">$obj</span><span class="p">,</span><span class="vm">$null</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$Output</span><span class="p">.</span><span class="py">IsNativeMode</span> <span class="p">=</span> <span class="nv">$type</span><span class="p">.</span><span class="py">InvokeMember</span><span class="p">(</span><span class="s2">&#34;IsNativeMode&#34;</span><span class="p">,</span><span class="s2">&#34;GetProperty&#34;</span><span class="p">,</span><span class="vm">$null</span><span class="p">,</span><span class="nv">$obj</span><span class="p">,</span><span class="vm">$null</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$Output</span><span class="p">.</span><span class="py">PDCRoleOwner</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$type</span><span class="p">.</span><span class="py">InvokeMember</span><span class="p">(</span><span class="s2">&#34;PDCRoleOwner&#34;</span><span class="p">,</span><span class="s2">&#34;GetProperty&#34;</span><span class="p">,</span><span class="vm">$null</span><span class="p">,</span><span class="nv">$obj</span><span class="p">,</span><span class="vm">$null</span><span class="p">)</span> <span class="o">-replace</span> <span class="s2">&#34;CN=NTDS Settings,&#34;</span><span class="p">,</span><span class="s2">&#34;&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$Output</span><span class="p">.</span><span class="py">SchemaRoleOwner</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$type</span><span class="p">.</span><span class="py">InvokeMember</span><span class="p">(</span><span class="s2">&#34;SchemaRoleOwner&#34;</span><span class="p">,</span><span class="s2">&#34;GetProperty&#34;</span><span class="p">,</span><span class="vm">$null</span><span class="p">,</span><span class="nv">$obj</span><span class="p">,</span><span class="vm">$null</span><span class="p">)</span> <span class="o">-replace</span> <span class="s2">&#34;CN=NTDS Settings,&#34;</span><span class="p">,</span><span class="s2">&#34;&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="nv">$Output</span><span class="p">.</span><span class="py">UserDN</span> <span class="p">=</span> <span class="nv">$type</span><span class="p">.</span><span class="py">InvokeMember</span><span class="p">(</span><span class="s2">&#34;UserName&#34;</span><span class="p">,</span><span class="s2">&#34;GetProperty&#34;</span><span class="p">,</span><span class="vm">$null</span><span class="p">,</span><span class="nv">$obj</span><span class="p">,</span><span class="vm">$null</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">			<span class="nv">$Output</span>
 </span></span><span class="line"><span class="cl">	<span class="p">}</span>
@@ -1473,17 +1758,17 @@ For example, <code>[^:]+</code> means match one or more characters that are not 
 </span></span><span class="line"><span class="cl">Hosted network status  : Not available
 </span></span></code></pre></div><h3 id="the-regex-explained">The regex explained</h3>
 <p>The PowerShell snippet below shows the regular expression and how the matches are added to a hash table collection as name = value.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="nv">$Properties</span> <span class="p">=</span> <span class="p">@{}</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="nv">$Properties</span> <span class="p">=</span> <span class="vm">@</span><span class="p">{}</span>
 </span></span><span class="line"><span class="cl"><span class="nv">$result</span> <span class="p">=</span> <span class="n">netsh</span> <span class="n">wlan</span> <span class="n">show</span> <span class="n">interfaces</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="nv">$Result</span> <span class="p">|</span> <span class="nb">ForEach-Object</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nv">$_</span> <span class="o">-match</span> <span class="s1">&#39;^\s+(?&lt;name&gt;[^:]+):\s(?&lt;value&gt;.*)$&#39;</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="nv">$name</span> <span class="p">=</span> <span class="nv">$Matches</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">].</span><span class="n">Trim</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">        <span class="nv">$val</span> <span class="p">=</span> <span class="nv">$Matches</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">].</span><span class="n">Trim</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$name</span> <span class="p">=</span> <span class="nv">$Matches</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">].</span><span class="py">Trim</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$val</span> <span class="p">=</span> <span class="nv">$Matches</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">].</span><span class="py">Trim</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="nv">$Properties</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$val</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$Properties</span><span class="p">.</span><span class="py">Add</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$val</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
@@ -1499,30 +1784,30 @@ Each line (the $_ variable) is tested for a match against the RegEx expression u
 </p>
 <p>A complete Get-WLAN PowerShell function is provided below.</p>
 <h2 id="powershell-script">PowerShell Script</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="k">Function</span> <span class="nb">Get-WLAN</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="kd">Function</span><span class="w"> </span><span class="nb">Get-WLAN</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="cm">&lt;#
-</span></span></span><span class="line"><span class="cl"><span class="cm">  </span><span class="sd">.SYNOPSIS</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">  .</span><span class="sd">SYNOPSIS</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">    Gets the properties of WiFI connections
-</span></span></span><span class="line"><span class="cl"><span class="cm">  </span><span class="sd">.DESCRIPTION</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">  .</span><span class="sd">DESCRIPTION</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">    A PowerShell wrapper around NETSH WLAN to convert the output into a PS object
-</span></span></span><span class="line"><span class="cl"><span class="cm">  </span><span class="sd">.INPUTS</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">  .</span><span class="sd">INPUTS</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">    None
-</span></span></span><span class="line"><span class="cl"><span class="cm">  </span><span class="sd">.OUTPUTS</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">  .</span><span class="sd">OUTPUTS</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">    PSObject
-</span></span></span><span class="line"><span class="cl"><span class="cm">  </span><span class="sd">.EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">  .</span><span class="sd">EXAMPLE</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">    Get-WLAN
-</span></span></span><span class="line"><span class="cl"><span class="cm">  </span><span class="sd">.NOTES</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">  .</span><span class="sd">NOTES</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">    Author:GD
 </span></span></span><span class="line"><span class="cl"><span class="cm">    Website: www.write-verbose.com
 </span></span></span><span class="line"><span class="cl"><span class="cm">    Twitter: @writeverbose
 </span></span></span><span class="line"><span class="cl"><span class="cm">  #&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="k">cmdletBinding</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="nb">cmdletBinding</span><span class="p">()]</span>
 </span></span><span class="line"><span class="cl">    <span class="k">param</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">    <span class="k">PROCESS</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nv">$Properties</span> <span class="p">=</span> <span class="p">@{}</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$Properties</span> <span class="p">=</span> <span class="vm">@</span><span class="p">{}</span>
 </span></span><span class="line"><span class="cl">        <span class="nv">$result</span> <span class="p">=</span> <span class="n">netsh</span> <span class="n">wlan</span> <span class="n">show</span> <span class="n">interfaces</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nv">$LASTEXITCODE</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="nv">$Properties</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s1">&#39;Computername&#39;</span><span class="p">,</span> <span class="nv">$ENV:COMPUTERNAME</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nv">$LASTEXITCODE</span> <span class="o">-eq</span> <span class="mf">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$Properties</span><span class="p">.</span><span class="py">Add</span><span class="p">(</span><span class="s1">&#39;Computername&#39;</span><span class="p">,</span> <span class="nv">$ENV:COMPUTERNAME</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">            <span class="nv">$Result</span> <span class="p">|</span> <span class="nb">ForEach-Object</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                <span class="cm">&lt;# Example NETSH command output:
@@ -1533,22 +1818,22 @@ Each line (the $_ variable) is tested for a match against the RegEx expression u
 </span></span></span><span class="line"><span class="cl"><span class="cm">                #&gt;</span>
 </span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="nv">$_</span> <span class="o">-match</span> <span class="s1">&#39;^\s+(?&lt;name&gt;[^:]+):\s(?&lt;value&gt;.*)$&#39;</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                    <span class="nv">$name</span> <span class="p">=</span> <span class="nv">$Matches</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">].</span><span class="n">Trim</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$val</span> <span class="p">=</span> <span class="nv">$Matches</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">].</span><span class="n">Trim</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$name</span> <span class="p">=</span> <span class="nv">$Matches</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">].</span><span class="py">Trim</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$val</span> <span class="p">=</span> <span class="nv">$Matches</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">].</span><span class="py">Trim</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Properties</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$val</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$Properties</span><span class="p">.</span><span class="py">Add</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$val</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">                <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">            <span class="p">}</span> <span class="c">#foreach</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="nv">$Properties</span><span class="p">.</span><span class="n">Count</span> <span class="o">-gt</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                <span class="no">[PSCustomObject][Ordered]</span><span class="nv">$Properties</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="nv">$Properties</span><span class="p">.</span><span class="py">Count</span> <span class="o">-gt</span> <span class="mf">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="p">[</span><span class="no">PSCustomObject][Ordered</span><span class="p">]</span><span class="nv">$Properties</span>
 </span></span><span class="line"><span class="cl">            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">                <span class="nb">Write-Warning</span> <span class="s2">&#34;Failed to parse NETSH output&#34;</span>
 </span></span><span class="line"><span class="cl">            <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="nb">Write-Warning</span> <span class="s2">&#34;Error from NETSH - &#39;</span><span class="p">$(</span><span class="nv">$Error</span><span class="p">[</span><span class="n">0</span><span class="p">])</span><span class="s2">&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">Write-Warning</span> <span class="s2">&#34;Error from NETSH - &#39;</span><span class="p">$(</span><span class="nv">$Error</span><span class="p">[</span><span class="mf">0</span><span class="p">])</span><span class="s2">&#39;&#34;</span>
 </span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="p">}</span><span class="c">#process</span>
@@ -1610,62 +1895,62 @@ The PowerShell script below gets the installed extensions using the following me
 </span></span><span class="line"><span class="cl">Gmail                           8.2          Fast, searchable email with less spam.
 </span></span><span class="line"><span class="cl">Chrome Cast                     7519.422.0.3
 </span></span></code></pre></div><h2 id="powershell-script">PowerShell Script</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="k">function</span> <span class="nb">Get-ChromeExtension</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="kd">function</span><span class="w"> </span><span class="nb">Get-ChromeExtension</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl"><span class="cm">&lt;#
-</span></span></span><span class="line"><span class="cl"><span class="cm"> </span><span class="sd">.SYNOPSIS</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .</span><span class="sd">SYNOPSIS</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">    Gets Chrome Extensions from a local or remote computer
-</span></span></span><span class="line"><span class="cl"><span class="cm"> </span><span class="sd">.DESCRIPTION</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .</span><span class="sd">DESCRIPTION</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">    Gets the name, version and description of the installed extensions
 </span></span></span><span class="line"><span class="cl"><span class="cm">    Admin rights are required to access other profiles on the local computer or
 </span></span></span><span class="line"><span class="cl"><span class="cm">    any profiles on a remote computer.
 </span></span></span><span class="line"><span class="cl"><span class="cm">    Internet access is required to lookup the extension ID on the Chrome web store
-</span></span></span><span class="line"><span class="cl"><span class="cm"> </span><span class="sd">.PARAMETER</span><span class="cm"> Computername
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .PARAMETER Computername
 </span></span></span><span class="line"><span class="cl"><span class="cm">    The name of the computer to connect to
 </span></span></span><span class="line"><span class="cl"><span class="cm">    The default is the local machine
-</span></span></span><span class="line"><span class="cl"><span class="cm"> </span><span class="sd">.PARAMETER</span><span class="cm"> Username
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .PARAMETER Username
 </span></span></span><span class="line"><span class="cl"><span class="cm">    The username to query i.e. the userprofile (c:\users\&lt;username&gt;)
 </span></span></span><span class="line"><span class="cl"><span class="cm">    If this parameter is omitted, all userprofiles are searched
-</span></span></span><span class="line"><span class="cl"><span class="cm"> </span><span class="sd">.EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .</span><span class="sd">EXAMPLE</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">    PS C:\&gt; Get-ChromeExtension
 </span></span></span><span class="line"><span class="cl"><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">    This command will get the Chrome extensions from all the user profiles on the local computer
-</span></span></span><span class="line"><span class="cl"><span class="cm"> </span><span class="sd">.EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .</span><span class="sd">EXAMPLE</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">    PS C:\&gt; Get-ChromeExtension -username Jsmith
 </span></span></span><span class="line"><span class="cl"><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">    This command will get the Chrome extensions installed under c:\users\jsmith on the local computer
 </span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm"> </span><span class="sd">.EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .</span><span class="sd">EXAMPLE</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">    PS C:\&gt; Get-ChromeExtension -Computername PC1234,PC4567
 </span></span></span><span class="line"><span class="cl"><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">    This command will get the Chrome extensions from all the user profiles on the two remote computers specified
-</span></span></span><span class="line"><span class="cl"><span class="cm"> </span><span class="sd">.NOTES</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .</span><span class="sd">NOTES</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">    Version 1.0
 </span></span></span><span class="line"><span class="cl"><span class="cm">#&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="k">cmdletbinding</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="nb">cmdletbinding</span><span class="p">()]</span>
 </span></span><span class="line"><span class="cl">    <span class="k">PARAM</span><span class="p">(</span>
-</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="k">parameter</span><span class="p">(</span><span class="k">Position</span> <span class="p">=</span> <span class="n">0</span><span class="p">)]</span>
-</span></span><span class="line"><span class="cl">        <span class="no">[string]</span><span class="nv">$Computername</span> <span class="p">=</span> <span class="nv">$ENV:COMPUTERNAME</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="nb">parameter</span><span class="p">(</span><span class="na">Position</span> <span class="p">=</span> <span class="mf">0</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="no">string</span><span class="p">]</span><span class="nv">$Computername</span> <span class="p">=</span> <span class="nv">$ENV:COMPUTERNAME</span>
 </span></span><span class="line"><span class="cl">        <span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="k">parameter</span><span class="p">(</span><span class="k">Position</span> <span class="p">=</span> <span class="n">1</span><span class="p">)]</span>
-</span></span><span class="line"><span class="cl">        <span class="no">[string]</span><span class="nv">$Username</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="nb">parameter</span><span class="p">(</span><span class="na">Position</span> <span class="p">=</span> <span class="mf">1</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="no">string</span><span class="p">]</span><span class="nv">$Username</span>
 </span></span><span class="line"><span class="cl">    <span class="p">)</span>
 </span></span><span class="line"><span class="cl">    <span class="k">BEGIN</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="c">#REGION --- Child function</span>
-</span></span><span class="line"><span class="cl">        <span class="k">function</span> <span class="nb">Get-ExtensionInfo</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">function</span><span class="w"> </span><span class="nb">Get-ExtensionInfo</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">            <span class="cm">&lt;#
-</span></span></span><span class="line"><span class="cl"><span class="cm">         </span><span class="sd">.SYNOPSIS</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">         .</span><span class="sd">SYNOPSIS</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">            Get Name and Version of the a Chrome extension
-</span></span></span><span class="line"><span class="cl"><span class="cm">         </span><span class="sd">.PARAMETER</span><span class="cm"> Folder
+</span></span></span><span class="line"><span class="cl"><span class="cm">         .PARAMETER Folder
 </span></span></span><span class="line"><span class="cl"><span class="cm">            A directory object (under %userprofile%\AppData\Local\Google\Chrome\User Data\Default\Extensions)
 </span></span></span><span class="line"><span class="cl"><span class="cm">        #&gt;</span>
-</span></span><span class="line"><span class="cl">            <span class="p">[</span><span class="k">cmdletbinding</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">            <span class="p">[</span><span class="nb">cmdletbinding</span><span class="p">()]</span>
 </span></span><span class="line"><span class="cl">            <span class="k">PARAM</span><span class="p">(</span>
-</span></span><span class="line"><span class="cl">                <span class="p">[</span><span class="k">parameter</span><span class="p">(</span><span class="k">Position</span> <span class="p">=</span> <span class="n">0</span><span class="p">)]</span>
-</span></span><span class="line"><span class="cl">                <span class="no">[IO.DirectoryInfo]</span><span class="nv">$Folder</span>
+</span></span><span class="line"><span class="cl">                <span class="p">[</span><span class="nb">parameter</span><span class="p">(</span><span class="na">Position</span> <span class="p">=</span> <span class="mf">0</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">                <span class="p">[</span><span class="no">IO.DirectoryInfo</span><span class="p">]</span><span class="nv">$Folder</span>
 </span></span><span class="line"><span class="cl">            <span class="p">)</span>
 </span></span><span class="line"><span class="cl">            <span class="k">BEGIN</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                <span class="nv">$BuiltInExtensions</span> <span class="p">=</span> <span class="p">@{</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$BuiltInExtensions</span> <span class="p">=</span> <span class="vm">@</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">                    <span class="s1">&#39;nmmhkkegccagdldgiimedpiccmgmieda&#39;</span> <span class="p">=</span> <span class="s1">&#39;Google Wallet&#39;</span>
 </span></span><span class="line"><span class="cl">                    <span class="s1">&#39;mhjfbmdgcfjbbpaeojofohoefgiehjai&#39;</span> <span class="p">=</span> <span class="s1">&#39;Chrome PDF Viewer&#39;</span>
 </span></span><span class="line"><span class="cl">                    <span class="s1">&#39;pkedcjkdefgpdelpbcmbmeomcjbeemfm&#39;</span> <span class="p">=</span> <span class="s1">&#39;Chrome Cast&#39;</span>
@@ -1675,32 +1960,32 @@ The PowerShell script below gets the installed extensions using the following me
 </span></span><span class="line"><span class="cl">            <span class="k">PROCESS</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">                <span class="c"># Extension folders are under %userprofile%\AppData\Local\Google\Chrome\User Data\Default\Extensions</span>
 </span></span><span class="line"><span class="cl">                <span class="c"># Folder names match extension ID e.g. blpcfgokakmgnkcojhhkbfbldkacnbeo</span>
-</span></span><span class="line"><span class="cl">                <span class="nv">$ExtID</span> <span class="p">=</span> <span class="nv">$Folder</span><span class="p">.</span><span class="n">Name</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$ExtID</span> <span class="p">=</span> <span class="nv">$Folder</span><span class="p">.</span><span class="py">Name</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                <span class="k">if</span><span class="p">(</span><span class="nv">$Folder</span><span class="p">.</span><span class="n">FullName</span> <span class="o">-match</span> <span class="s1">&#39;\\Users\\(?&lt;username&gt;[^\\]+)\\&#39;</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span><span class="p">(</span><span class="nv">$Folder</span><span class="p">.</span><span class="py">FullName</span> <span class="o">-match</span> <span class="s1">&#39;\\Users\\(?&lt;username&gt;[^\\]+)\\&#39;</span><span class="p">){</span>
 </span></span><span class="line"><span class="cl">                    <span class="nv">$Username</span> <span class="p">=</span> <span class="nv">$Matches</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span>
 </span></span><span class="line"><span class="cl">                <span class="p">}</span><span class="k">else</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">                    <span class="nv">$Username</span> <span class="p">=</span> <span class="s1">&#39;&#39;</span>
 </span></span><span class="line"><span class="cl">                <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                <span class="c"># There can be more than one version installed. Get the latest one</span>
-</span></span><span class="line"><span class="cl">                <span class="nv">$LastestExtVersionInstallFolder</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="nv">$Folder</span><span class="p">.</span><span class="n">Fullname</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-match</span> <span class="s1">&#39;^[0-9\._-]+$&#39;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">-Property</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span> <span class="n">-ExpandProperty</span> <span class="n">Name</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$LastestExtVersionInstallFolder</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="nv">$Folder</span><span class="p">.</span><span class="py">Fullname</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="py">Name</span> <span class="o">-match</span> <span class="s1">&#39;^[0-9\._-]+$&#39;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">-Property</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="mf">1</span> <span class="n">-ExpandProperty</span> <span class="n">Name</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                <span class="c"># Get the version from the JSON manifest</span>
-</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="nb">Test-Path</span> <span class="n">-Path</span> <span class="s2">&#34;</span><span class="p">$(</span><span class="nv">$Folder</span><span class="p">.</span><span class="n">Fullname</span><span class="p">)</span><span class="s2">\$LastestExtVersionInstallFolder\Manifest.json&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="nb">Test-Path</span> <span class="n">-Path</span> <span class="s2">&#34;</span><span class="p">$(</span><span class="nv">$Folder</span><span class="p">.</span><span class="n">Fullname</span><span class="p">)</span><span class="s2">\</span><span class="nv">$LastestExtVersionInstallFolder</span><span class="s2">\Manifest.json&#34;</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Manifest</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="n">-Path</span> <span class="s2">&#34;</span><span class="p">$(</span><span class="nv">$Folder</span><span class="p">.</span><span class="n">Fullname</span><span class="p">)</span><span class="s2">\$LastestExtVersionInstallFolder\Manifest.json&#34;</span> <span class="n">-Raw</span> <span class="p">|</span> <span class="nb">ConvertFrom-Json</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$Manifest</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="n">-Path</span> <span class="s2">&#34;</span><span class="p">$(</span><span class="nv">$Folder</span><span class="p">.</span><span class="n">Fullname</span><span class="p">)</span><span class="s2">\</span><span class="nv">$LastestExtVersionInstallFolder</span><span class="s2">\Manifest.json&#34;</span> <span class="n">-Raw</span> <span class="p">|</span> <span class="nb">ConvertFrom-Json</span>
 </span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="p">(</span><span class="nv">$Manifest</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                        <span class="k">if</span> <span class="p">(</span><span class="o">-not</span><span class="p">(</span><span class="no">[string]</span><span class="p">::</span><span class="n">IsNullOrEmpty</span><span class="p">(</span><span class="nv">$Manifest</span><span class="p">.</span><span class="n">version</span><span class="p">)))</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                            <span class="nv">$Version</span> <span class="p">=</span> <span class="nv">$Manifest</span><span class="p">.</span><span class="n">version</span>
+</span></span><span class="line"><span class="cl">                        <span class="k">if</span> <span class="p">(</span><span class="o">-not</span><span class="p">([</span><span class="no">string</span><span class="p">]::</span><span class="n">IsNullOrEmpty</span><span class="p">(</span><span class="nv">$Manifest</span><span class="p">.</span><span class="n">version</span><span class="p">)))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="nv">$Version</span> <span class="p">=</span> <span class="nv">$Manifest</span><span class="p">.</span><span class="py">version</span>
 </span></span><span class="line"><span class="cl">                        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">                    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">                    <span class="c"># Just use the folder name as the version</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Version</span> <span class="p">=</span> <span class="nv">$LastestExtVersionInstallFolder</span><span class="p">.</span><span class="n">Name</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$Version</span> <span class="p">=</span> <span class="nv">$LastestExtVersionInstallFolder</span><span class="p">.</span><span class="py">Name</span>
 </span></span><span class="line"><span class="cl">                <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                <span class="k">if</span><span class="p">(</span><span class="nv">$BuiltInExtensions</span><span class="p">.</span><span class="n">ContainsKey</span><span class="p">(</span><span class="nv">$ExtID</span><span class="p">)){</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span><span class="p">(</span><span class="nv">$BuiltInExtensions</span><span class="p">.</span><span class="py">ContainsKey</span><span class="p">(</span><span class="nv">$ExtID</span><span class="p">)){</span>
 </span></span><span class="line"><span class="cl">                    <span class="c"># Built-in extensions do not appear in the Chrome Store</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                    <span class="nv">$Title</span> <span class="p">=</span> <span class="nv">$BuiltInExtensions</span><span class="p">[</span><span class="nv">$ExtID</span><span class="p">]</span>
@@ -1716,12 +2001,12 @@ The PowerShell script below gets the installed extensions using the following me
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                        <span class="nv">$WebRequest</span> <span class="p">=</span> <span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="nv">$url</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                        <span class="k">if</span> <span class="p">(</span><span class="nv">$WebRequest</span><span class="p">.</span><span class="n">StatusCode</span> <span class="o">-eq</span> <span class="n">200</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="k">if</span> <span class="p">(</span><span class="nv">$WebRequest</span><span class="p">.</span><span class="py">StatusCode</span> <span class="o">-eq</span> <span class="mf">200</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                            <span class="c"># Get the HTML Page Title but remove &#39; - Chrome Web Store&#39;</span>
-</span></span><span class="line"><span class="cl">                            <span class="k">if</span> <span class="p">(</span><span class="o">-not</span><span class="p">(</span><span class="no">[string]</span><span class="p">::</span><span class="n">IsNullOrEmpty</span><span class="p">(</span><span class="nv">$WebRequest</span><span class="p">.</span><span class="n">ParsedHtml</span><span class="p">.</span><span class="n">title</span><span class="p">)))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="k">if</span> <span class="p">(</span><span class="o">-not</span><span class="p">([</span><span class="no">string</span><span class="p">]::</span><span class="n">IsNullOrEmpty</span><span class="p">(</span><span class="nv">$WebRequest</span><span class="p">.</span><span class="py">ParsedHtml</span><span class="p">.</span><span class="n">title</span><span class="p">)))</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                                <span class="nv">$ExtTitle</span> <span class="p">=</span> <span class="nv">$WebRequest</span><span class="p">.</span><span class="n">ParsedHtml</span><span class="p">.</span><span class="n">title</span>
+</span></span><span class="line"><span class="cl">                                <span class="nv">$ExtTitle</span> <span class="p">=</span> <span class="nv">$WebRequest</span><span class="p">.</span><span class="py">ParsedHtml</span><span class="p">.</span><span class="py">title</span>
 </span></span><span class="line"><span class="cl">                                <span class="k">if</span> <span class="p">(</span><span class="nv">$ExtTitle</span> <span class="o">-match</span> <span class="s1">&#39;\s-\s.*$&#39;</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">                                    <span class="nv">$Title</span> <span class="p">=</span> <span class="nv">$ExtTitle</span> <span class="o">-replace</span> <span class="s1">&#39;\s-\s.*$&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span>
 </span></span><span class="line"><span class="cl">                                    <span class="nv">$extType</span> <span class="p">=</span> <span class="s1">&#39;ChromeStore&#39;</span>
@@ -1732,15 +2017,15 @@ The PowerShell script below gets the installed extensions using the following me
 </span></span><span class="line"><span class="cl">                            <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                            <span class="c"># Screen scrape the Description meta-data</span>
-</span></span><span class="line"><span class="cl">                            <span class="nv">$Description</span> <span class="p">=</span> <span class="nv">$webRequest</span><span class="p">.</span><span class="n">AllElements</span><span class="p">.</span><span class="n">InnerHTML</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span> <span class="o">-match</span> <span class="s1">&#39;&lt;meta name=&#34;Description&#34; content=&#34;([^&#34;]+)&#34;&gt;&#39;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-object</span> <span class="n">-First</span> <span class="n">1</span> <span class="p">|</span> <span class="nb">ForEach-Object</span> <span class="p">{</span> <span class="nv">$Matches</span><span class="p">[</span><span class="n">1</span><span class="p">]</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                            <span class="nv">$Description</span> <span class="p">=</span> <span class="nv">$webRequest</span><span class="p">.</span><span class="py">AllElements</span><span class="p">.</span><span class="py">InnerHTML</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span> <span class="o">-match</span> <span class="s1">&#39;&lt;meta name=&#34;Description&#34; content=&#34;([^&#34;]+)&#34;&gt;&#39;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-object</span> <span class="n">-First</span> <span class="mf">1</span> <span class="p">|</span> <span class="nb">ForEach-Object</span> <span class="p">{</span> <span class="nv">$Matches</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">                        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">                    <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                        <span class="nb">Write-Warning</span> <span class="s2">&#34;Error during webstore lookup for &#39;$ExtID&#39; - &#39;$_&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">                        <span class="nb">Write-Warning</span> <span class="s2">&#34;Error during webstore lookup for &#39;</span><span class="nv">$ExtID</span><span class="s2">&#39; - &#39;</span><span class="nv">$_</span><span class="s2">&#39;&#34;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">                <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                <span class="no">[PSCustomObject][Ordered]</span><span class="p">@{</span>
+</span></span><span class="line"><span class="cl">                <span class="p">[</span><span class="no">PSCustomObject][Ordered</span><span class="p">]</span><span class="vm">@</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">                    <span class="n">Name</span>        <span class="p">=</span> <span class="nv">$Title</span>
 </span></span><span class="line"><span class="cl">                    <span class="n">Version</span>     <span class="p">=</span> <span class="nv">$Version</span>
 </span></span><span class="line"><span class="cl">                    <span class="n">Description</span> <span class="p">=</span> <span class="nv">$Description</span>
@@ -1761,13 +2046,13 @@ The PowerShell script below gets the installed extensions using the following me
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="nv">$Username</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">                <span class="c"># Single userprofile</span>
-</span></span><span class="line"><span class="cl">                <span class="nv">$Path</span> <span class="p">=</span> <span class="nb">Join-path</span> <span class="n">-path</span> <span class="s2">&#34;fileSystem::\\$Computer\C$\Users\$Username&#34;</span> <span class="n">-ChildPath</span> <span class="nv">$ExtensionFolderPath</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$Path</span> <span class="p">=</span> <span class="nb">Join-path</span> <span class="n">-path</span> <span class="s2">&#34;fileSystem::\\</span><span class="nv">$Computer</span><span class="s2">\C$\Users\</span><span class="nv">$Username</span><span class="s2">&#34;</span> <span class="n">-ChildPath</span> <span class="nv">$ExtensionFolderPath</span>
 </span></span><span class="line"><span class="cl">                <span class="nv">$Extensions</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="nv">$Path</span> <span class="n">-Directory</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">                <span class="c"># All user profiles that contain this a Chrome extensions folder</span>
-</span></span><span class="line"><span class="cl">                <span class="nv">$Path</span> <span class="p">=</span> <span class="nb">Join-path</span> <span class="n">-path</span> <span class="s2">&#34;fileSystem::\\$Computer\C$\Users\*&#34;</span> <span class="n">-ChildPath</span> <span class="nv">$ExtensionFolderPath</span>
-</span></span><span class="line"><span class="cl">                <span class="nv">$Extensions</span> <span class="p">=@()</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$Path</span> <span class="p">=</span> <span class="nb">Join-path</span> <span class="n">-path</span> <span class="s2">&#34;fileSystem::\\</span><span class="nv">$Computer</span><span class="s2">\C$\Users\*&#34;</span> <span class="n">-ChildPath</span> <span class="nv">$ExtensionFolderPath</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$Extensions</span> <span class="p">=</span><span class="vm">@</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">                <span class="nb">Get-Item</span> <span class="n">-Path</span> <span class="nv">$Path</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span> <span class="p">|</span> <span class="nb">ForEach-Object</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                    <span class="nv">$Extensions</span> <span class="p">+=</span> <span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="nv">$_</span> <span class="n">-Directory</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
@@ -1775,7 +2060,7 @@ The PowerShell script below gets the installed extensions using the following me
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">            <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="o">-not</span><span class="p">(</span><span class="nv">$null</span> <span class="o">-eq</span> <span class="nv">$Extensions</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="o">-not</span><span class="p">(</span><span class="vm">$null</span> <span class="o">-eq</span> <span class="nv">$Extensions</span><span class="p">))</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                <span class="k">Foreach</span> <span class="p">(</span><span class="nv">$Extension</span> <span class="k">in</span> <span class="nv">$Extensions</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
@@ -1786,7 +2071,7 @@ The PowerShell script below gets the installed extensions using the following me
 </span></span><span class="line"><span class="cl">                <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                <span class="nb">Write-Warning</span> <span class="s2">&#34;$Computer : no extensions were found&#34;</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">Write-Warning</span> <span class="s2">&#34;</span><span class="nv">$Computer</span><span class="s2"> : no extensions were found&#34;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">            <span class="p">}</span>
 </span></span><span class="line"><span class="cl">

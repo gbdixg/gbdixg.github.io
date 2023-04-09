@@ -203,7 +203,7 @@ Save the file,  add it to the GIT index, then commit the change to complete the 
 <li>Commit to complete the merge (<code>git commit</code>)</li>
 </ol>
 <h2 id="fast-forward-merge">FAST FORWARD MERGE</h2>
-<p>A fast foward merge occurs automatically when git moves a branch without having to create a new commit. It just re-uses an existing commit.<br>
+<p>A fast forward merge occurs automatically when git moves a branch without having to create a new commit. It just re-uses an existing commit.<br>
 The most common case is when you want to merge a feature branch into main, but then continue working on the Feature branch with the latest updates from main.<br>
 When you first merge the branch into main, GIT creates a new commit on main that has two parents - the previous commit on main and the previous commit on the branch.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">❯ git switch main
