@@ -156,7 +156,7 @@ Click <strong>Grant admin consent for <tenant></strong></p>
     </item>
     
     <item>
-      <title>Create Intune Win32Apps with a GUI front-end</title>
+      <title>Create Intune Win32Apps with a PowerShell GUI front-end</title>
       <link>https://write-verbose.com/2023/03/18/Show-Win32AppUI/</link>
       <pubDate>Sat, 18 Mar 2023 00:00:00 +0000</pubDate>
       
