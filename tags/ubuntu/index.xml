@@ -32,7 +32,7 @@
 <p><a href="https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi">Download and install the update package</a></p>
 <h2 id="set-the-default-version">Set the default version</h2>
 <p>Make sure everything is version 2</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="n">wsl</span> <span class="p">-</span><span class="n">-set-default-version</span> <span class="mf">2</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">wsl --set-default-version <span class="m">2</span>
 </span></span></code></pre></div><h2 id="install-the-required-distro">Install the required distro</h2>
 <p>Ubuntu is the most reliable on Windows at the time of writing</p>
 <p><a href="https://www.microsoft.com/en-gb/p/ubuntu-2004-lts/9n6svws3rx71">Ubuntu 20.04 LTS</a></p>
@@ -46,12 +46,12 @@
 </span></span><span class="line"><span class="cl">sudo apt-get upgrade
 </span></span></code></pre></div><h2 id="check-you-are-running-version-2">Check you are running version 2</h2>
 <p>Windows 10 PowerShell:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="n">wsl</span> <span class="p">-</span><span class="n">-list</span> <span class="n">-v</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">wsl --list -v
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">  <span class="n">NAME</span>                   <span class="n">STATE</span>           <span class="n">VERSION</span>
-</span></span><span class="line"><span class="cl"><span class="p">*</span> <span class="nb">docker-desktop</span><span class="n">-data</span>    <span class="n">Running</span>         <span class="mf">2</span>
-</span></span><span class="line"><span class="cl">  <span class="n">Ubuntu</span><span class="p">-</span><span class="mf">20.04</span>           <span class="n">Running</span>         <span class="mf">2</span>
-</span></span><span class="line"><span class="cl">  <span class="nb">docker-desktop</span>         <span class="n">Running</span>         <span class="mf">2</span>
+</span></span><span class="line"><span class="cl">  NAME                   STATE           VERSION
+</span></span><span class="line"><span class="cl">* docker-desktop-data    Running         <span class="m">2</span>
+</span></span><span class="line"><span class="cl">  Ubuntu-20.04           Running         <span class="m">2</span>
+</span></span><span class="line"><span class="cl">  docker-desktop         Running         <span class="m">2</span>
 </span></span></code></pre></div><h2 id="location-of-the-vhdx-file">Location of the .vhdx file</h2>
 <p>The virtual disk containing the Linux OS is located here:</p>
 <p><code>%LOCALAPPDATA%\Packages\CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc\LocalState\ext4.vhdx</code></p>
