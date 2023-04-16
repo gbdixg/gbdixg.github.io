@@ -41,26 +41,26 @@ Click <strong>Review Permissions</strong></p>
 <p><img loading="lazy" src="/img/CustomApp05.png" alt="User consent"  />
 </p>
 <p>Select <strong>This application has more permissions that I want</strong>. The following PowerShell is displayed (uses the AzureAD module):</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">Connect-AzureAD
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Connect-AzureAD</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Get Service Principal using objectId</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$sp</span> <span class="o">=</span> Get-AzureADServicePrincipal -ObjectId <span class="s2">&#34;1aded007-dfd1-49cc-8b70-9923a4f53a05&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c"># Get Service Principal using objectId</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$sp</span> <span class="p">=</span> <span class="nb">Get-AzureADServicePrincipal</span> <span class="n">-ObjectId</span> <span class="s2">&#34;1aded007-dfd1-49cc-8b70-9923a4f53a05&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Get all delegated permissions for the service principal</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$spOAuth2PermissionsGrants</span> <span class="o">=</span> Get-AzureADOAuth2PermissionGrant -All <span class="nv">$true</span><span class="p">|</span> Where-Object <span class="o">{</span> <span class="nv">$_</span>.clientId -eq <span class="nv">$sp</span>.ObjectId <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="c"># Get all delegated permissions for the service principal</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$spOAuth2PermissionsGrants</span> <span class="p">=</span> <span class="nb">Get-AzureADOAuth2PermissionGrant</span> <span class="n">-All</span> <span class="vm">$true</span><span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="py">clientId</span> <span class="o">-eq</span> <span class="nv">$sp</span><span class="p">.</span><span class="py">ObjectId</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Remove all delegated permissions</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$spOAuth2PermissionsGrants</span> <span class="p">|</span> ForEach-Object <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    Remove-AzureADOAuth2PermissionGrant -ObjectId <span class="nv">$_</span>.ObjectId
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="c"># Remove all delegated permissions</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$spOAuth2PermissionsGrants</span> <span class="p">|</span> <span class="nb">ForEach-Object</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">Remove-AzureADOAuth2PermissionGrant</span> <span class="n">-ObjectId</span> <span class="nv">$_</span><span class="p">.</span><span class="py">ObjectId</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Get all application permissions for the service principal</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$spApplicationPermissions</span> <span class="o">=</span> Get-AzureADServiceAppRoleAssignedTo -ObjectId <span class="nv">$sp</span>.ObjectId -All <span class="nv">$true</span> <span class="p">|</span> Where-Object <span class="o">{</span> <span class="nv">$_</span>.PrincipalType -eq <span class="s2">&#34;ServicePrincipal&#34;</span> <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="c"># Get all application permissions for the service principal</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$spApplicationPermissions</span> <span class="p">=</span> <span class="nb">Get-AzureADServiceAppRoleAssignedTo</span> <span class="n">-ObjectId</span> <span class="nv">$sp</span><span class="p">.</span><span class="py">ObjectId</span> <span class="n">-All</span> <span class="vm">$true</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="py">PrincipalType</span> <span class="o">-eq</span> <span class="s2">&#34;ServicePrincipal&#34;</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Remove all delegated permissions</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$spApplicationPermissions</span> <span class="p">|</span> ForEach-Object <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    Remove-AzureADServiceAppRoleAssignment -ObjectId <span class="nv">$_</span>.PrincipalId -AppRoleAssignmentId <span class="nv">$_</span>.objectId
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="c"># Remove all delegated permissions</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$spApplicationPermissions</span> <span class="p">|</span> <span class="nb">ForEach-Object</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">Remove-AzureADServiceAppRoleAssignment</span> <span class="n">-ObjectId</span> <span class="nv">$_</span><span class="p">.</span><span class="py">PrincipalId</span> <span class="n">-AppRoleAssignmentId</span> <span class="nv">$_</span><span class="p">.</span><span class="py">objectId</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h1 id="custom-app-step-by-step">Custom app Step by Step</h1>
 <p>The following steps create a new application with delegated API access to MSGraph, suitable for use from a PowerShell script. The permissions are specific to the <a href="/2023/03/18/Show-Win32AppUI/">Show-Win32AppUI</a></p>
 <p>Open the <a href="https://aad.portal.azure.com/">Azure AD portal</a> and select <strong>App registrations</strong></p>
@@ -135,15 +135,15 @@ Click <strong>Grant admin consent for <tenant></strong></p>
 </p>
 <p>Examples of PowerShell authentication using the app are below:</p>
 <h2 id="msalps-authentication">MSAL.PS authentication</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="nv">$TenantID</span> <span class="o">=</span> &lt;your tenant ID obtained from the AAD Overview page&gt;
-</span></span><span class="line"><span class="cl"><span class="nv">$ClientID</span> <span class="o">=</span> &lt;application ID of the custom app&gt;
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nv">$TenantID</span> <span class="p">=</span> <span class="p">&lt;</span><span class="n">your</span> <span class="n">tenant</span> <span class="n">ID</span> <span class="n">obtained</span> <span class="n">from</span> <span class="n">the</span> <span class="n">AAD</span> <span class="n">Overview</span> <span class="n">page</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$ClientID</span> <span class="p">=</span> <span class="p">&lt;</span><span class="n">application</span> <span class="n">ID</span> <span class="n">of</span> <span class="n">the</span> <span class="n">custom</span> <span class="n">app</span><span class="p">&gt;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nv">$Token</span> <span class="o">=</span> Get-MSALToken -TenantID <span class="nv">$TenantID</span> -ClientID <span class="nv">$ClientID</span> -Interactive
+</span></span><span class="line"><span class="cl"><span class="nv">$Token</span> <span class="p">=</span> <span class="nb">Get-MSALToken</span> <span class="n">-TenantID</span> <span class="nv">$TenantID</span> <span class="n">-ClientID</span> <span class="nv">$ClientID</span> <span class="n">-Interactive</span>
 </span></span></code></pre></div><h2 id="intunewin32app-authentication">IntuneWin32App authentication</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="nv">$TenantID</span> <span class="o">=</span> &lt;your tenant ID obtained from the AAD Overview page&gt;
-</span></span><span class="line"><span class="cl"><span class="nv">$ClientID</span> <span class="o">=</span> &lt;application ID of the custom app&gt;
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nv">$TenantID</span> <span class="p">=</span> <span class="p">&lt;</span><span class="n">your</span> <span class="n">tenant</span> <span class="n">ID</span> <span class="n">obtained</span> <span class="n">from</span> <span class="n">the</span> <span class="n">AAD</span> <span class="n">Overview</span> <span class="n">page</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$ClientID</span> <span class="p">=</span> <span class="p">&lt;</span><span class="n">application</span> <span class="n">ID</span> <span class="n">of</span> <span class="n">the</span> <span class="n">custom</span> <span class="n">app</span><span class="p">&gt;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Connect-MSIntuneGraph -TenantID <span class="nv">$TenantID</span> -ClientID <span class="nv">$ClientID</span> -Interactive
+</span></span><span class="line"><span class="cl"><span class="nb">Connect-MSIntuneGraph</span> <span class="n">-TenantID</span> <span class="nv">$TenantID</span> <span class="n">-ClientID</span> <span class="nv">$ClientID</span> <span class="n">-Interactive</span>
 </span></span></code></pre></div><p>The Connect-MSIntuneGraph command in the IntuneWin32App module creates global variables to store the token for later use:</p>
 <ul>
 <li>$Global:AuthenticationHeader</li>

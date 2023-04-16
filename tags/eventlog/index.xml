@@ -25,136 +25,136 @@
 <p>The PowerShell <strong>Get-Winevent</strong> command can work against remote event logs, but it can be painfully slow over the network. Copying an entire exported log (.evtx file) across the same connection is much faster. Get-Winevent can still be used with the <em>-path</em> parameter to query the locally copied .evtx file.</p>
 <h2 id="powershell-script">PowerShell Script</h2>
 <p><strong>wevtutil.exe</strong> is Windows .exe that can export event logs.  The PowerShell function below uses wevtutil to export one ore more event logs and copy them locally. The computer name is pre-pended to the log name.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">Function Export-EventLog <span class="o">{</span>
-</span></span><span class="line"><span class="cl">	&lt;<span class="c1">#</span>
-</span></span><span class="line"><span class="cl">		.SYNOPSIS
-</span></span><span class="line"><span class="cl">			Exports a remote event log to a file.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="kd">Function</span><span class="w"> </span><span class="nb">Export-EventLog</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="cm">&lt;#
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">SYNOPSIS</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			Exports a remote event log to a file.
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">DESCRIPTION</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			Uses wevtutil.exe to perform the export on the remote computer
+</span></span></span><span class="line"><span class="cl"><span class="cm">			The log(s) are saved to c:\Windows\Temp and then moved over the network to the local computer
+</span></span></span><span class="line"><span class="cl"><span class="cm">			The resulting log file is $Path\$computername-$logname.evtx
+</span></span></span><span class="line"><span class="cl"><span class="cm">			The file can then be opened in Windows Event Viewer or queried directly using &#34;Get-Winevent -Path....&#34;
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			The remote computer must be online and the Windows Firewall must allow inbound RPC and SMB connections
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.PARAMETER  Computername
+</span></span></span><span class="line"><span class="cl"><span class="cm">			The name of the remote computer.
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.PARAMETER  Logname
+</span></span></span><span class="line"><span class="cl"><span class="cm">			The name(s) of the log file to export.
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.PARAMETER  Path
+</span></span></span><span class="line"><span class="cl"><span class="cm">			The local folder path where the output file will be saved
+</span></span></span><span class="line"><span class="cl"><span class="cm">			Default = %TEMP%
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.PARAMETER  RemotePath
+</span></span></span><span class="line"><span class="cl"><span class="cm">			The remote folder path used to stage the exported file prior to moving it to the local folder path.
+</span></span></span><span class="line"><span class="cl"><span class="cm">			Environment variables are not supported.
+</span></span></span><span class="line"><span class="cl"><span class="cm">			Default = C:\Windows\Temp
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			PS C:\&gt; Export-EventLog -Computername &#34;PC654321&#34;
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			This command will export the System and Application event logs from the remote computer PC654321
+</span></span></span><span class="line"><span class="cl"><span class="cm">			The logs will be exported to c:\windows\temp on the remote computer then moved to
+</span></span></span><span class="line"><span class="cl"><span class="cm">			c:\temp on the local computer
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			PS C:\&gt; Export-EventLog -Computername &#34;PC654321&#34; -LogName &#34;System&#34;,&#34;Security&#34;
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			This command will export the System and Security event logs from the remote computer PC654321
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			PS C:\&gt; &#34;PC654321&#34; | Export-EventLog -LogName &#34;Application&#34;,&#34;Security&#34;
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			This command will export the Application and Security event logs from the remote computer PC654321
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			PS C:\&gt; Get-Winevent -Computername $Computer -Listlog * -EA 0 | Where{$_.RecordCount -gt 0} | Export-EventLog -Computername $Computer
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			This command will export all the event logs from the remote computer represented by the $computer variable
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">NOTES</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			Version: 1.0
+</span></span></span><span class="line"><span class="cl"><span class="cm">	#&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">[</span><span class="nb">CmdletBinding</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">param</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="nb">parameter</span><span class="p">(</span><span class="na">position</span> <span class="p">=</span> <span class="mf">0</span><span class="p">,</span> <span class="na">valuefromPipeline</span> <span class="p">=</span> <span class="vm">$true</span><span class="p">,</span> <span class="na">valuefrompipelinebypropertyname</span> <span class="p">=</span> <span class="vm">$true</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="no">string[]</span><span class="p">]</span><span class="nv">$Computername</span> <span class="p">=</span> <span class="nv">$Env:COMPUTERNAME</span>
+</span></span><span class="line"><span class="cl">		<span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="nb">parameter</span><span class="p">(</span><span class="na">position</span> <span class="p">=</span> <span class="mf">1</span><span class="p">,</span> <span class="na">valuefrompipelinebypropertyname</span> <span class="p">=</span> <span class="vm">$true</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="no">string[]</span><span class="p">]</span><span class="nv">$LogName</span> <span class="p">=</span> <span class="vm">@</span><span class="p">(</span><span class="s2">&#34;System&#34;</span><span class="p">,</span> <span class="s2">&#34;Application&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="nb">parameter</span><span class="p">(</span><span class="na">position</span> <span class="p">=</span> <span class="mf">2</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="nb">ValidateScript</span><span class="p">(</span> <span class="p">{</span> <span class="nb">Test-Path</span> <span class="nv">$_</span> <span class="n">-PathType</span> <span class="s1">&#39;Container&#39;</span> <span class="p">})]</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="no">string</span><span class="p">]</span><span class="nv">$Path</span> <span class="p">=</span> <span class="nv">$ENV:TEMP</span>
+</span></span><span class="line"><span class="cl">		<span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="nb">parameter</span><span class="p">(</span><span class="na">position</span> <span class="p">=</span> <span class="mf">3</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="no">string</span><span class="p">]</span><span class="nv">$RemotePath</span> <span class="p">=</span> <span class="s2">&#34;C:\Windows\Temp&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">PROCESS</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">Foreach</span> <span class="p">(</span><span class="nv">$Name</span> <span class="k">in</span> <span class="nv">$Computername</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nb">Write-Progress</span> <span class="n">-id</span> <span class="mf">1</span> <span class="n">-Activity</span> <span class="s2">&#34;Computer &#34;</span> <span class="n">-Status</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">		.DESCRIPTION
-</span></span><span class="line"><span class="cl">			Uses wevtutil.exe to perform the <span class="nb">export</span> on the remote computer
-</span></span><span class="line"><span class="cl">			The log<span class="o">(</span>s<span class="o">)</span> are saved to c:<span class="se">\W</span>indows<span class="se">\T</span>emp and <span class="k">then</span> moved over the network to the <span class="nb">local</span> computer
-</span></span><span class="line"><span class="cl">			The resulting log file is <span class="nv">$Path</span><span class="se">\$</span>computername-<span class="nv">$logname</span>.evtx
-</span></span><span class="line"><span class="cl">			The file can <span class="k">then</span> be opened in Windows Event Viewer or queried directly using <span class="s2">&#34;Get-Winevent -Path....&#34;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">If</span> <span class="p">(</span><span class="nb">Test-Connection</span> <span class="n">-ComputerName</span> <span class="nv">$Name</span> <span class="n">-Count</span> <span class="mf">1</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nv">$LogName</span> <span class="p">|</span> <span class="nb">ForEach-Object</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$Log</span> <span class="p">=</span> <span class="nv">$_</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			The remote computer must be online and the Windows Firewall must allow inbound RPC and SMB connections
-</span></span><span class="line"><span class="cl">		.PARAMETER  Computername
-</span></span><span class="line"><span class="cl">			The name of the remote computer.
-</span></span><span class="line"><span class="cl">		.PARAMETER  Logname
-</span></span><span class="line"><span class="cl">			The name<span class="o">(</span>s<span class="o">)</span> of the log file to export.
-</span></span><span class="line"><span class="cl">		.PARAMETER  Path
-</span></span><span class="line"><span class="cl">			The <span class="nb">local</span> folder path where the output file will be saved
-</span></span><span class="line"><span class="cl">			<span class="nv">Default</span> <span class="o">=</span> %TEMP%
-</span></span><span class="line"><span class="cl">		.PARAMETER  RemotePath
-</span></span><span class="line"><span class="cl">			The remote folder path used to stage the exported file prior to moving it to the <span class="nb">local</span> folder path.
-</span></span><span class="line"><span class="cl">			Environment variables are not supported.
-</span></span><span class="line"><span class="cl">			<span class="nv">Default</span> <span class="o">=</span> C:<span class="se">\W</span>indows<span class="se">\T</span>emp
-</span></span><span class="line"><span class="cl">		.EXAMPLE
-</span></span><span class="line"><span class="cl">			PS C:<span class="se">\&gt;</span> Export-EventLog -Computername <span class="s2">&#34;PC654321&#34;</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">PSObject</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Computername</span><span class="p">,</span> <span class="n">LogName</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">Result</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span><span class="p">.</span><span class="py">Computername</span> <span class="p">=</span> <span class="nv">$Name</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span><span class="p">.</span><span class="py">LogName</span> <span class="p">=</span> <span class="nv">$Log</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			This <span class="nb">command</span> will <span class="nb">export</span> the System and Application event logs from the remote computer PC654321
-</span></span><span class="line"><span class="cl">			The logs will be exported to c:<span class="se">\w</span>indows<span class="se">\t</span>emp on the remote computer <span class="k">then</span> moved to
-</span></span><span class="line"><span class="cl">			c:<span class="se">\t</span>emp on the <span class="nb">local</span> computer
-</span></span><span class="line"><span class="cl">		.EXAMPLE
-</span></span><span class="line"><span class="cl">			PS C:<span class="se">\&gt;</span> Export-EventLog -Computername <span class="s2">&#34;PC654321&#34;</span> -LogName <span class="s2">&#34;System&#34;</span>,<span class="s2">&#34;Security&#34;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			This <span class="nb">command</span> will <span class="nb">export</span> the System and Security event logs from the remote computer PC654321
-</span></span><span class="line"><span class="cl">		.EXAMPLE
-</span></span><span class="line"><span class="cl">			PS C:<span class="se">\&gt;</span> <span class="s2">&#34;PC654321&#34;</span> <span class="p">|</span> Export-EventLog -LogName <span class="s2">&#34;Application&#34;</span>,<span class="s2">&#34;Security&#34;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			This <span class="nb">command</span> will <span class="nb">export</span> the Application and Security event logs from the remote computer PC654321
-</span></span><span class="line"><span class="cl">		.EXAMPLE
-</span></span><span class="line"><span class="cl">			PS C:<span class="se">\&gt;</span> Get-Winevent -Computername <span class="nv">$Computer</span> -Listlog * -EA <span class="m">0</span> <span class="p">|</span> Where<span class="o">{</span><span class="nv">$_</span>.RecordCount -gt 0<span class="o">}</span> <span class="p">|</span> Export-EventLog -Computername <span class="nv">$Computer</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			This <span class="nb">command</span> will <span class="nb">export</span> all the event logs from the remote computer represented by the <span class="nv">$computer</span> variable
-</span></span><span class="line"><span class="cl">		.NOTES
-</span></span><span class="line"><span class="cl">			Version: 1.0
-</span></span><span class="line"><span class="cl">	<span class="c1">#&gt;</span>
-</span></span><span class="line"><span class="cl">	<span class="o">[</span>CmdletBinding<span class="o">()]</span>
-</span></span><span class="line"><span class="cl">	param<span class="o">(</span>
-</span></span><span class="line"><span class="cl">		<span class="o">[</span>parameter<span class="o">(</span><span class="nv">position</span> <span class="o">=</span> 0, <span class="nv">valuefromPipeline</span> <span class="o">=</span> <span class="nv">$true</span>, <span class="nv">valuefrompipelinebypropertyname</span> <span class="o">=</span> <span class="nv">$true</span><span class="o">)]</span>
-</span></span><span class="line"><span class="cl">		<span class="o">[</span>string<span class="o">[]]</span><span class="nv">$Computername</span> <span class="o">=</span> <span class="nv">$Env</span>:COMPUTERNAME
-</span></span><span class="line"><span class="cl">		,
-</span></span><span class="line"><span class="cl">		<span class="o">[</span>parameter<span class="o">(</span><span class="nv">position</span> <span class="o">=</span> 1, <span class="nv">valuefrompipelinebypropertyname</span> <span class="o">=</span> <span class="nv">$true</span><span class="o">)]</span>
-</span></span><span class="line"><span class="cl">		<span class="o">[</span>string<span class="o">[]]</span><span class="nv">$LogName</span> <span class="o">=</span> @<span class="o">(</span><span class="s2">&#34;System&#34;</span>, <span class="s2">&#34;Application&#34;</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl">		,
-</span></span><span class="line"><span class="cl">		<span class="o">[</span>parameter<span class="o">(</span><span class="nv">position</span> <span class="o">=</span> 2<span class="o">)]</span>
-</span></span><span class="line"><span class="cl">		<span class="o">[</span>ValidateScript<span class="o">(</span> <span class="o">{</span> Test-Path <span class="nv">$_</span> -PathType <span class="s1">&#39;Container&#39;</span> <span class="o">})]</span>
-</span></span><span class="line"><span class="cl">		<span class="o">[</span>string<span class="o">]</span><span class="nv">$Path</span> <span class="o">=</span> <span class="nv">$ENV</span>:TEMP
-</span></span><span class="line"><span class="cl">		,
-</span></span><span class="line"><span class="cl">		<span class="o">[</span>parameter<span class="o">(</span><span class="nv">position</span> <span class="o">=</span> 3<span class="o">)]</span>
-</span></span><span class="line"><span class="cl">		<span class="o">[</span>string<span class="o">]</span><span class="nv">$RemotePath</span> <span class="o">=</span> <span class="s2">&#34;C:\Windows\Temp&#34;</span>
-</span></span><span class="line"><span class="cl">	<span class="o">)</span>
-</span></span><span class="line"><span class="cl">	PROCESS <span class="o">{</span>
-</span></span><span class="line"><span class="cl">		Foreach <span class="o">(</span><span class="nv">$Name</span> in <span class="nv">$Computername</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">			Write-Progress -id <span class="m">1</span> -Activity <span class="s2">&#34;Computer &#34;</span> -Status <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">&#34;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			If <span class="o">(</span>Test-Connection -ComputerName <span class="nv">$Name</span> -Count <span class="m">1</span> -ErrorAction SilentlyContinue<span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">				<span class="nv">$LogName</span> <span class="p">|</span> ForEach-Object <span class="o">{</span>
-</span></span><span class="line"><span class="cl">					<span class="nv">$Log</span> <span class="o">=</span> <span class="nv">$_</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span> <span class="o">=</span> New-Object PSObject <span class="p">|</span> Select Computername, LogName, Path, Result
-</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span>.Computername <span class="o">=</span> <span class="nv">$Name</span>
-</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span>.LogName <span class="o">=</span> <span class="nv">$Log</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">					<span class="k">if</span> <span class="o">((</span>Get-WinEvent -LogName <span class="nv">$Log</span> -ComputerName <span class="nv">$Name</span> -MaxEvents <span class="m">1</span> -ErrorAction SilentlyContinue <span class="p">|</span> Measure-Object<span class="o">)</span>.Count -lt 1<span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">						Write-Warning -Message <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log is empty. Skipping export&#34;</span>
+</span></span><span class="line"><span class="cl">					<span class="k">if</span> <span class="p">((</span><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="nv">$Log</span> <span class="n">-ComputerName</span> <span class="nv">$Name</span> <span class="n">-MaxEvents</span> <span class="mf">1</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span> <span class="p">|</span> <span class="nb">Measure-Object</span><span class="p">).</span><span class="py">Count</span> <span class="o">-lt</span> <span class="mf">1</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">						<span class="nb">Write-Warning</span> <span class="n">-Message</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log is empty. Skipping export&#34;</span>
 </span></span><span class="line"><span class="cl">						<span class="k">return</span>
-</span></span><span class="line"><span class="cl">					<span class="o">}</span>
-</span></span><span class="line"><span class="cl">					<span class="nv">$OutputFileName</span> <span class="o">=</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">-</span><span class="k">$(</span><span class="nv">$Log</span> -replace <span class="s2">&#34;/&#34;</span>,<span class="s2">&#34;-&#34;</span><span class="k">)</span><span class="s2">.evtx&#34;</span>
+</span></span><span class="line"><span class="cl">					<span class="p">}</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$OutputFileName</span> <span class="p">=</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">-</span><span class="p">$(</span><span class="nv">$Log</span> <span class="o">-replace</span> <span class="s2">&#34;/&#34;</span><span class="p">,</span><span class="s2">&#34;-&#34;</span><span class="p">)</span><span class="s2">.evtx&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">					Write-Progress -id <span class="m">2</span> -ParentId <span class="m">1</span> -Activity <span class="s2">&#34;Exporting&#34;</span> -Status <span class="s2">&#34;</span><span class="nv">$Log</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">					<span class="nb">Write-Progress</span> <span class="n">-id</span> <span class="mf">2</span> <span class="n">-ParentId</span> <span class="mf">1</span> <span class="n">-Activity</span> <span class="s2">&#34;Exporting&#34;</span> <span class="n">-Status</span> <span class="s2">&#34;</span><span class="nv">$Log</span><span class="s2">&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">					<span class="k">if</span> <span class="o">(</span><span class="nv">$Name</span> -eq <span class="nv">$Env</span>:COMPUTERNAME<span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">						Write-Verbose <span class="s2">&#34;Local computer...&#34;</span>
-</span></span><span class="line"><span class="cl">						<span class="nv">$Cmd</span> <span class="o">=</span> <span class="s2">&#34;</span><span class="k">$(</span><span class="nv">$Env</span>:windir<span class="k">)</span><span class="s2">\system32\wevtutil.exe epl &#39;</span><span class="nv">$Log</span><span class="s2">&#39; &#39;</span><span class="nv">$Path</span><span class="s2">\$OutputFileName&#39; /r:</span><span class="nv">$Name</span><span class="s2"> /ow:True 2&gt;&amp;1&#34;</span>
-</span></span><span class="line"><span class="cl">						<span class="nv">$CmdResult</span> <span class="o">=</span> Invoke-Expression -Command <span class="nv">$cmd</span>
+</span></span><span class="line"><span class="cl">					<span class="k">if</span> <span class="p">(</span><span class="nv">$Name</span> <span class="o">-eq</span> <span class="nv">$Env:COMPUTERNAME</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">						<span class="nb">Write-Verbose</span> <span class="s2">&#34;Local computer...&#34;</span>
+</span></span><span class="line"><span class="cl">						<span class="nv">$Cmd</span> <span class="p">=</span> <span class="s2">&#34;</span><span class="p">$(</span><span class="nv">$Env:windir</span><span class="p">)</span><span class="s2">\system32\wevtutil.exe epl &#39;</span><span class="nv">$Log</span><span class="s2">&#39; &#39;</span><span class="nv">$Path</span><span class="s2">\</span><span class="nv">$OutputFileName</span><span class="s2">&#39; /r:</span><span class="nv">$Name</span><span class="s2"> /ow:True 2&gt;&amp;1&#34;</span>
+</span></span><span class="line"><span class="cl">						<span class="nv">$CmdResult</span> <span class="p">=</span> <span class="nb">Invoke-Expression</span> <span class="n">-Command</span> <span class="nv">$cmd</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">						<span class="k">if</span> <span class="o">(</span><span class="nv">$CmdResult</span> -eq <span class="nv">$Null</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">							Write-Verbose <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;</span><span class="nv">$path</span><span class="s2">&#39; = &#39;Success&#39;&#34;</span>
-</span></span><span class="line"><span class="cl">							<span class="nv">$Output</span>.Result <span class="o">=</span> <span class="s2">&#34;Success&#34;</span>
-</span></span><span class="line"><span class="cl">						<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">							Write-Error <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;</span><span class="nv">$path</span><span class="s2">&#39; = &#39;</span><span class="nv">$CmdResult</span><span class="s2">&#39;&#34;</span>
-</span></span><span class="line"><span class="cl">							<span class="nv">$Output</span>.Result <span class="o">=</span> <span class="s2">&#34;Error - </span><span class="nv">$CMDResult</span><span class="s2">&#34;</span>
-</span></span><span class="line"><span class="cl">						<span class="o">}</span>
+</span></span><span class="line"><span class="cl">						<span class="k">if</span> <span class="p">(</span><span class="nv">$CmdResult</span> <span class="o">-eq</span> <span class="vm">$Null</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">							<span class="nb">Write-Verbose</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;</span><span class="nv">$path</span><span class="s2">&#39; = &#39;Success&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="nv">$Output</span><span class="p">.</span><span class="py">Result</span> <span class="p">=</span> <span class="s2">&#34;Success&#34;</span>
+</span></span><span class="line"><span class="cl">						<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">							<span class="nb">Write-Error</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;</span><span class="nv">$path</span><span class="s2">&#39; = &#39;</span><span class="nv">$CmdResult</span><span class="s2">&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="nv">$Output</span><span class="p">.</span><span class="py">Result</span> <span class="p">=</span> <span class="s2">&#34;Error - </span><span class="nv">$CMDResult</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">						<span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">					<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">						Write-Verbose <span class="s2">&#34;Remote computer...&#34;</span>
-</span></span><span class="line"><span class="cl">						<span class="c1"># Wevtutil LogName filepath /r:&lt;remote computer&gt; /ow:&lt;Overwrite true/false&gt;</span>
-</span></span><span class="line"><span class="cl">						<span class="nv">$Cmd</span> <span class="o">=</span> <span class="s2">&#34;</span><span class="k">$(</span><span class="nv">$Env</span>:windir<span class="k">)</span><span class="s2">\system32\wevtutil.exe epl &#39;</span><span class="nv">$Log</span><span class="s2">&#39; &#39;</span><span class="nv">$RemotePath</span><span class="s2">\$OutputFileName&#39; /r:</span><span class="nv">$Name</span><span class="s2"> /ow:True 2&gt;&amp;1&#34;</span>
-</span></span><span class="line"><span class="cl">						<span class="nv">$CmdResult</span> <span class="o">=</span> Invoke-Expression -Command <span class="nv">$cmd</span>
-</span></span><span class="line"><span class="cl">						<span class="k">if</span> <span class="o">(</span><span class="nv">$CmdResult</span> -eq <span class="nv">$Null</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">							<span class="c1"># Convert &lt;Drive&gt;:\ to \&lt;Drive&gt;$ for remote connection</span>
-</span></span><span class="line"><span class="cl">							<span class="nv">$RemoteUNC</span> <span class="o">=</span> <span class="nv">$RemotePath</span> -Replace <span class="s1">&#39;(?&lt;Drive&gt;[A-Za-z]+):&#39;</span>, <span class="s1">&#39;${Drive}$$&#39;</span> <span class="c1"># c:\ = c$\</span>
+</span></span><span class="line"><span class="cl">					<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">						<span class="nb">Write-Verbose</span> <span class="s2">&#34;Remote computer...&#34;</span>
+</span></span><span class="line"><span class="cl">						<span class="c"># Wevtutil LogName filepath /r:&lt;remote computer&gt; /ow:&lt;Overwrite true/false&gt;</span>
+</span></span><span class="line"><span class="cl">						<span class="nv">$Cmd</span> <span class="p">=</span> <span class="s2">&#34;</span><span class="p">$(</span><span class="nv">$Env:windir</span><span class="p">)</span><span class="s2">\system32\wevtutil.exe epl &#39;</span><span class="nv">$Log</span><span class="s2">&#39; &#39;</span><span class="nv">$RemotePath</span><span class="s2">\</span><span class="nv">$OutputFileName</span><span class="s2">&#39; /r:</span><span class="nv">$Name</span><span class="s2"> /ow:True 2&gt;&amp;1&#34;</span>
+</span></span><span class="line"><span class="cl">						<span class="nv">$CmdResult</span> <span class="p">=</span> <span class="nb">Invoke-Expression</span> <span class="n">-Command</span> <span class="nv">$cmd</span>
+</span></span><span class="line"><span class="cl">						<span class="k">if</span> <span class="p">(</span><span class="nv">$CmdResult</span> <span class="o">-eq</span> <span class="vm">$Null</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">							<span class="c"># Convert &lt;Drive&gt;:\ to \&lt;Drive&gt;$ for remote connection</span>
+</span></span><span class="line"><span class="cl">							<span class="nv">$RemoteUNC</span> <span class="p">=</span> <span class="nv">$RemotePath</span> <span class="o">-Replace</span> <span class="s1">&#39;(?&lt;Drive&gt;[A-Za-z]+):&#39;</span><span class="p">,</span> <span class="s1">&#39;${Drive}$$&#39;</span> <span class="c"># c:\ = c$\</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">							Write-Verbose <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;\\</span><span class="nv">$Name</span><span class="s2">\$RemoteUNC\$OutputFileName&#39; = &#39;Success&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="nb">Write-Verbose</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;\\</span><span class="nv">$Name</span><span class="s2">\</span><span class="nv">$RemoteUNC</span><span class="s2">\</span><span class="nv">$OutputFileName</span><span class="s2">&#39; = &#39;Success&#39;&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">							Write-Progress -id <span class="m">3</span> -ParentId <span class="m">1</span> -Activity <span class="s2">&#34;Copying&#34;</span> -Status <span class="s2">&#34;</span><span class="nv">$Log</span><span class="s2">&#34;</span>
-</span></span><span class="line"><span class="cl">							Try <span class="o">{</span>
-</span></span><span class="line"><span class="cl">								move-item -path <span class="s2">&#34;filesystem::\\</span><span class="nv">$Name</span><span class="s2">\$RemoteUNC\$OutputFileName&#34;</span> -Dest <span class="nv">$Path</span> -Force -ErrorAction Stop
-</span></span><span class="line"><span class="cl">								Write-Verbose <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log move to &#39;</span><span class="nv">$path</span><span class="s2">&#39; = Success&#34;</span>
-</span></span><span class="line"><span class="cl">								<span class="nv">$Output</span>.Result <span class="o">=</span> <span class="s2">&#34;Success&#34;</span>
-</span></span><span class="line"><span class="cl">							<span class="o">}</span> Catch <span class="o">{</span>
-</span></span><span class="line"><span class="cl">								Write-Error <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log move to &#39;</span><span class="nv">$path</span><span class="s2">&#39; failed - &#39;</span><span class="nv">$_</span><span class="s2">&#39;&#34;</span>
-</span></span><span class="line"><span class="cl">								<span class="nv">$Output</span>.Result <span class="o">=</span> <span class="s2">&#34;Error - &#39;</span><span class="nv">$_</span><span class="s2">&#39;&#34;</span>
-</span></span><span class="line"><span class="cl">							<span class="o">}</span>
+</span></span><span class="line"><span class="cl">							<span class="nb">Write-Progress</span> <span class="n">-id</span> <span class="mf">3</span> <span class="n">-ParentId</span> <span class="mf">1</span> <span class="n">-Activity</span> <span class="s2">&#34;Copying&#34;</span> <span class="n">-Status</span> <span class="s2">&#34;</span><span class="nv">$Log</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="k">Try</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">								<span class="nb">move-item</span> <span class="n">-path</span> <span class="s2">&#34;filesystem::\\</span><span class="nv">$Name</span><span class="s2">\</span><span class="nv">$RemoteUNC</span><span class="s2">\</span><span class="nv">$OutputFileName</span><span class="s2">&#34;</span> <span class="n">-Dest</span> <span class="nv">$Path</span> <span class="n">-Force</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+</span></span><span class="line"><span class="cl">								<span class="nb">Write-Verbose</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log move to &#39;</span><span class="nv">$path</span><span class="s2">&#39; = Success&#34;</span>
+</span></span><span class="line"><span class="cl">								<span class="nv">$Output</span><span class="p">.</span><span class="py">Result</span> <span class="p">=</span> <span class="s2">&#34;Success&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="p">}</span> <span class="k">Catch</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">								<span class="nb">Write-Error</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log move to &#39;</span><span class="nv">$path</span><span class="s2">&#39; failed - &#39;</span><span class="nv">$_</span><span class="s2">&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">								<span class="nv">$Output</span><span class="p">.</span><span class="py">Result</span> <span class="p">=</span> <span class="s2">&#34;Error - &#39;</span><span class="nv">$_</span><span class="s2">&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">						<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">							Write-Error <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;\\</span><span class="nv">$Name</span><span class="s2">\$RemotePath&#39; = &#39;</span><span class="nv">$CmdResult</span><span class="s2">&#39;&#34;</span>
-</span></span><span class="line"><span class="cl">							<span class="nv">$Result</span> <span class="o">=</span> <span class="s2">&#34;Error - </span><span class="nv">$CMDResult</span><span class="s2">&#34;</span>
-</span></span><span class="line"><span class="cl">						<span class="o">}</span>
-</span></span><span class="line"><span class="cl">					<span class="o">}</span><span class="c1">#end if</span>
+</span></span><span class="line"><span class="cl">						<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">							<span class="nb">Write-Error</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;\\</span><span class="nv">$Name</span><span class="s2">\</span><span class="nv">$RemotePath</span><span class="s2">&#39; = &#39;</span><span class="nv">$CmdResult</span><span class="s2">&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="nv">$Result</span> <span class="p">=</span> <span class="s2">&#34;Error - </span><span class="nv">$CMDResult</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">						<span class="p">}</span>
+</span></span><span class="line"><span class="cl">					<span class="p">}</span><span class="c">#end if</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span>.Path <span class="o">=</span> <span class="s2">&#34;</span><span class="nv">$Path</span><span class="s2">\$OutputFileName&#34;</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span><span class="p">.</span><span class="py">Path</span> <span class="p">=</span> <span class="s2">&#34;</span><span class="nv">$Path</span><span class="s2">\</span><span class="nv">$OutputFileName</span><span class="s2">&#34;</span>
 </span></span><span class="line"><span class="cl">					<span class="nv">$Output</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">				<span class="o">}</span><span class="c1">#foreach logname</span>
-</span></span><span class="line"><span class="cl">			<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">				Write-Warning -Message <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2"> :: ping failed&#34;</span>
-</span></span><span class="line"><span class="cl">			<span class="o">}</span>
-</span></span><span class="line"><span class="cl">		<span class="o">}</span> <span class="c1">#foreach Name</span>
-</span></span><span class="line"><span class="cl">	<span class="o">}</span><span class="c1">#process</span>
+</span></span><span class="line"><span class="cl">				<span class="p">}</span><span class="c">#foreach logname</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nb">Write-Warning</span> <span class="n">-Message</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2"> :: ping failed&#34;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span> <span class="c">#foreach Name</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span><span class="c">#process</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="o">}</span><span class="c1">#EndFunction</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span><span class="c">#EndFunction</span>
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
 <p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>

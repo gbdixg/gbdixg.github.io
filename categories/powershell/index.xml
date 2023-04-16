@@ -64,48 +64,48 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </span></span></code></pre></div><p>See the <a href="https://github.com/gbdixg/Show-Win32AppUI/tree/main/Show-Win32AppUI/Xaml">Show-Win32UI tool</a> for an example of separate XAML files per Page and main Window.</p>
 <h1 id="load-xaml-controls-into-powershell-variables">Load XAML controls into PowerShell variables</h1>
 <p>A thread safe Hashtable collection allows WPF controls to be referenced in PowerShell at runtime. Grouping the controls in a collection is convenient as it simplifies passing them into Runspaces.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1">### Example of reading controls from XAML files and assigning them to variables</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example of reading controls from XAML files and assigning them to variables</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">function</span> LoadXml <span class="o">(</span><span class="nv">$filename</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="c1"># Convert a .XAML file to an XMLDocument</span>
-</span></span><span class="line"><span class="cl">    <span class="nv">$XmlLoader</span> <span class="o">=</span> <span class="o">(</span>New-Object System.Xml.XmlDocument<span class="o">)</span>
-</span></span><span class="line"><span class="cl">    <span class="nv">$XmlLoader</span>.Load<span class="o">(</span><span class="nv">$filename</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="kd">function</span><span class="w"> </span><span class="nb">LoadXml</span> <span class="p">(</span><span class="nv">$filename</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c"># Convert a .XAML file to an XMLDocument</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$XmlLoader</span> <span class="p">=</span> <span class="p">(</span><span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="py">Xml</span><span class="p">.</span><span class="n">XmlDocument</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$XmlLoader</span><span class="p">.</span><span class="py">Load</span><span class="p">(</span><span class="nv">$filename</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nv">$XmlLoader</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Load the XAML files</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$xmlMainWindow</span> <span class="o">=</span> LoadXml<span class="o">(</span><span class="s2">&#34;</span><span class="nv">$PSScriptRoot</span><span class="s2">\Xaml\MainWindow.xaml&#34;</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$xmlPage1</span> <span class="o">=</span> LoadXml<span class="o">(</span><span class="s2">&#34;</span><span class="nv">$PScriptRoot</span><span class="s2">\Xaml\Page1.xaml&#34;</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$xmlPage2</span> <span class="o">=</span> LoadXml<span class="o">(</span><span class="s2">&#34;</span><span class="nv">$PScriptRoot</span><span class="s2">\Xaml\Page2.xaml&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="c"># Load the XAML files</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$xmlMainWindow</span> <span class="p">=</span> <span class="n">LoadXml</span><span class="p">(</span><span class="s2">&#34;</span><span class="nv">$PSScriptRoot</span><span class="s2">\Xaml\MainWindow.xaml&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$xmlPage1</span> <span class="p">=</span> <span class="n">LoadXml</span><span class="p">(</span><span class="s2">&#34;</span><span class="nv">$PScriptRoot</span><span class="s2">\Xaml\Page1.xaml&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$xmlPage2</span> <span class="p">=</span> <span class="n">LoadXml</span><span class="p">(</span><span class="s2">&#34;</span><span class="nv">$PScriptRoot</span><span class="s2">\Xaml\Page2.xaml&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Collection storing references to all named WPF controls in the UI</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span><span class="o">=[</span>hashtable<span class="o">]</span>::Synchronized<span class="o">(</span>@<span class="o">{})</span>
+</span></span><span class="line"><span class="cl"><span class="c"># Collection storing references to all named WPF controls in the UI</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span><span class="p">=[</span><span class="no">hashtable</span><span class="p">]::</span><span class="n">Synchronized</span><span class="p">(</span><span class="vm">@</span><span class="p">{})</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Convert Windows and Pages to a XAML object graph</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span>.MainWindow <span class="o">=</span> <span class="o">[</span>Windows.Markup.XamlReader<span class="o">]</span>::Load<span class="o">((</span>New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList <span class="nv">$xmlMainWindow</span><span class="o">))</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span>.Page1 <span class="o">=</span> <span class="o">[</span>Windows.Markup.XamlReader<span class="o">]</span>::Load<span class="o">((</span>New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList <span class="nv">$xmlPage1</span><span class="o">))</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span>.Page2 <span class="o">=</span> <span class="o">[</span>Windows.Markup.XamlReader<span class="o">]</span>::Load<span class="o">((</span>New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList <span class="nv">$xmlPage2</span><span class="o">))</span>
+</span></span><span class="line"><span class="cl"><span class="c"># Convert Windows and Pages to a XAML object graph</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span><span class="p">.</span><span class="py">MainWindow</span> <span class="p">=</span> <span class="p">[</span><span class="no">Windows.Markup.XamlReader</span><span class="p">]::</span><span class="n">Load</span><span class="p">((</span><span class="nb">New-Object</span> <span class="n">-TypeName</span> <span class="n">System</span><span class="p">.</span><span class="py">Xml</span><span class="p">.</span><span class="py">XmlNodeReader</span> <span class="n">-ArgumentList</span> <span class="nv">$xmlMainWindow</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span><span class="p">.</span><span class="py">Page1</span> <span class="p">=</span> <span class="p">[</span><span class="no">Windows.Markup.XamlReader</span><span class="p">]::</span><span class="n">Load</span><span class="p">((</span><span class="nb">New-Object</span> <span class="n">-TypeName</span> <span class="n">System</span><span class="p">.</span><span class="py">Xml</span><span class="p">.</span><span class="py">XmlNodeReader</span> <span class="n">-ArgumentList</span> <span class="nv">$xmlPage1</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span><span class="p">.</span><span class="py">Page2</span> <span class="p">=</span> <span class="p">[</span><span class="no">Windows.Markup.XamlReader</span><span class="p">]::</span><span class="n">Load</span><span class="p">((</span><span class="nb">New-Object</span> <span class="n">-TypeName</span> <span class="n">System</span><span class="p">.</span><span class="py">Xml</span><span class="p">.</span><span class="py">XmlNodeReader</span> <span class="n">-ArgumentList</span> <span class="nv">$xmlPage2</span><span class="p">))</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Add each named control to the $UIControls hashtable (repeat for each Window / Page)</span>
-</span></span><span class="line"><span class="cl"><span class="c1"># This allows key controls to be referenced directly at runtime, rather than through a parent-child hierarchy of Page&gt;Control</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$XmlMainWindow</span>.SelectNodes<span class="o">(</span><span class="s2">&#34;//*[@*[contains(translate(name(.),&#39;n&#39;,&#39;N&#39;),&#39;Name&#39;)]]&#34;</span><span class="o">)</span> <span class="p">|</span> ForEach-Object -Process <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nv">$UIControls</span>.<span class="k">$(</span><span class="nv">$_</span>.Name<span class="k">)</span> <span class="o">=</span> <span class="nv">$UIControls</span>.MainWindow.FindName<span class="o">(</span><span class="nv">$_</span>.Name<span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="c"># Add each named control to the $UIControls hashtable (repeat for each Window / Page)</span>
+</span></span><span class="line"><span class="cl"><span class="c"># This allows key controls to be referenced directly at runtime, rather than through a parent-child hierarchy of Page&gt;Control</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$XmlMainWindow</span><span class="p">.</span><span class="py">SelectNodes</span><span class="p">(</span><span class="s2">&#34;//*[@*[contains(translate(name(.),&#39;n&#39;,&#39;N&#39;),&#39;Name&#39;)]]&#34;</span><span class="p">)</span> <span class="p">|</span> <span class="nb">ForEach-Object</span> <span class="n">-Process</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$UIControls</span><span class="p">.</span><span class="vm">$</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span> <span class="p">=</span> <span class="nv">$UIControls</span><span class="p">.</span><span class="py">MainWindow</span><span class="p">.</span><span class="py">FindName</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nv">$xmlPage1</span>.SelectNodes<span class="o">(</span><span class="s2">&#34;//*[@*[contains(translate(name(.),&#39;n&#39;,&#39;N&#39;),&#39;Name&#39;)]]&#34;</span><span class="o">)</span> <span class="p">|</span> ForEach-Object -Process <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nv">$UIControls</span>.<span class="k">$(</span><span class="nv">$_</span>.Name<span class="k">)</span> <span class="o">=</span> <span class="nv">$UIControls</span>.Page1.FindName<span class="o">(</span><span class="nv">$_</span>.Name<span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$xmlPage1</span><span class="p">.</span><span class="py">SelectNodes</span><span class="p">(</span><span class="s2">&#34;//*[@*[contains(translate(name(.),&#39;n&#39;,&#39;N&#39;),&#39;Name&#39;)]]&#34;</span><span class="p">)</span> <span class="p">|</span> <span class="nb">ForEach-Object</span> <span class="n">-Process</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$UIControls</span><span class="p">.</span><span class="vm">$</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span> <span class="p">=</span> <span class="nv">$UIControls</span><span class="p">.</span><span class="py">Page1</span><span class="p">.</span><span class="py">FindName</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nv">$xmlPage2</span>.SelectNodes<span class="o">(</span><span class="s2">&#34;//*[@*[contains(translate(name(.),&#39;n&#39;,&#39;N&#39;),&#39;Name&#39;)]]&#34;</span><span class="o">)</span> <span class="p">|</span> ForEach-Object -Process <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nv">$UIControls</span>.<span class="k">$(</span><span class="nv">$_</span>.Name<span class="k">)</span> <span class="o">=</span> <span class="nv">$UIControls</span>.Page2.FindName<span class="o">(</span><span class="nv">$_</span>.Name<span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$xmlPage2</span><span class="p">.</span><span class="py">SelectNodes</span><span class="p">(</span><span class="s2">&#34;//*[@*[contains(translate(name(.),&#39;n&#39;,&#39;N&#39;),&#39;Name&#39;)]]&#34;</span><span class="p">)</span> <span class="p">|</span> <span class="nb">ForEach-Object</span> <span class="n">-Process</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$UIControls</span><span class="p">.</span><span class="vm">$</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span> <span class="p">=</span> <span class="nv">$UIControls</span><span class="p">.</span><span class="py">Page2</span><span class="p">.</span><span class="py">FindName</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Example of loading first Page into the Frame</span>
-</span></span><span class="line"><span class="cl"><span class="c1"># &#34;frame_Pages&#34; in the name of the Frame defined in the XAML file</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span>.frame_Pages.Content <span class="o">=</span> <span class="nv">$UIControls</span>.Page1
+</span></span><span class="line"><span class="cl"><span class="c"># Example of loading first Page into the Frame</span>
+</span></span><span class="line"><span class="cl"><span class="c"># &#34;frame_Pages&#34; in the name of the Frame defined in the XAML file</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span><span class="p">.</span><span class="py">frame_Pages</span><span class="p">.</span><span class="py">Content</span> <span class="p">=</span> <span class="nv">$UIControls</span><span class="p">.</span><span class="py">Page1</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Show the user interface</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span>.MainWindow.ShowDialog<span class="o">()</span>  
+</span></span><span class="line"><span class="cl"><span class="c"># Show the user interface</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span><span class="p">.</span><span class="py">MainWindow</span><span class="p">.</span><span class="py">ShowDialog</span><span class="p">()</span>  
 </span></span></code></pre></div><h2 id="using-wpf-styles-to-simplify-xaml">Using WPF Styles to simplify XAML</h2>
 <p>XAML styles are analogous to CSS in HTML. The XAML style can apply to all controls of a type, such as all TextBoxes, defining properties such as the colour, font, border etc. If a property needs to be changed, it only needs to be updated in one place. Its also a flexible solution because Style properties can still be over-ridden on an individual control.</p>
 <p>Styles can be defined in a separate XAML file and then <em>imported</em> on each Window / Page as a <strong>ResourceDictionary</strong>.</p>
@@ -226,19 +226,19 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </span></span></code></pre></div><h2 id="defining-event-handlers">Defining Event Handlers</h2>
 <p>WPF controls support events that occur based on user input. Some events are common to most controls, such as <strong>MouseEnter</strong> and <strong>MouseLeave</strong> while other events are specific to a control type, such as <strong>SelectionChanged</strong> in a ComboBox.</p>
 <p>PowerShell uses an &ldquo;Add_[Event Name]&rdquo; syntax to define the code to run when the event fires as below. The per-control event list is available in the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.windows.controls.combobox?view=windowsdesktop-7.0#events">MS Documentation</a>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1"># Example event handler - code will run when the Combo box selection changes</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span>.combo_language.Add_SelectionChanged<span class="o">({</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c"># Example event handler - code will run when the Combo box selection changes</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span><span class="p">.</span><span class="py">combo_language</span><span class="p">.</span><span class="py">Add_SelectionChanged</span><span class="p">({</span>
 </span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    <span class="nv">$Language</span> <span class="o">=</span> <span class="nv">$UIControls</span>.combo_language.SelectedItem
+</span></span><span class="line"><span class="cl">    <span class="nv">$Language</span> <span class="p">=</span> <span class="nv">$UIControls</span><span class="p">.</span><span class="py">combo_language</span><span class="p">.</span><span class="py">SelectedItem</span>
 </span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl"><span class="o">})</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Example event handler - code will run when the button is left clicked</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span>.btn_Next.Add_Click<span class="o">({</span>
+</span></span><span class="line"><span class="cl"><span class="c"># Example event handler - code will run when the button is left clicked</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span><span class="p">.</span><span class="py">btn_Next</span><span class="p">.</span><span class="py">Add_Click</span><span class="p">({</span>
 </span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    <span class="nv">$UIControls</span>.frame_Pages.Content <span class="o">=</span> <span class="nv">$UIControls</span>.Page2
+</span></span><span class="line"><span class="cl">    <span class="nv">$UIControls</span><span class="p">.</span><span class="py">frame_Pages</span><span class="p">.</span><span class="py">Content</span> <span class="p">=</span> <span class="nv">$UIControls</span><span class="p">.</span><span class="py">Page2</span>
 </span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl"><span class="o">})</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
 <p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
@@ -274,229 +274,229 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 <p>These concepts are covered in more detail below.</p>
 <h2 id="sharing-variables-functions-and-modules-with-a-runspace">Sharing variables, functions and modules with a Runspace</h2>
 <p><strong>Required modules</strong> must be specifically loaded into the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.runspaces.initialsessionstate?view=powershellsdk-7.3.0">InitialSessionState</a> of the Runspace. The Runspace won&rsquo;t automatically have access to modules already loaded in the <em>parent</em> PowerShell session.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1">### Example of importing modules into a new Runspace ###</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example of importing modules into a new Runspace ###</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nv">$modulesToLoad</span><span class="o">=</span>@<span class="o">(</span><span class="s1">&#39;Microsoft.Graph.Intune&#39;</span>,<span class="s1">&#39;MSAL.PS&#39;</span><span class="o">)</span> <span class="c1"># Must be installed on the computer</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$modulesToLoad</span><span class="p">=</span><span class="vm">@</span><span class="p">(</span><span class="s1">&#39;Microsoft.Graph.Intune&#39;</span><span class="p">,</span><span class="s1">&#39;MSAL.PS&#39;</span><span class="p">)</span> <span class="c"># Must be installed on the computer</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nv">$initialSessionState</span> <span class="o">=</span> <span class="o">[</span>initialsessionstate<span class="o">]</span>::CreateDefault<span class="o">()</span>
-</span></span><span class="line"><span class="cl">foreach<span class="o">(</span><span class="nv">$module</span> in <span class="nv">$modulesToLoad</span><span class="o">){</span>
-</span></span><span class="line"><span class="cl">    <span class="nv">$initialSessionState</span>.ImportPSModule<span class="o">(</span><span class="nv">$module</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span> <span class="o">=</span> <span class="o">[</span>runspacefactory<span class="o">]</span>::CreateRunspace<span class="o">(</span><span class="nv">$initialSessionState</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$initialSessionState</span> <span class="p">=</span> <span class="p">[</span><span class="no">initialsessionstate</span><span class="p">]::</span><span class="n">CreateDefault</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="k">foreach</span><span class="p">(</span><span class="nv">$module</span> <span class="k">in</span> <span class="nv">$modulesToLoad</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$initialSessionState</span><span class="p">.</span><span class="py">ImportPSModule</span><span class="p">(</span><span class="nv">$module</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span> <span class="p">=</span> <span class="p">[</span><span class="no">runspacefactory</span><span class="p">]::</span><span class="n">CreateRunspace</span><span class="p">(</span><span class="nv">$initialSessionState</span><span class="p">)</span>
 </span></span></code></pre></div><p>You can also import <strong>standalone Functions</strong> into a Runspace using the <em>InitialSessionState</em>. The following imports functions already loaded in the <em>parent</em> session, but you could also load directly from a file on disk.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1">### Example importing parent session functions into a new Runspace ###</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example importing parent session functions into a new Runspace ###</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nv">$FunctionsToImport</span> <span class="o">=</span> @<span class="o">(</span><span class="s1">&#39;Write-TxtLog&#39;</span>,<span class="s1">&#39;Get-APIResults&#39;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$FunctionsToImport</span> <span class="p">=</span> <span class="vm">@</span><span class="p">(</span><span class="s1">&#39;Write-TxtLog&#39;</span><span class="p">,</span><span class="s1">&#39;Get-APIResults&#39;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">foreach<span class="o">(</span><span class="nv">$function</span> in <span class="nv">$functionsToImport</span><span class="o">){</span>
-</span></span><span class="line"><span class="cl">    <span class="nv">$definition</span> <span class="o">=</span> Get-Content <span class="s2">&#34;Function:\$Function&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="nv">$entry</span> <span class="o">=</span> New-Object System.Management.Automation.Runspaces.SessionStateFunctionEntry -ArgumentList <span class="nv">$function</span>, <span class="nv">$definition</span>
-</span></span><span class="line"><span class="cl">    <span class="nv">$initialSessionState</span>.Commands.Add<span class="o">(</span><span class="nv">$entry</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span> <span class="o">=</span> <span class="o">[</span>runspacefactory<span class="o">]</span>::CreateRunspace<span class="o">(</span><span class="nv">$initialSessionState</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">foreach</span><span class="p">(</span><span class="nv">$function</span> <span class="k">in</span> <span class="nv">$functionsToImport</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$definition</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="s2">&#34;Function:\</span><span class="nv">$Function</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$entry</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="py">Management</span><span class="p">.</span><span class="py">Automation</span><span class="p">.</span><span class="py">Runspaces</span><span class="p">.</span><span class="py">SessionStateFunctionEntry</span> <span class="n">-ArgumentList</span> <span class="nv">$function</span><span class="p">,</span> <span class="nv">$definition</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$initialSessionState</span><span class="p">.</span><span class="py">Commands</span><span class="p">.</span><span class="py">Add</span><span class="p">(</span><span class="nv">$entry</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span> <span class="p">=</span> <span class="p">[</span><span class="no">runspacefactory</span><span class="p">]::</span><span class="n">CreateRunspace</span><span class="p">(</span><span class="nv">$initialSessionState</span><span class="p">)</span>
 </span></span></code></pre></div><p><strong>Variables</strong> can be shared with a Runspace using the <strong>SetVariable</strong> method of the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.runspaces.sessionstateproxy?view=powershellsdk-7.3.0">SessionStateProxy</a> class.  SetVariable parameters are the <em>variable name</em> (without the &lsquo;$&rsquo;) and the value to set.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1">### Example importing parent session variables into a new Runspace ###</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example importing parent session variables into a new Runspace ###</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nv">$VariablesToImport</span> <span class="o">=</span> @<span class="o">(</span><span class="s1">&#39;username&#39;</span>,<span class="s1">&#39;password&#39;</span>,<span class="s1">&#39;displayName&#39;</span><span class="o">)</span> <span class="c1"># existing variables in the parent session</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$VariablesToImport</span> <span class="p">=</span> <span class="vm">@</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">,</span><span class="s1">&#39;password&#39;</span><span class="p">,</span><span class="s1">&#39;displayName&#39;</span><span class="p">)</span> <span class="c"># existing variables in the parent session</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span> <span class="o">=</span> <span class="o">[</span>runspacefactory<span class="o">]</span>::CreateRunspace<span class="o">(</span><span class="nv">$initialSessionState</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span>.Open<span class="o">()</span>
-</span></span><span class="line"><span class="cl">Foreach<span class="o">(</span><span class="nv">$var</span> in <span class="nv">$VariablesToImport</span><span class="o">){</span>
-</span></span><span class="line"><span class="cl">    <span class="nv">$VarValue</span> <span class="o">=</span> Get-Variable -Name <span class="nv">$Var</span> <span class="p">|</span> Select -ExpandProperty Value
-</span></span><span class="line"><span class="cl">    <span class="nv">$Runspace</span>.SessionStateProxy.SetVariable<span class="o">(</span><span class="nv">$Var</span>,<span class="nv">$VarValue</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span> <span class="p">=</span> <span class="p">[</span><span class="no">runspacefactory</span><span class="p">]::</span><span class="n">CreateRunspace</span><span class="p">(</span><span class="nv">$initialSessionState</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span><span class="p">.</span><span class="py">Open</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="k">Foreach</span><span class="p">(</span><span class="nv">$var</span> <span class="k">in</span> <span class="nv">$VariablesToImport</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$VarValue</span> <span class="p">=</span> <span class="nb">Get-Variable</span> <span class="n">-Name</span> <span class="nv">$Var</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">-ExpandProperty</span> <span class="n">Value</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$Runspace</span><span class="p">.</span><span class="py">SessionStateProxy</span><span class="p">.</span><span class="py">SetVariable</span><span class="p">(</span><span class="nv">$Var</span><span class="p">,</span><span class="nv">$VarValue</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h2 id="runspace-output-using-a-thread-safe-collection">Runspace output using a thread-safe collection</h2>
 <p>Output from a Runspace can be captured during execution using a thread-safe collection imported from the parent session. When a Runspace updates the collection the updated values are available in the parent session and any concurrent Runspaces that also import the collection.  Thread safe collections usually need to be <em>locked</em> during update to prevent conflicts.</p>
 <p>With a <strong>synchronised Arraylist</strong>, values added in the Runspace will immediately available to all other Runspaces and the parent session, as in following example:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1">### Example using locks on a thread safe collection ###</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example using locks on a thread safe collection ###</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Parent session code</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$BackgroundJobs</span> <span class="o">=</span> <span class="o">[</span>system.collections.arraylist<span class="o">]</span>::Synchronized<span class="o">((</span>New-Object System.Collections.ArrayList<span class="o">))</span> <span class="c1"># Thread safe collection</span>
+</span></span><span class="line"><span class="cl"><span class="c"># Parent session code</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$BackgroundJobs</span> <span class="p">=</span> <span class="p">[</span><span class="no">system.collections.arraylist</span><span class="p">]::</span><span class="n">Synchronized</span><span class="p">((</span><span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="py">Collections</span><span class="p">.</span><span class="n">ArrayList</span><span class="p">))</span> <span class="c"># Thread safe collection</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span> <span class="o">=</span> <span class="o">[</span>runspacefactory<span class="o">]</span>::CreateRunspace<span class="o">(</span><span class="nv">$initialSessionState</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span>.Open<span class="o">()</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span>.SessionStateProxy.SetVariable<span class="o">(</span><span class="s1">&#39;BackgroundJobs&#39;</span>,<span class="nv">$BackgroundJobs</span><span class="o">)</span> <span class="c1"># Pass the variable into the RunSpace</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span> <span class="p">=</span> <span class="p">[</span><span class="no">runspacefactory</span><span class="p">]::</span><span class="n">CreateRunspace</span><span class="p">(</span><span class="nv">$initialSessionState</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span><span class="p">.</span><span class="py">Open</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span><span class="p">.</span><span class="py">SessionStateProxy</span><span class="p">.</span><span class="py">SetVariable</span><span class="p">(</span><span class="s1">&#39;BackgroundJobs&#39;</span><span class="p">,</span><span class="nv">$BackgroundJobs</span><span class="p">)</span> <span class="c"># Pass the variable into the RunSpace</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nv">$PSCode</span> <span class="o">=</span> <span class="o">[</span>powershell<span class="o">]</span>::Create<span class="o">()</span>.AddScript<span class="o">({</span>
-</span></span><span class="line"><span class="cl">    <span class="c1"># This is the Runspace script block</span>
-</span></span><span class="line"><span class="cl">    try<span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="o">[</span>System.Threading.Monitor<span class="o">]</span>::Enter<span class="o">(</span><span class="nv">$BackgroundJobs</span>.SyncRoot<span class="o">)</span> <span class="c1"># lock</span>
-</span></span><span class="line"><span class="cl">        <span class="nv">$BackgroundJobs</span>.Add<span class="o">(</span><span class="s2">&#34;New item&#34;</span><span class="o">)</span> <span class="c1"># modify ArrayList</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>finally<span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="o">[</span>System.Threading.Monitor<span class="o">]</span>::Exit<span class="o">(</span><span class="nv">$BackgroundJobs</span>.SyncRoot<span class="o">)</span> <span class="c1"># unlock</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span> 
-</span></span><span class="line"><span class="cl"><span class="o">}</span>,<span class="nv">$True</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$PSCode</span> <span class="p">=</span> <span class="p">[</span><span class="no">powershell</span><span class="p">]::</span><span class="n">Create</span><span class="p">().</span><span class="py">AddScript</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="c"># This is the Runspace script block</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="no">System.Threading.Monitor</span><span class="p">]::</span><span class="n">Enter</span><span class="p">(</span><span class="nv">$BackgroundJobs</span><span class="p">.</span><span class="n">SyncRoot</span><span class="p">)</span> <span class="c"># lock</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$BackgroundJobs</span><span class="p">.</span><span class="py">Add</span><span class="p">(</span><span class="s2">&#34;New item&#34;</span><span class="p">)</span> <span class="c"># modify ArrayList</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span><span class="k">finally</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="no">System.Threading.Monitor</span><span class="p">]::</span><span class="n">Exit</span><span class="p">(</span><span class="nv">$BackgroundJobs</span><span class="p">.</span><span class="n">SyncRoot</span><span class="p">)</span> <span class="c"># unlock</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> 
+</span></span><span class="line"><span class="cl"><span class="p">},</span><span class="vm">$True</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nv">$PSCode</span>.Runspace <span class="o">=</span> <span class="nv">$Runspace</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$null</span> <span class="o">=</span> <span class="nv">$PSCode</span>.BeginInvoke<span class="o">()</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$PSCode</span><span class="p">.</span><span class="py">Runspace</span> <span class="p">=</span> <span class="nv">$Runspace</span>
+</span></span><span class="line"><span class="cl"><span class="vm">$null</span> <span class="p">=</span> <span class="nv">$PSCode</span><span class="p">.</span><span class="py">BeginInvoke</span><span class="p">()</span>
 </span></span></code></pre></div><p>There are also <em>Queues and Stacks</em> in .NET that automatically implement locking and don&rsquo;t need the System.Threading.Monitor code in the above example e.g. a <em>ConcurrentQueue</em>:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1">### ConcurrentQueue example - doesn&#39;t need System.Threading.Monitor ###</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### ConcurrentQueue example - doesn&#39;t need System.Threading.Monitor ###</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Parent session code</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$colQueue</span> <span class="o">=</span> <span class="o">[</span>System.Collections.Concurrent.ConcurrentQueue<span class="o">[</span>psobject<span class="o">]]</span>::new<span class="o">()</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$colQueue</span>.TryAdd<span class="o">([</span>pscustomobject<span class="o">]</span>@<span class="o">{</span> <span class="nv">givenName</span> <span class="o">=</span> <span class="s1">&#39;Bill&#39;</span><span class="p">;</span><span class="nv">sn</span><span class="o">=</span><span class="s1">&#39;Gates&#39;</span><span class="o">})</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$colQueue</span>.TryAdd<span class="o">([</span>pscustomobject<span class="o">]</span>@<span class="o">{</span> <span class="nv">givenName</span> <span class="o">=</span> <span class="s1">&#39;Steve&#39;</span><span class="p">;</span><span class="nv">sn</span><span class="o">=</span><span class="s1">&#39;Jobs&#39;</span><span class="o">})</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span>.SessionStateProxy.SetVariable<span class="o">(</span><span class="s1">&#39;colQueue&#39;</span>,<span class="nv">$colQueue</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="c"># Parent session code</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$colQueue</span> <span class="p">=</span> <span class="p">[</span><span class="no">System.Collections.Concurrent.ConcurrentQueue[psobject]</span><span class="p">]::</span><span class="n">new</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$colQueue</span><span class="p">.</span><span class="py">TryAdd</span><span class="p">([</span><span class="no">pscustomobject</span><span class="p">]</span><span class="vm">@</span><span class="p">{</span> <span class="n">givenName</span> <span class="p">=</span> <span class="s1">&#39;Bill&#39;</span><span class="p">;</span><span class="n">sn</span><span class="p">=</span><span class="s1">&#39;Gates&#39;</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$colQueue</span><span class="p">.</span><span class="py">TryAdd</span><span class="p">([</span><span class="no">pscustomobject</span><span class="p">]</span><span class="vm">@</span><span class="p">{</span> <span class="n">givenName</span> <span class="p">=</span> <span class="s1">&#39;Steve&#39;</span><span class="p">;</span><span class="n">sn</span><span class="p">=</span><span class="s1">&#39;Jobs&#39;</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span><span class="p">.</span><span class="py">SessionStateProxy</span><span class="p">.</span><span class="py">SetVariable</span><span class="p">(</span><span class="s1">&#39;colQueue&#39;</span><span class="p">,</span><span class="nv">$colQueue</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nv">$PSCode</span> <span class="o">=</span> <span class="o">[</span>powershell<span class="o">]</span>::Create<span class="o">()</span>.AddScript<span class="o">({</span>
-</span></span><span class="line"><span class="cl">    <span class="c1"># This is the Runspace script block</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$PSCode</span> <span class="p">=</span> <span class="p">[</span><span class="no">powershell</span><span class="p">]::</span><span class="n">Create</span><span class="p">().</span><span class="py">AddScript</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="c"># This is the Runspace script block</span>
 </span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    <span class="c1"># No locking required when ConcurrentQueue is modified in the Runspace</span>
-</span></span><span class="line"><span class="cl">    <span class="nv">$Entry</span> <span class="o">=</span> <span class="nv">$null</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="o">(</span><span class="nv">$colQueue</span>.TryDequeue<span class="o">([</span>ref<span class="o">]</span><span class="nv">$Entry</span><span class="o">))</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        Write-Output <span class="nv">$Entry</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c"># No locking required when ConcurrentQueue is modified in the Runspace</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$Entry</span> <span class="p">=</span> <span class="vm">$null</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="nv">$colQueue</span><span class="p">.</span><span class="py">TryDequeue</span><span class="p">([</span><span class="no">ref</span><span class="p">]</span><span class="nv">$Entry</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">Write-Output</span> <span class="nv">$Entry</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl"> <span class="o">}</span>,<span class="nv">$True</span><span class="o">)</span>   
+</span></span><span class="line"><span class="cl"> <span class="p">},</span><span class="vm">$True</span><span class="p">)</span>   
 </span></span></code></pre></div><p>More information on thread safe collections is available <a href="https://learn.microsoft.com/en-us/dotnet/standard/collections/thread-safe/">here</a></p>
 <h2 id="how-to-update-the-wpf-user-interface-from-another-runspace">How to update the WPF user interface from another Runspace</h2>
 <p>If you try to modify the WPF user interface from a separate Runspace, PowerShell will throw an error indicating only the owning thread (Runspace) can update it.</p>
 <p><img loading="lazy" src="/img/UIThreadError2.png" alt="UIError"  />
 </p>
 <p>The solution is to wrap the update in a <strong>Dispatcher.Invoke</strong> method as follows:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1">### Example updating a WPF control from another thread (Runspace) ###</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example updating a WPF control from another thread (Runspace) ###</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># In the Runspace script block</span>
-</span></span><span class="line"><span class="cl"><span class="c1"># txt_SetupFile is a WPF text box created in the parent session of the Runspace</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span>.txt_SetupFile.Dispatcher.Invoke<span class="o">([</span>action<span class="o">]{</span>
-</span></span><span class="line"><span class="cl">    <span class="nv">$UIControls</span>.txt_SetupFile.Text <span class="o">=</span> <span class="s2">&#34;Successfully updated from another Runspace&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>,<span class="s2">&#34;Normal&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="c"># In the Runspace script block</span>
+</span></span><span class="line"><span class="cl"><span class="c"># txt_SetupFile is a WPF text box created in the parent session of the Runspace</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span><span class="p">.</span><span class="py">txt_SetupFile</span><span class="p">.</span><span class="py">Dispatcher</span><span class="p">.</span><span class="py">Invoke</span><span class="p">([</span><span class="no">action</span><span class="p">]{</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$UIControls</span><span class="p">.</span><span class="py">txt_SetupFile</span><span class="p">.</span><span class="py">Text</span> <span class="p">=</span> <span class="s2">&#34;Successfully updated from another Runspace&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">},</span><span class="s2">&#34;Normal&#34;</span><span class="p">)</span>
 </span></span></code></pre></div><h2 id="writing-to-the-same-log-file-from-separate-runspaces">Writing to the same log file from separate Runspaces</h2>
 <p>Runspaces also make it more complex to write to a single log file. There is potential for a deadlock or <a href="https://learn.microsoft.com/en-us/dotnet/standard/threading/managed-threading-best-practices#race-conditions">race condition</a> to occur. A <strong>Mutex</strong> is one way to implement the required locking:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1">### Example using a Mutex lock before writing to a log file ###</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example using a Mutex lock before writing to a log file ###</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># In the Runspace script block</span>
-</span></span><span class="line"><span class="cl"><span class="c1"># LogMutex is an arbitrary name but must be the same when used in any Runspace and the parent session</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$mtx</span> <span class="o">=</span> New-Object System.Threading.Mutex<span class="o">(</span><span class="nv">$false</span>, <span class="s2">&#34;LogMutex&#34;</span><span class="o">)</span> 
+</span></span><span class="line"><span class="cl"><span class="c"># In the Runspace script block</span>
+</span></span><span class="line"><span class="cl"><span class="c"># LogMutex is an arbitrary name but must be the same when used in any Runspace and the parent session</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$mtx</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="py">Threading</span><span class="p">.</span><span class="py">Mutex</span><span class="p">(</span><span class="vm">$false</span><span class="p">,</span> <span class="s2">&#34;LogMutex&#34;</span><span class="p">)</span> 
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">If <span class="o">(</span><span class="nv">$mtx</span>.WaitOne<span class="o">()){</span> <span class="c1"># Wait until this Runspace can get a lock on the LogMutex object</span>
+</span></span><span class="line"><span class="cl"><span class="k">If</span> <span class="p">(</span><span class="nv">$mtx</span><span class="p">.</span><span class="py">WaitOne</span><span class="p">()){</span> <span class="c"># Wait until this Runspace can get a lock on the LogMutex object</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="c1"># Lock obtained. Other Runspaces are now waiting</span>
-</span></span><span class="line"><span class="cl">    try<span class="o">{</span>
-</span></span><span class="line"><span class="cl">        Add-Content -Path <span class="nv">$logFile</span> -Value <span class="nv">$Message</span>  -ErrorAction Stop
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>finally<span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="o">[</span>void<span class="o">]</span><span class="nv">$mtx</span>.ReleaseMutex<span class="o">()</span> <span class="c1"># release the lock</span>
-</span></span><span class="line"><span class="cl">        <span class="nv">$mtx</span>.Dispose<span class="o">()</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span> 
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c"># Lock obtained. Other Runspaces are now waiting</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">Add-Content</span> <span class="n">-Path</span> <span class="nv">$logFile</span> <span class="n">-Value</span> <span class="nv">$Message</span>  <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span><span class="k">finally</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="no">void</span><span class="p">]</span><span class="nv">$mtx</span><span class="p">.</span><span class="py">ReleaseMutex</span><span class="p">()</span> <span class="c"># release the lock</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$mtx</span><span class="p">.</span><span class="py">Dispose</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> 
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h2 id="managing-runspace-lifecycle">Managing Runspace lifecycle</h2>
 <p>A Runspace executes its script block asynchronously and output (if any) is available at the end. The parent session must manage Runspaces, checking for completion, processing output and ultimately disposing of them.  If you don&rsquo;t dispose of Runspaces they will persist until the parent PowerShell session is closed and could eat-up memory.</p>
 <p>A <strong>Timer</strong> is a common way to manage Runspaces in an event-driven WPF script. When the Timer event fires, its script blocks checks for Runspace completion as in the example below. A thread safe collection is used to keep track of Runspaces until they are disposed of.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1">### Example Timer code to clean-up completed Runspaces ###</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example Timer code to clean-up completed Runspaces ###</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Create a collection to track Runspaces</span>
+</span></span><span class="line"><span class="cl"><span class="c"># Create a collection to track Runspaces</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nv">$PS</span> <span class="o">=</span> <span class="o">[</span>powershell<span class="o">]</span>::Create<span class="o">()</span>.AddScript<span class="o">(</span><span class="nv">$codeToRunInRunspace</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$handle</span> <span class="o">=</span> <span class="nv">$PS</span>.BeginInvoke<span class="o">()</span> <span class="c1"># Start the runspace</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$PS</span> <span class="p">=</span> <span class="p">[</span><span class="no">powershell</span><span class="p">]::</span><span class="n">Create</span><span class="p">().</span><span class="py">AddScript</span><span class="p">(</span><span class="nv">$codeToRunInRunspace</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$handle</span> <span class="p">=</span> <span class="nv">$PS</span><span class="p">.</span><span class="py">BeginInvoke</span><span class="p">()</span> <span class="c"># Start the runspace</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Add the new Runspace to the RunspaceJobs collection</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$RunspaceJobs</span> <span class="o">=</span> <span class="o">[</span>system.collections.arraylist<span class="o">]</span>::Synchronized<span class="o">((</span>New-Object System.Collections.ArrayList<span class="o">))</span>
-</span></span><span class="line"><span class="cl">try<span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="o">[</span>System.Threading.Monitor<span class="o">]</span>::Enter<span class="o">(</span><span class="nv">$RunspaceJobs</span>.SyncRoot<span class="o">)</span> <span class="c1"># lock</span>
-</span></span><span class="line"><span class="cl">    <span class="nv">$RunspaceJobs</span>.Add<span class="o">([</span>PSCustomObject<span class="o">]</span>@<span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nv">powerShell</span> <span class="o">=</span> <span class="nv">$PS</span>  <span class="c1"># System.Management.Automation.PowerShell object</span>
-</span></span><span class="line"><span class="cl">        <span class="nv">runspace</span> <span class="o">=</span> <span class="nv">$handle</span> <span class="c1"># System.Management.Automation.PowerShellAsyncResult Object</span>
-</span></span><span class="line"><span class="cl">    <span class="o">})</span> <span class="p">|</span> Out-Null
-</span></span><span class="line"><span class="cl"><span class="o">}</span>finally<span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="o">[</span>System.Threading.Monitor<span class="o">]</span>::Exit<span class="o">(</span><span class="nv">$RunspaceJobs</span>.SyncRoot<span class="o">)</span> <span class="c1"># unlock</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="c"># Add the new Runspace to the RunspaceJobs collection</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$RunspaceJobs</span> <span class="p">=</span> <span class="p">[</span><span class="no">system.collections.arraylist</span><span class="p">]::</span><span class="n">Synchronized</span><span class="p">((</span><span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="py">Collections</span><span class="p">.</span><span class="n">ArrayList</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="k">try</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="no">System.Threading.Monitor</span><span class="p">]::</span><span class="n">Enter</span><span class="p">(</span><span class="nv">$RunspaceJobs</span><span class="p">.</span><span class="n">SyncRoot</span><span class="p">)</span> <span class="c"># lock</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$RunspaceJobs</span><span class="p">.</span><span class="py">Add</span><span class="p">([</span><span class="no">PSCustomObject</span><span class="p">]</span><span class="vm">@</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">powerShell</span> <span class="p">=</span> <span class="nv">$PS</span>  <span class="c"># System.Management.Automation.PowerShell object</span>
+</span></span><span class="line"><span class="cl">        <span class="n">runspace</span> <span class="p">=</span> <span class="nv">$handle</span> <span class="c"># System.Management.Automation.PowerShellAsyncResult Object</span>
+</span></span><span class="line"><span class="cl">    <span class="p">})</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span><span class="k">finally</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="no">System.Threading.Monitor</span><span class="p">]::</span><span class="n">Exit</span><span class="p">(</span><span class="nv">$RunspaceJobs</span><span class="p">.</span><span class="n">SyncRoot</span><span class="p">)</span> <span class="c"># unlock</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Timer to manage Runspace lifecycle</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$RunspaceCleanupTimer</span> <span class="o">=</span> New-Object System.Windows.Forms.Timer
-</span></span><span class="line"><span class="cl"><span class="nv">$RunspaceCleanupTimer</span>.Enabled <span class="o">=</span> <span class="nv">$true</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$RunspaceCleanupTimer</span>.Interval <span class="o">=</span> <span class="m">5000</span>  <span class="c1"># Timer code runs every 5 seconds</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$RunspaceCleanupTimer</span>.Add_Tick<span class="o">({</span>
-</span></span><span class="line"><span class="cl">    <span class="c1"># In the timer code</span>
-</span></span><span class="line"><span class="cl">    Foreach<span class="o">(</span><span class="nv">$job</span> in <span class="nv">$Script</span>:RunspaceJobs<span class="o">){</span>
+</span></span><span class="line"><span class="cl"><span class="c"># Timer to manage Runspace lifecycle</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$RunspaceCleanupTimer</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="py">Windows</span><span class="p">.</span><span class="py">Forms</span><span class="p">.</span><span class="py">Timer</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$RunspaceCleanupTimer</span><span class="p">.</span><span class="py">Enabled</span> <span class="p">=</span> <span class="vm">$true</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$RunspaceCleanupTimer</span><span class="p">.</span><span class="py">Interval</span> <span class="p">=</span> <span class="mf">5000</span>  <span class="c"># Timer code runs every 5 seconds</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$RunspaceCleanupTimer</span><span class="p">.</span><span class="py">Add_Tick</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="c"># In the timer code</span>
+</span></span><span class="line"><span class="cl">    <span class="k">Foreach</span><span class="p">(</span><span class="nv">$job</span> <span class="k">in</span> <span class="nv">$Script:RunspaceJobs</span><span class="p">){</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="o">(</span><span class="nv">$job</span>.runspace.IsCompleted -eq <span class="nv">$True</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="nv">$job</span><span class="p">.</span><span class="py">runspace</span><span class="p">.</span><span class="py">IsCompleted</span> <span class="o">-eq</span> <span class="vm">$True</span><span class="p">){</span>
 </span></span><span class="line"><span class="cl">           
-</span></span><span class="line"><span class="cl">           <span class="c1"># Capture completed Runspace output and dispose of it to free-up memory</span>
-</span></span><span class="line"><span class="cl">            try<span class="o">{</span>
-</span></span><span class="line"><span class="cl">                <span class="nv">$RSOutput</span> <span class="o">=</span> <span class="nv">$job</span>.powerShell.EndInvoke<span class="o">(</span><span class="nv">$job</span>.runspace<span class="o">)</span>
-</span></span><span class="line"><span class="cl">                <span class="nv">$job</span>.powerShell.runspace.Dispose<span class="o">()</span>
+</span></span><span class="line"><span class="cl">           <span class="c"># Capture completed Runspace output and dispose of it to free-up memory</span>
+</span></span><span class="line"><span class="cl">            <span class="k">try</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$RSOutput</span> <span class="p">=</span> <span class="nv">$job</span><span class="p">.</span><span class="py">powerShell</span><span class="p">.</span><span class="py">EndInvoke</span><span class="p">(</span><span class="nv">$job</span><span class="p">.</span><span class="n">runspace</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$job</span><span class="p">.</span><span class="py">powerShell</span><span class="p">.</span><span class="py">runspace</span><span class="p">.</span><span class="py">Dispose</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">                
-</span></span><span class="line"><span class="cl">                <span class="c1"># Remove the job from the tracking collection</span>
-</span></span><span class="line"><span class="cl">                try<span class="o">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="o">[</span>System.Threading.Monitor<span class="o">]</span>::Enter<span class="o">(</span><span class="nv">$Script</span>:RunspaceJobs.SyncRoot<span class="o">)</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Script</span>:RunspaceJobs.Remove<span class="o">(</span><span class="nv">$job</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl">                <span class="o">}</span>finally<span class="o">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="o">[</span>System.Threading.Monitor<span class="o">]</span>::Exit<span class="o">(</span><span class="nv">$Script</span>:RunspaceJobs.SyncRoot<span class="o">)</span>
-</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                <span class="c"># Remove the job from the tracking collection</span>
+</span></span><span class="line"><span class="cl">                <span class="k">try</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">[</span><span class="no">System.Threading.Monitor</span><span class="p">]::</span><span class="n">Enter</span><span class="p">(</span><span class="nv">$Script:RunspaceJobs</span><span class="p">.</span><span class="n">SyncRoot</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$Script:RunspaceJobs</span><span class="p">.</span><span class="py">Remove</span><span class="p">(</span><span class="nv">$job</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span><span class="k">finally</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">[</span><span class="no">System.Threading.Monitor</span><span class="p">]::</span><span class="n">Exit</span><span class="p">(</span><span class="nv">$Script:RunspaceJobs</span><span class="p">.</span><span class="n">SyncRoot</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="o">}</span>catch<span class="o">{</span>
-</span></span><span class="line"><span class="cl">                Write-Host <span class="s2">&#34;Runspace disposal Failed &#39;</span><span class="nv">$_</span><span class="s2">&#39;&#34;</span>
-</span></span><span class="line"><span class="cl">            <span class="o">}</span>
-</span></span><span class="line"><span class="cl">        <span class="o">}</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span><span class="c1">#foreach</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span><span class="k">catch</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">Write-Host</span> <span class="s2">&#34;Runspace disposal Failed &#39;</span><span class="nv">$_</span><span class="s2">&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span><span class="c">#foreach</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="o">})</span><span class="c1">#End of timer scriptblock</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span><span class="c">#End of timer scriptblock</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nv">$RunspaceCleanupTimer</span>.Start<span class="o">()</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$RunspaceCleanupTimer</span><span class="p">.</span><span class="py">Start</span><span class="p">()</span>
 </span></span></code></pre></div><h2 id="capturing-verbose-warning-and-error-streams-from-a-runspace">Capturing Verbose, Warning and Error streams from a Runspace</h2>
 <p>By default, the Runspace output streams are not displayed in the parent session console and are lost when the Runspace is disposed.<br>
 The output can be captured at Runspace completion using the <strong>Streams</strong> object. The modification below to the Timer script block saves the output to a log file.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1">#### Modified Timer code to capture additional output streams at clean-up ####</span>
-</span></span><span class="line"><span class="cl">Foreach<span class="o">(</span><span class="nv">$job</span> in <span class="nv">$Global</span>:BackgroundJobs<span class="o">){</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">#### Modified Timer code to capture additional output streams at clean-up ####</span>
+</span></span><span class="line"><span class="cl"><span class="k">Foreach</span><span class="p">(</span><span class="nv">$job</span> <span class="k">in</span> <span class="nv">$Global:BackgroundJobs</span><span class="p">){</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="o">(</span><span class="nv">$job</span>.runspace.IsCompleted -eq <span class="nv">$True</span><span class="o">){</span>
-</span></span><span class="line"><span class="cl">        Write-TxtLog <span class="s2">&#34;Runspace &#39;</span><span class="k">$(</span><span class="nv">$job</span>.powershell.runspace.name<span class="k">)</span><span class="s2">&#39; completed...&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="nv">$job</span><span class="p">.</span><span class="py">runspace</span><span class="p">.</span><span class="py">IsCompleted</span> <span class="o">-eq</span> <span class="vm">$True</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">Write-TxtLog</span> <span class="s2">&#34;Runspace &#39;</span><span class="p">$(</span><span class="nv">$job</span><span class="p">.</span><span class="py">powershell</span><span class="p">.</span><span class="py">runspace</span><span class="p">.</span><span class="n">name</span><span class="p">)</span><span class="s2">&#39; completed...&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="c1"># Could also include &#39;DEBUG&#39; and &#39;Information&#39; streams if used in your Runspaces</span>
-</span></span><span class="line"><span class="cl">        <span class="nv">$Streams</span> <span class="o">=</span> @<span class="o">{</span>
-</span></span><span class="line"><span class="cl">            <span class="s1">&#39;Verbose&#39;</span><span class="o">=</span><span class="s1">&#39;VERBOSE&#39;</span>
-</span></span><span class="line"><span class="cl">            <span class="s1">&#39;Warning&#39;</span><span class="o">=</span><span class="s1">&#39;WARN&#39;</span>
-</span></span><span class="line"><span class="cl">            <span class="s1">&#39;Error&#39;</span><span class="o">=</span><span class="s1">&#39;ERROR&#39;</span>
-</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="c"># Could also include &#39;DEBUG&#39; and &#39;Information&#39; streams if used in your Runspaces</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$Streams</span> <span class="p">=</span> <span class="vm">@</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;Verbose&#39;</span><span class="p">=</span><span class="s1">&#39;VERBOSE&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;Warning&#39;</span><span class="p">=</span><span class="s1">&#39;WARN&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;Error&#39;</span><span class="p">=</span><span class="s1">&#39;ERROR&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        Foreach<span class="o">(</span><span class="nv">$StreamType</span> in <span class="nv">$Streams</span>.Keys<span class="o">){</span>                        
-</span></span><span class="line"><span class="cl">            <span class="nv">$StreamOutput</span> <span class="o">=</span> <span class="nv">$job</span>.powershell.Streams.<span class="s2">&#34;</span><span class="nv">$StreamType</span><span class="s2">&#34;</span>  <span class="c1"># Capture the Runspace output for each stream</span>
-</span></span><span class="line"><span class="cl">            <span class="k">if</span><span class="o">(</span><span class="nv">$StreamOutput</span><span class="o">){</span>
-</span></span><span class="line"><span class="cl">                <span class="nv">$StreamOutput</span> <span class="p">|</span> Foreach-Object <span class="o">{</span> Write-TxtLog <span class="nv">$_</span> -indent <span class="m">2</span> -severity <span class="k">$(</span><span class="nv">$Streams</span><span class="o">[</span><span class="nv">$StreamType</span><span class="o">]</span><span class="k">)</span> <span class="o">}</span>
-</span></span><span class="line"><span class="cl">            <span class="o">}</span>
-</span></span><span class="line"><span class="cl">            Remove-Variable -name <span class="s1">&#39;StreamOutput&#39;</span> -force -ErrorAction SilentlyContinue
-</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">Foreach</span><span class="p">(</span><span class="nv">$StreamType</span> <span class="k">in</span> <span class="nv">$Streams</span><span class="p">.</span><span class="n">Keys</span><span class="p">){</span>                        
+</span></span><span class="line"><span class="cl">            <span class="nv">$StreamOutput</span> <span class="p">=</span> <span class="nv">$job</span><span class="p">.</span><span class="py">powershell</span><span class="p">.</span><span class="py">Streams</span><span class="p">.</span><span class="s2">&#34;</span><span class="nv">$StreamType</span><span class="s2">&#34;</span>  <span class="c"># Capture the Runspace output for each stream</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span><span class="p">(</span><span class="nv">$StreamOutput</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$StreamOutput</span> <span class="p">|</span> <span class="nb">Foreach-Object</span> <span class="p">{</span> <span class="nb">Write-TxtLog</span> <span class="nv">$_</span> <span class="n">-indent</span> <span class="mf">2</span> <span class="n">-severity</span> <span class="vm">$</span><span class="p">(</span><span class="nv">$Streams</span><span class="p">[</span><span class="nv">$StreamType</span><span class="p">])</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">Remove-Variable</span> <span class="n">-name</span> <span class="s1">&#39;StreamOutput&#39;</span> <span class="n">-force</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        Write-TxtLog <span class="s2">&#34;Disposing of runspace...&#34;</span> -indent <span class="m">1</span>
-</span></span><span class="line"><span class="cl">        try<span class="o">{</span>
-</span></span><span class="line"><span class="cl">            <span class="nv">$RSOutput</span> <span class="o">=</span> <span class="nv">$job</span>.powerShell.EndInvoke<span class="o">(</span><span class="nv">$job</span>.runspace<span class="o">)</span>
-</span></span><span class="line"><span class="cl">            <span class="nv">$job</span>.powerShell.runspace.Dispose<span class="o">()</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">Write-TxtLog</span> <span class="s2">&#34;Disposing of runspace...&#34;</span> <span class="n">-indent</span> <span class="mf">1</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$RSOutput</span> <span class="p">=</span> <span class="nv">$job</span><span class="p">.</span><span class="py">powerShell</span><span class="p">.</span><span class="py">EndInvoke</span><span class="p">(</span><span class="nv">$job</span><span class="p">.</span><span class="n">runspace</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$job</span><span class="p">.</span><span class="py">powerShell</span><span class="p">.</span><span class="py">runspace</span><span class="p">.</span><span class="py">Dispose</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">            
-</span></span><span class="line"><span class="cl">            <span class="c1"># Remove the job from the tracking list</span>
-</span></span><span class="line"><span class="cl">            try<span class="o">{</span>
-</span></span><span class="line"><span class="cl">                <span class="o">[</span>System.Threading.Monitor<span class="o">]</span>::Enter<span class="o">(</span><span class="nv">$Global</span>:BackgroundJobs.SyncRoot<span class="o">)</span>
-</span></span><span class="line"><span class="cl">                <span class="nv">$Global</span>:BackgroundJobs.Remove<span class="o">(</span><span class="nv">$job</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl">            <span class="o">}</span>finally<span class="o">{</span>
-</span></span><span class="line"><span class="cl">                <span class="o">[</span>System.Threading.Monitor<span class="o">]</span>::Exit<span class="o">(</span><span class="nv">$Global</span>:BackgroundJobs.SyncRoot<span class="o">)</span>
-</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="c"># Remove the job from the tracking list</span>
+</span></span><span class="line"><span class="cl">            <span class="k">try</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="p">[</span><span class="no">System.Threading.Monitor</span><span class="p">]::</span><span class="n">Enter</span><span class="p">(</span><span class="nv">$Global:BackgroundJobs</span><span class="p">.</span><span class="n">SyncRoot</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$Global:BackgroundJobs</span><span class="p">.</span><span class="py">Remove</span><span class="p">(</span><span class="nv">$job</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span><span class="k">finally</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="p">[</span><span class="no">System.Threading.Monitor</span><span class="p">]::</span><span class="n">Exit</span><span class="p">(</span><span class="nv">$Global:BackgroundJobs</span><span class="p">.</span><span class="n">SyncRoot</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="o">}</span>catch<span class="o">{</span>
-</span></span><span class="line"><span class="cl">            Write-TxtLog <span class="s2">&#34;Failed &#39;</span><span class="nv">$_</span><span class="s2">&#39;&#34;</span> -indent <span class="m">2</span> -severity ERROR
-</span></span><span class="line"><span class="cl">        <span class="o">}</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span><span class="c1">#foreach</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span><span class="k">catch</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">Write-TxtLog</span> <span class="s2">&#34;Failed &#39;</span><span class="nv">$_</span><span class="s2">&#39;&#34;</span> <span class="n">-indent</span> <span class="mf">2</span> <span class="n">-severity</span> <span class="n">ERROR</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span><span class="c">#foreach</span>
 </span></span></code></pre></div><h2 id="displaying-verbose-warning-and-error-streams-in-the-console">Displaying Verbose, Warning and Error Streams in the console</h2>
 <p>The approach above captures output when the Runspace code has completed. If you want feedback in the console during execution there are a couple of methods.</p>
 <p>Firstly, the simplest option is to use the <strong>.NET Console.Writeline()</strong> method. Although this doesn&rsquo;t capture the PowerShell streams, it is a simple way to provide real-time console output in the parent session.<br>
 You will need to implement your own colour-coding to distinguish between warnings or errors if needed.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1">### Example Runspace code to write to parent PowerShell console ###</span>
-</span></span><span class="line"><span class="cl"><span class="o">[</span>console<span class="o">]</span>::ForegroundColor<span class="o">=</span><span class="s1">&#39;YELLOW&#39;</span>
-</span></span><span class="line"><span class="cl"><span class="o">[</span>Console<span class="o">]</span>::WriteLine<span class="o">(</span><span class="s1">&#39;Username was not found&#39;</span><span class="o">)</span>  <span class="c1"># Automatically writes to the parent session</span>
-</span></span><span class="line"><span class="cl"><span class="o">[</span>console<span class="o">]</span>::ResetColor<span class="o">()</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example Runspace code to write to parent PowerShell console ###</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="no">console</span><span class="p">]::</span><span class="n">ForegroundColor</span><span class="p">=</span><span class="s1">&#39;YELLOW&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="no">Console</span><span class="p">]::</span><span class="n">WriteLine</span><span class="p">(</span><span class="s1">&#39;Username was not found&#39;</span><span class="p">)</span>  <span class="c"># Automatically writes to the parent session</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="no">console</span><span class="p">]::</span><span class="n">ResetColor</span><span class="p">()</span>
 </span></span></code></pre></div><p>Alternatively, you could pass the built-in $Host variable from the parent session into the Runspace and use methods like WriteVerboseLine() as shown below.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1">### Example writing to parent console using the $Host variable </span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example writing to parent console using the $Host variable </span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Parent session code</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span> <span class="o">=</span> <span class="o">[</span>runspacefactory<span class="o">]</span>::CreateRunspace<span class="o">(</span><span class="nv">$initialSessionState</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span>.Open<span class="o">()</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span>.SessionStateProxy.SetVariable<span class="o">(</span><span class="s1">&#39;ParentHost&#39;</span>,<span class="nv">$Host</span><span class="o">)</span>  <span class="c1"># Built-in host variable passed into the Runspace as $ParentHost</span>
+</span></span><span class="line"><span class="cl"><span class="c"># Parent session code</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span> <span class="p">=</span> <span class="p">[</span><span class="no">runspacefactory</span><span class="p">]::</span><span class="n">CreateRunspace</span><span class="p">(</span><span class="nv">$initialSessionState</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span><span class="p">.</span><span class="py">Open</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span><span class="p">.</span><span class="py">SessionStateProxy</span><span class="p">.</span><span class="py">SetVariable</span><span class="p">(</span><span class="s1">&#39;ParentHost&#39;</span><span class="p">,</span><span class="nv">$Host</span><span class="p">)</span>  <span class="c"># Built-in host variable passed into the Runspace as $ParentHost</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># Write to the parent console from the Runspace script block</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$ParentHost</span>.ui.WriteVerboseLine<span class="o">(</span><span class="s2">&#34;Realtime verbose output from Runspace in parent console&#34;</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$ParentHost</span>.UI.WriteWarningLine<span class="o">(</span><span class="s2">&#34;Realtime warning output from Runspace in parent console&#34;</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="nv">$ParentHost</span>.UI.WriteErrorLine<span class="o">(</span><span class="s2">&#34;Realtime error output from Runspace in parent console&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="c"># Write to the parent console from the Runspace script block</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$ParentHost</span><span class="p">.</span><span class="py">ui</span><span class="p">.</span><span class="py">WriteVerboseLine</span><span class="p">(</span><span class="s2">&#34;Realtime verbose output from Runspace in parent console&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$ParentHost</span><span class="p">.</span><span class="py">UI</span><span class="p">.</span><span class="py">WriteWarningLine</span><span class="p">(</span><span class="s2">&#34;Realtime warning output from Runspace in parent console&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$ParentHost</span><span class="p">.</span><span class="py">UI</span><span class="p">.</span><span class="py">WriteErrorLine</span><span class="p">(</span><span class="s2">&#34;Realtime error output from Runspace in parent console&#34;</span><span class="p">)</span>
 </span></span></code></pre></div><p>See the <a href="https://github.com/gbdixg/Show-Win32AppUI">Show-Win32AppUI tool</a> for an example of using these ideas together in a WPF app.</p>
 <p>See <a href="/2023/03/21/PowerShellWPFPt2/">part2 of this series</a> for information on WPF controls, events and XAML.</p>
 <p><br/><br/></p>
@@ -521,11 +521,11 @@ You will need to implement your own colour-coding to distinguish between warning
 <h1 id="setup">SETUP</h1>
 <h2 id="modules">Modules</h2>
 <p><em>Show-Win32AppUI</em> depends on two PowerShell modules. Install these modules if you don&rsquo;t already have them.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">Install-Module -Name MSAL.PS
-</span></span><span class="line"><span class="cl">Install-Module -Name IntuneWin32App
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">MSAL</span><span class="p">.</span><span class="nb">PS
+</span></span></span><span class="line"><span class="cl"><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">IntuneWin32App</span>
 </span></span></code></pre></div><p>The most recent tested versions are listed below:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">Install-Module -Name MSAL.PS -RequiredVersion 4.37.0.0
-</span></span><span class="line"><span class="cl">Install-Module -Name IntuneWin32App -RequiredVersion 1.4.0
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">MSAL</span><span class="p">.</span><span class="nb">PS </span><span class="n">-RequiredVersion</span> <span class="mf">4.37</span><span class="p">.</span><span class="py">0</span><span class="p">.</span><span class="py">0</span>
+</span></span><span class="line"><span class="cl"><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">IntuneWin32App</span> <span class="n">-RequiredVersion</span> <span class="mf">1.4</span><span class="p">.</span><span class="py">0</span>
 </span></span></code></pre></div><h2 id="tenant-id">Tenant ID</h2>
 <p>Update the $TenantID on line 4 of <em>Show-Win32AppUI.ps1</em> to use your required Azure tenant. Your tenant ID is available from the <a href="https://aad.portal.azure.com/">Azure AD portal</a> <em>Overview</em> page.</p>
 <h2 id="azure-client-app">Azure Client App</h2>
@@ -558,14 +558,14 @@ Whether you use a custom app or Microsoft Graph PowerShell, the app must be conf
 <p>The tool does not need administrative access to the client workstation. Internet access is required, to download the <a href="https://github.com/Microsoft/Microsoft-Win32-Content-Prep-Tool">Win32 Content Prep tool</a> on first use.</p>
 <h2 id="powershell-script-execution">PowerShell script execution</h2>
 <p>PowerShell script execution is disabled on Windows clients by default. Use one of the methods below to allow script execution on the workstation.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">set-executionpolicy Unrestricted
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">set-executionpolicy</span> <span class="n">Unrestricted</span>
 </span></span></code></pre></div><p>or</p>
 <pre tabindex="0"><code class="language-CMD" data-lang="CMD">powershell -executionpolicy bypass -file &lt;path to script&gt;
 </code></pre><h1 id="launch-the-tool">Launch the tool</h1>
 <p>Start a PowerShell 5.1 or Pwsh 7.x console and execute the script as follows:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">.<span class="se">\S</span>how-Win32AppUI.ps1
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="p">.\</span><span class="nb">Show-Win32AppUI</span><span class="p">.</span><span class="py">ps1</span>
 </span></span></code></pre></div><p>To show debug information in the console add the <em>WriteHost</em> switch:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">.<span class="se">\S</span>how-Win32AppUI.ps1 -WriteHost
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="p">.\</span><span class="nb">Show-Win32AppUI</span><span class="p">.</span><span class="py">ps1</span> <span class="n">-WriteHost</span>
 </span></span></code></pre></div><h1 id="using-the-tool">Using the tool</h1>
 <table>
   <tr>
@@ -615,7 +615,7 @@ Whether you use a custom app or Microsoft Graph PowerShell, the app must be conf
 <h1 id="troubleshooting">Troubleshooting</h1>
 <p>The tool creates a debug log on every run with detailed information and error messages. The default LogFolder is C:\Temp, but can be modified on Line 8 of Show-Win32AppUI.ps1.</p>
 <p>The -WriteHost switch will also show the debug output in the console.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">.<span class="se">\S</span>how-Win32AppUI.ps1 -writehost
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="p">.\</span><span class="nb">Show-Win32AppUI</span><span class="p">.</span><span class="py">ps1</span> <span class="n">-writehost</span>
 </span></span></code></pre></div><p><img loading="lazy" src="/img/Win32AppUI-WriteHost.png" alt="WriteHost"  />
 </p>
 <h1 id="options">Options</h1>
@@ -660,136 +660,136 @@ Whether you use a custom app or Microsoft Graph PowerShell, the app must be conf
 <p>The PowerShell <strong>Get-Winevent</strong> command can work against remote event logs, but it can be painfully slow over the network. Copying an entire exported log (.evtx file) across the same connection is much faster. Get-Winevent can still be used with the <em>-path</em> parameter to query the locally copied .evtx file.</p>
 <h2 id="powershell-script">PowerShell Script</h2>
 <p><strong>wevtutil.exe</strong> is Windows .exe that can export event logs.  The PowerShell function below uses wevtutil to export one ore more event logs and copy them locally. The computer name is pre-pended to the log name.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">Function Export-EventLog <span class="o">{</span>
-</span></span><span class="line"><span class="cl">	&lt;<span class="c1">#</span>
-</span></span><span class="line"><span class="cl">		.SYNOPSIS
-</span></span><span class="line"><span class="cl">			Exports a remote event log to a file.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="kd">Function</span><span class="w"> </span><span class="nb">Export-EventLog</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="cm">&lt;#
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">SYNOPSIS</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			Exports a remote event log to a file.
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">DESCRIPTION</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			Uses wevtutil.exe to perform the export on the remote computer
+</span></span></span><span class="line"><span class="cl"><span class="cm">			The log(s) are saved to c:\Windows\Temp and then moved over the network to the local computer
+</span></span></span><span class="line"><span class="cl"><span class="cm">			The resulting log file is $Path\$computername-$logname.evtx
+</span></span></span><span class="line"><span class="cl"><span class="cm">			The file can then be opened in Windows Event Viewer or queried directly using &#34;Get-Winevent -Path....&#34;
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			The remote computer must be online and the Windows Firewall must allow inbound RPC and SMB connections
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.PARAMETER  Computername
+</span></span></span><span class="line"><span class="cl"><span class="cm">			The name of the remote computer.
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.PARAMETER  Logname
+</span></span></span><span class="line"><span class="cl"><span class="cm">			The name(s) of the log file to export.
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.PARAMETER  Path
+</span></span></span><span class="line"><span class="cl"><span class="cm">			The local folder path where the output file will be saved
+</span></span></span><span class="line"><span class="cl"><span class="cm">			Default = %TEMP%
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.PARAMETER  RemotePath
+</span></span></span><span class="line"><span class="cl"><span class="cm">			The remote folder path used to stage the exported file prior to moving it to the local folder path.
+</span></span></span><span class="line"><span class="cl"><span class="cm">			Environment variables are not supported.
+</span></span></span><span class="line"><span class="cl"><span class="cm">			Default = C:\Windows\Temp
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			PS C:\&gt; Export-EventLog -Computername &#34;PC654321&#34;
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			This command will export the System and Application event logs from the remote computer PC654321
+</span></span></span><span class="line"><span class="cl"><span class="cm">			The logs will be exported to c:\windows\temp on the remote computer then moved to
+</span></span></span><span class="line"><span class="cl"><span class="cm">			c:\temp on the local computer
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			PS C:\&gt; Export-EventLog -Computername &#34;PC654321&#34; -LogName &#34;System&#34;,&#34;Security&#34;
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			This command will export the System and Security event logs from the remote computer PC654321
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			PS C:\&gt; &#34;PC654321&#34; | Export-EventLog -LogName &#34;Application&#34;,&#34;Security&#34;
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			This command will export the Application and Security event logs from the remote computer PC654321
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			PS C:\&gt; Get-Winevent -Computername $Computer -Listlog * -EA 0 | Where{$_.RecordCount -gt 0} | Export-EventLog -Computername $Computer
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			This command will export all the event logs from the remote computer represented by the $computer variable
+</span></span></span><span class="line"><span class="cl"><span class="cm">		.</span><span class="sd">NOTES</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">			Version: 1.0
+</span></span></span><span class="line"><span class="cl"><span class="cm">	#&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">[</span><span class="nb">CmdletBinding</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">param</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="nb">parameter</span><span class="p">(</span><span class="na">position</span> <span class="p">=</span> <span class="mf">0</span><span class="p">,</span> <span class="na">valuefromPipeline</span> <span class="p">=</span> <span class="vm">$true</span><span class="p">,</span> <span class="na">valuefrompipelinebypropertyname</span> <span class="p">=</span> <span class="vm">$true</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="no">string[]</span><span class="p">]</span><span class="nv">$Computername</span> <span class="p">=</span> <span class="nv">$Env:COMPUTERNAME</span>
+</span></span><span class="line"><span class="cl">		<span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="nb">parameter</span><span class="p">(</span><span class="na">position</span> <span class="p">=</span> <span class="mf">1</span><span class="p">,</span> <span class="na">valuefrompipelinebypropertyname</span> <span class="p">=</span> <span class="vm">$true</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="no">string[]</span><span class="p">]</span><span class="nv">$LogName</span> <span class="p">=</span> <span class="vm">@</span><span class="p">(</span><span class="s2">&#34;System&#34;</span><span class="p">,</span> <span class="s2">&#34;Application&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="nb">parameter</span><span class="p">(</span><span class="na">position</span> <span class="p">=</span> <span class="mf">2</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="nb">ValidateScript</span><span class="p">(</span> <span class="p">{</span> <span class="nb">Test-Path</span> <span class="nv">$_</span> <span class="n">-PathType</span> <span class="s1">&#39;Container&#39;</span> <span class="p">})]</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="no">string</span><span class="p">]</span><span class="nv">$Path</span> <span class="p">=</span> <span class="nv">$ENV:TEMP</span>
+</span></span><span class="line"><span class="cl">		<span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="nb">parameter</span><span class="p">(</span><span class="na">position</span> <span class="p">=</span> <span class="mf">3</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">		<span class="p">[</span><span class="no">string</span><span class="p">]</span><span class="nv">$RemotePath</span> <span class="p">=</span> <span class="s2">&#34;C:\Windows\Temp&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">PROCESS</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">Foreach</span> <span class="p">(</span><span class="nv">$Name</span> <span class="k">in</span> <span class="nv">$Computername</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nb">Write-Progress</span> <span class="n">-id</span> <span class="mf">1</span> <span class="n">-Activity</span> <span class="s2">&#34;Computer &#34;</span> <span class="n">-Status</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">		.DESCRIPTION
-</span></span><span class="line"><span class="cl">			Uses wevtutil.exe to perform the <span class="nb">export</span> on the remote computer
-</span></span><span class="line"><span class="cl">			The log<span class="o">(</span>s<span class="o">)</span> are saved to c:<span class="se">\W</span>indows<span class="se">\T</span>emp and <span class="k">then</span> moved over the network to the <span class="nb">local</span> computer
-</span></span><span class="line"><span class="cl">			The resulting log file is <span class="nv">$Path</span><span class="se">\$</span>computername-<span class="nv">$logname</span>.evtx
-</span></span><span class="line"><span class="cl">			The file can <span class="k">then</span> be opened in Windows Event Viewer or queried directly using <span class="s2">&#34;Get-Winevent -Path....&#34;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">If</span> <span class="p">(</span><span class="nb">Test-Connection</span> <span class="n">-ComputerName</span> <span class="nv">$Name</span> <span class="n">-Count</span> <span class="mf">1</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nv">$LogName</span> <span class="p">|</span> <span class="nb">ForEach-Object</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$Log</span> <span class="p">=</span> <span class="nv">$_</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			The remote computer must be online and the Windows Firewall must allow inbound RPC and SMB connections
-</span></span><span class="line"><span class="cl">		.PARAMETER  Computername
-</span></span><span class="line"><span class="cl">			The name of the remote computer.
-</span></span><span class="line"><span class="cl">		.PARAMETER  Logname
-</span></span><span class="line"><span class="cl">			The name<span class="o">(</span>s<span class="o">)</span> of the log file to export.
-</span></span><span class="line"><span class="cl">		.PARAMETER  Path
-</span></span><span class="line"><span class="cl">			The <span class="nb">local</span> folder path where the output file will be saved
-</span></span><span class="line"><span class="cl">			<span class="nv">Default</span> <span class="o">=</span> %TEMP%
-</span></span><span class="line"><span class="cl">		.PARAMETER  RemotePath
-</span></span><span class="line"><span class="cl">			The remote folder path used to stage the exported file prior to moving it to the <span class="nb">local</span> folder path.
-</span></span><span class="line"><span class="cl">			Environment variables are not supported.
-</span></span><span class="line"><span class="cl">			<span class="nv">Default</span> <span class="o">=</span> C:<span class="se">\W</span>indows<span class="se">\T</span>emp
-</span></span><span class="line"><span class="cl">		.EXAMPLE
-</span></span><span class="line"><span class="cl">			PS C:<span class="se">\&gt;</span> Export-EventLog -Computername <span class="s2">&#34;PC654321&#34;</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">PSObject</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Computername</span><span class="p">,</span> <span class="n">LogName</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">Result</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span><span class="p">.</span><span class="py">Computername</span> <span class="p">=</span> <span class="nv">$Name</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span><span class="p">.</span><span class="py">LogName</span> <span class="p">=</span> <span class="nv">$Log</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			This <span class="nb">command</span> will <span class="nb">export</span> the System and Application event logs from the remote computer PC654321
-</span></span><span class="line"><span class="cl">			The logs will be exported to c:<span class="se">\w</span>indows<span class="se">\t</span>emp on the remote computer <span class="k">then</span> moved to
-</span></span><span class="line"><span class="cl">			c:<span class="se">\t</span>emp on the <span class="nb">local</span> computer
-</span></span><span class="line"><span class="cl">		.EXAMPLE
-</span></span><span class="line"><span class="cl">			PS C:<span class="se">\&gt;</span> Export-EventLog -Computername <span class="s2">&#34;PC654321&#34;</span> -LogName <span class="s2">&#34;System&#34;</span>,<span class="s2">&#34;Security&#34;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			This <span class="nb">command</span> will <span class="nb">export</span> the System and Security event logs from the remote computer PC654321
-</span></span><span class="line"><span class="cl">		.EXAMPLE
-</span></span><span class="line"><span class="cl">			PS C:<span class="se">\&gt;</span> <span class="s2">&#34;PC654321&#34;</span> <span class="p">|</span> Export-EventLog -LogName <span class="s2">&#34;Application&#34;</span>,<span class="s2">&#34;Security&#34;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			This <span class="nb">command</span> will <span class="nb">export</span> the Application and Security event logs from the remote computer PC654321
-</span></span><span class="line"><span class="cl">		.EXAMPLE
-</span></span><span class="line"><span class="cl">			PS C:<span class="se">\&gt;</span> Get-Winevent -Computername <span class="nv">$Computer</span> -Listlog * -EA <span class="m">0</span> <span class="p">|</span> Where<span class="o">{</span><span class="nv">$_</span>.RecordCount -gt 0<span class="o">}</span> <span class="p">|</span> Export-EventLog -Computername <span class="nv">$Computer</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			This <span class="nb">command</span> will <span class="nb">export</span> all the event logs from the remote computer represented by the <span class="nv">$computer</span> variable
-</span></span><span class="line"><span class="cl">		.NOTES
-</span></span><span class="line"><span class="cl">			Version: 1.0
-</span></span><span class="line"><span class="cl">	<span class="c1">#&gt;</span>
-</span></span><span class="line"><span class="cl">	<span class="o">[</span>CmdletBinding<span class="o">()]</span>
-</span></span><span class="line"><span class="cl">	param<span class="o">(</span>
-</span></span><span class="line"><span class="cl">		<span class="o">[</span>parameter<span class="o">(</span><span class="nv">position</span> <span class="o">=</span> 0, <span class="nv">valuefromPipeline</span> <span class="o">=</span> <span class="nv">$true</span>, <span class="nv">valuefrompipelinebypropertyname</span> <span class="o">=</span> <span class="nv">$true</span><span class="o">)]</span>
-</span></span><span class="line"><span class="cl">		<span class="o">[</span>string<span class="o">[]]</span><span class="nv">$Computername</span> <span class="o">=</span> <span class="nv">$Env</span>:COMPUTERNAME
-</span></span><span class="line"><span class="cl">		,
-</span></span><span class="line"><span class="cl">		<span class="o">[</span>parameter<span class="o">(</span><span class="nv">position</span> <span class="o">=</span> 1, <span class="nv">valuefrompipelinebypropertyname</span> <span class="o">=</span> <span class="nv">$true</span><span class="o">)]</span>
-</span></span><span class="line"><span class="cl">		<span class="o">[</span>string<span class="o">[]]</span><span class="nv">$LogName</span> <span class="o">=</span> @<span class="o">(</span><span class="s2">&#34;System&#34;</span>, <span class="s2">&#34;Application&#34;</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl">		,
-</span></span><span class="line"><span class="cl">		<span class="o">[</span>parameter<span class="o">(</span><span class="nv">position</span> <span class="o">=</span> 2<span class="o">)]</span>
-</span></span><span class="line"><span class="cl">		<span class="o">[</span>ValidateScript<span class="o">(</span> <span class="o">{</span> Test-Path <span class="nv">$_</span> -PathType <span class="s1">&#39;Container&#39;</span> <span class="o">})]</span>
-</span></span><span class="line"><span class="cl">		<span class="o">[</span>string<span class="o">]</span><span class="nv">$Path</span> <span class="o">=</span> <span class="nv">$ENV</span>:TEMP
-</span></span><span class="line"><span class="cl">		,
-</span></span><span class="line"><span class="cl">		<span class="o">[</span>parameter<span class="o">(</span><span class="nv">position</span> <span class="o">=</span> 3<span class="o">)]</span>
-</span></span><span class="line"><span class="cl">		<span class="o">[</span>string<span class="o">]</span><span class="nv">$RemotePath</span> <span class="o">=</span> <span class="s2">&#34;C:\Windows\Temp&#34;</span>
-</span></span><span class="line"><span class="cl">	<span class="o">)</span>
-</span></span><span class="line"><span class="cl">	PROCESS <span class="o">{</span>
-</span></span><span class="line"><span class="cl">		Foreach <span class="o">(</span><span class="nv">$Name</span> in <span class="nv">$Computername</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">			Write-Progress -id <span class="m">1</span> -Activity <span class="s2">&#34;Computer &#34;</span> -Status <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">&#34;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">			If <span class="o">(</span>Test-Connection -ComputerName <span class="nv">$Name</span> -Count <span class="m">1</span> -ErrorAction SilentlyContinue<span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">				<span class="nv">$LogName</span> <span class="p">|</span> ForEach-Object <span class="o">{</span>
-</span></span><span class="line"><span class="cl">					<span class="nv">$Log</span> <span class="o">=</span> <span class="nv">$_</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span> <span class="o">=</span> New-Object PSObject <span class="p">|</span> Select Computername, LogName, Path, Result
-</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span>.Computername <span class="o">=</span> <span class="nv">$Name</span>
-</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span>.LogName <span class="o">=</span> <span class="nv">$Log</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">					<span class="k">if</span> <span class="o">((</span>Get-WinEvent -LogName <span class="nv">$Log</span> -ComputerName <span class="nv">$Name</span> -MaxEvents <span class="m">1</span> -ErrorAction SilentlyContinue <span class="p">|</span> Measure-Object<span class="o">)</span>.Count -lt 1<span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">						Write-Warning -Message <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log is empty. Skipping export&#34;</span>
+</span></span><span class="line"><span class="cl">					<span class="k">if</span> <span class="p">((</span><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="nv">$Log</span> <span class="n">-ComputerName</span> <span class="nv">$Name</span> <span class="n">-MaxEvents</span> <span class="mf">1</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span> <span class="p">|</span> <span class="nb">Measure-Object</span><span class="p">).</span><span class="py">Count</span> <span class="o">-lt</span> <span class="mf">1</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">						<span class="nb">Write-Warning</span> <span class="n">-Message</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log is empty. Skipping export&#34;</span>
 </span></span><span class="line"><span class="cl">						<span class="k">return</span>
-</span></span><span class="line"><span class="cl">					<span class="o">}</span>
-</span></span><span class="line"><span class="cl">					<span class="nv">$OutputFileName</span> <span class="o">=</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">-</span><span class="k">$(</span><span class="nv">$Log</span> -replace <span class="s2">&#34;/&#34;</span>,<span class="s2">&#34;-&#34;</span><span class="k">)</span><span class="s2">.evtx&#34;</span>
+</span></span><span class="line"><span class="cl">					<span class="p">}</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$OutputFileName</span> <span class="p">=</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">-</span><span class="p">$(</span><span class="nv">$Log</span> <span class="o">-replace</span> <span class="s2">&#34;/&#34;</span><span class="p">,</span><span class="s2">&#34;-&#34;</span><span class="p">)</span><span class="s2">.evtx&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">					Write-Progress -id <span class="m">2</span> -ParentId <span class="m">1</span> -Activity <span class="s2">&#34;Exporting&#34;</span> -Status <span class="s2">&#34;</span><span class="nv">$Log</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">					<span class="nb">Write-Progress</span> <span class="n">-id</span> <span class="mf">2</span> <span class="n">-ParentId</span> <span class="mf">1</span> <span class="n">-Activity</span> <span class="s2">&#34;Exporting&#34;</span> <span class="n">-Status</span> <span class="s2">&#34;</span><span class="nv">$Log</span><span class="s2">&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">					<span class="k">if</span> <span class="o">(</span><span class="nv">$Name</span> -eq <span class="nv">$Env</span>:COMPUTERNAME<span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">						Write-Verbose <span class="s2">&#34;Local computer...&#34;</span>
-</span></span><span class="line"><span class="cl">						<span class="nv">$Cmd</span> <span class="o">=</span> <span class="s2">&#34;</span><span class="k">$(</span><span class="nv">$Env</span>:windir<span class="k">)</span><span class="s2">\system32\wevtutil.exe epl &#39;</span><span class="nv">$Log</span><span class="s2">&#39; &#39;</span><span class="nv">$Path</span><span class="s2">\$OutputFileName&#39; /r:</span><span class="nv">$Name</span><span class="s2"> /ow:True 2&gt;&amp;1&#34;</span>
-</span></span><span class="line"><span class="cl">						<span class="nv">$CmdResult</span> <span class="o">=</span> Invoke-Expression -Command <span class="nv">$cmd</span>
+</span></span><span class="line"><span class="cl">					<span class="k">if</span> <span class="p">(</span><span class="nv">$Name</span> <span class="o">-eq</span> <span class="nv">$Env:COMPUTERNAME</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">						<span class="nb">Write-Verbose</span> <span class="s2">&#34;Local computer...&#34;</span>
+</span></span><span class="line"><span class="cl">						<span class="nv">$Cmd</span> <span class="p">=</span> <span class="s2">&#34;</span><span class="p">$(</span><span class="nv">$Env:windir</span><span class="p">)</span><span class="s2">\system32\wevtutil.exe epl &#39;</span><span class="nv">$Log</span><span class="s2">&#39; &#39;</span><span class="nv">$Path</span><span class="s2">\</span><span class="nv">$OutputFileName</span><span class="s2">&#39; /r:</span><span class="nv">$Name</span><span class="s2"> /ow:True 2&gt;&amp;1&#34;</span>
+</span></span><span class="line"><span class="cl">						<span class="nv">$CmdResult</span> <span class="p">=</span> <span class="nb">Invoke-Expression</span> <span class="n">-Command</span> <span class="nv">$cmd</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">						<span class="k">if</span> <span class="o">(</span><span class="nv">$CmdResult</span> -eq <span class="nv">$Null</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">							Write-Verbose <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;</span><span class="nv">$path</span><span class="s2">&#39; = &#39;Success&#39;&#34;</span>
-</span></span><span class="line"><span class="cl">							<span class="nv">$Output</span>.Result <span class="o">=</span> <span class="s2">&#34;Success&#34;</span>
-</span></span><span class="line"><span class="cl">						<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">							Write-Error <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;</span><span class="nv">$path</span><span class="s2">&#39; = &#39;</span><span class="nv">$CmdResult</span><span class="s2">&#39;&#34;</span>
-</span></span><span class="line"><span class="cl">							<span class="nv">$Output</span>.Result <span class="o">=</span> <span class="s2">&#34;Error - </span><span class="nv">$CMDResult</span><span class="s2">&#34;</span>
-</span></span><span class="line"><span class="cl">						<span class="o">}</span>
+</span></span><span class="line"><span class="cl">						<span class="k">if</span> <span class="p">(</span><span class="nv">$CmdResult</span> <span class="o">-eq</span> <span class="vm">$Null</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">							<span class="nb">Write-Verbose</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;</span><span class="nv">$path</span><span class="s2">&#39; = &#39;Success&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="nv">$Output</span><span class="p">.</span><span class="py">Result</span> <span class="p">=</span> <span class="s2">&#34;Success&#34;</span>
+</span></span><span class="line"><span class="cl">						<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">							<span class="nb">Write-Error</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;</span><span class="nv">$path</span><span class="s2">&#39; = &#39;</span><span class="nv">$CmdResult</span><span class="s2">&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="nv">$Output</span><span class="p">.</span><span class="py">Result</span> <span class="p">=</span> <span class="s2">&#34;Error - </span><span class="nv">$CMDResult</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">						<span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">					<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">						Write-Verbose <span class="s2">&#34;Remote computer...&#34;</span>
-</span></span><span class="line"><span class="cl">						<span class="c1"># Wevtutil LogName filepath /r:&lt;remote computer&gt; /ow:&lt;Overwrite true/false&gt;</span>
-</span></span><span class="line"><span class="cl">						<span class="nv">$Cmd</span> <span class="o">=</span> <span class="s2">&#34;</span><span class="k">$(</span><span class="nv">$Env</span>:windir<span class="k">)</span><span class="s2">\system32\wevtutil.exe epl &#39;</span><span class="nv">$Log</span><span class="s2">&#39; &#39;</span><span class="nv">$RemotePath</span><span class="s2">\$OutputFileName&#39; /r:</span><span class="nv">$Name</span><span class="s2"> /ow:True 2&gt;&amp;1&#34;</span>
-</span></span><span class="line"><span class="cl">						<span class="nv">$CmdResult</span> <span class="o">=</span> Invoke-Expression -Command <span class="nv">$cmd</span>
-</span></span><span class="line"><span class="cl">						<span class="k">if</span> <span class="o">(</span><span class="nv">$CmdResult</span> -eq <span class="nv">$Null</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">							<span class="c1"># Convert &lt;Drive&gt;:\ to \&lt;Drive&gt;$ for remote connection</span>
-</span></span><span class="line"><span class="cl">							<span class="nv">$RemoteUNC</span> <span class="o">=</span> <span class="nv">$RemotePath</span> -Replace <span class="s1">&#39;(?&lt;Drive&gt;[A-Za-z]+):&#39;</span>, <span class="s1">&#39;${Drive}$$&#39;</span> <span class="c1"># c:\ = c$\</span>
+</span></span><span class="line"><span class="cl">					<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">						<span class="nb">Write-Verbose</span> <span class="s2">&#34;Remote computer...&#34;</span>
+</span></span><span class="line"><span class="cl">						<span class="c"># Wevtutil LogName filepath /r:&lt;remote computer&gt; /ow:&lt;Overwrite true/false&gt;</span>
+</span></span><span class="line"><span class="cl">						<span class="nv">$Cmd</span> <span class="p">=</span> <span class="s2">&#34;</span><span class="p">$(</span><span class="nv">$Env:windir</span><span class="p">)</span><span class="s2">\system32\wevtutil.exe epl &#39;</span><span class="nv">$Log</span><span class="s2">&#39; &#39;</span><span class="nv">$RemotePath</span><span class="s2">\</span><span class="nv">$OutputFileName</span><span class="s2">&#39; /r:</span><span class="nv">$Name</span><span class="s2"> /ow:True 2&gt;&amp;1&#34;</span>
+</span></span><span class="line"><span class="cl">						<span class="nv">$CmdResult</span> <span class="p">=</span> <span class="nb">Invoke-Expression</span> <span class="n">-Command</span> <span class="nv">$cmd</span>
+</span></span><span class="line"><span class="cl">						<span class="k">if</span> <span class="p">(</span><span class="nv">$CmdResult</span> <span class="o">-eq</span> <span class="vm">$Null</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">							<span class="c"># Convert &lt;Drive&gt;:\ to \&lt;Drive&gt;$ for remote connection</span>
+</span></span><span class="line"><span class="cl">							<span class="nv">$RemoteUNC</span> <span class="p">=</span> <span class="nv">$RemotePath</span> <span class="o">-Replace</span> <span class="s1">&#39;(?&lt;Drive&gt;[A-Za-z]+):&#39;</span><span class="p">,</span> <span class="s1">&#39;${Drive}$$&#39;</span> <span class="c"># c:\ = c$\</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">							Write-Verbose <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;\\</span><span class="nv">$Name</span><span class="s2">\$RemoteUNC\$OutputFileName&#39; = &#39;Success&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="nb">Write-Verbose</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;\\</span><span class="nv">$Name</span><span class="s2">\</span><span class="nv">$RemoteUNC</span><span class="s2">\</span><span class="nv">$OutputFileName</span><span class="s2">&#39; = &#39;Success&#39;&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">							Write-Progress -id <span class="m">3</span> -ParentId <span class="m">1</span> -Activity <span class="s2">&#34;Copying&#34;</span> -Status <span class="s2">&#34;</span><span class="nv">$Log</span><span class="s2">&#34;</span>
-</span></span><span class="line"><span class="cl">							Try <span class="o">{</span>
-</span></span><span class="line"><span class="cl">								move-item -path <span class="s2">&#34;filesystem::\\</span><span class="nv">$Name</span><span class="s2">\$RemoteUNC\$OutputFileName&#34;</span> -Dest <span class="nv">$Path</span> -Force -ErrorAction Stop
-</span></span><span class="line"><span class="cl">								Write-Verbose <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log move to &#39;</span><span class="nv">$path</span><span class="s2">&#39; = Success&#34;</span>
-</span></span><span class="line"><span class="cl">								<span class="nv">$Output</span>.Result <span class="o">=</span> <span class="s2">&#34;Success&#34;</span>
-</span></span><span class="line"><span class="cl">							<span class="o">}</span> Catch <span class="o">{</span>
-</span></span><span class="line"><span class="cl">								Write-Error <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log move to &#39;</span><span class="nv">$path</span><span class="s2">&#39; failed - &#39;</span><span class="nv">$_</span><span class="s2">&#39;&#34;</span>
-</span></span><span class="line"><span class="cl">								<span class="nv">$Output</span>.Result <span class="o">=</span> <span class="s2">&#34;Error - &#39;</span><span class="nv">$_</span><span class="s2">&#39;&#34;</span>
-</span></span><span class="line"><span class="cl">							<span class="o">}</span>
+</span></span><span class="line"><span class="cl">							<span class="nb">Write-Progress</span> <span class="n">-id</span> <span class="mf">3</span> <span class="n">-ParentId</span> <span class="mf">1</span> <span class="n">-Activity</span> <span class="s2">&#34;Copying&#34;</span> <span class="n">-Status</span> <span class="s2">&#34;</span><span class="nv">$Log</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="k">Try</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">								<span class="nb">move-item</span> <span class="n">-path</span> <span class="s2">&#34;filesystem::\\</span><span class="nv">$Name</span><span class="s2">\</span><span class="nv">$RemoteUNC</span><span class="s2">\</span><span class="nv">$OutputFileName</span><span class="s2">&#34;</span> <span class="n">-Dest</span> <span class="nv">$Path</span> <span class="n">-Force</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+</span></span><span class="line"><span class="cl">								<span class="nb">Write-Verbose</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log move to &#39;</span><span class="nv">$path</span><span class="s2">&#39; = Success&#34;</span>
+</span></span><span class="line"><span class="cl">								<span class="nv">$Output</span><span class="p">.</span><span class="py">Result</span> <span class="p">=</span> <span class="s2">&#34;Success&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="p">}</span> <span class="k">Catch</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">								<span class="nb">Write-Error</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log move to &#39;</span><span class="nv">$path</span><span class="s2">&#39; failed - &#39;</span><span class="nv">$_</span><span class="s2">&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">								<span class="nv">$Output</span><span class="p">.</span><span class="py">Result</span> <span class="p">=</span> <span class="s2">&#34;Error - &#39;</span><span class="nv">$_</span><span class="s2">&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">						<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">							Write-Error <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;\\</span><span class="nv">$Name</span><span class="s2">\$RemotePath&#39; = &#39;</span><span class="nv">$CmdResult</span><span class="s2">&#39;&#34;</span>
-</span></span><span class="line"><span class="cl">							<span class="nv">$Result</span> <span class="o">=</span> <span class="s2">&#34;Error - </span><span class="nv">$CMDResult</span><span class="s2">&#34;</span>
-</span></span><span class="line"><span class="cl">						<span class="o">}</span>
-</span></span><span class="line"><span class="cl">					<span class="o">}</span><span class="c1">#end if</span>
+</span></span><span class="line"><span class="cl">						<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">							<span class="nb">Write-Error</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2">::</span><span class="nv">$log</span><span class="s2"> log export to &#39;\\</span><span class="nv">$Name</span><span class="s2">\</span><span class="nv">$RemotePath</span><span class="s2">&#39; = &#39;</span><span class="nv">$CmdResult</span><span class="s2">&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">							<span class="nv">$Result</span> <span class="p">=</span> <span class="s2">&#34;Error - </span><span class="nv">$CMDResult</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">						<span class="p">}</span>
+</span></span><span class="line"><span class="cl">					<span class="p">}</span><span class="c">#end if</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span>.Path <span class="o">=</span> <span class="s2">&#34;</span><span class="nv">$Path</span><span class="s2">\$OutputFileName&#34;</span>
+</span></span><span class="line"><span class="cl">					<span class="nv">$Output</span><span class="p">.</span><span class="py">Path</span> <span class="p">=</span> <span class="s2">&#34;</span><span class="nv">$Path</span><span class="s2">\</span><span class="nv">$OutputFileName</span><span class="s2">&#34;</span>
 </span></span><span class="line"><span class="cl">					<span class="nv">$Output</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">				<span class="o">}</span><span class="c1">#foreach logname</span>
-</span></span><span class="line"><span class="cl">			<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">				Write-Warning -Message <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2"> :: ping failed&#34;</span>
-</span></span><span class="line"><span class="cl">			<span class="o">}</span>
-</span></span><span class="line"><span class="cl">		<span class="o">}</span> <span class="c1">#foreach Name</span>
-</span></span><span class="line"><span class="cl">	<span class="o">}</span><span class="c1">#process</span>
+</span></span><span class="line"><span class="cl">				<span class="p">}</span><span class="c">#foreach logname</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nb">Write-Warning</span> <span class="n">-Message</span> <span class="s2">&#34;</span><span class="nv">$Name</span><span class="s2"> :: ping failed&#34;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span> <span class="c">#foreach Name</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span><span class="c">#process</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="o">}</span><span class="c1">#EndFunction</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span><span class="c">#EndFunction</span>
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
 <p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>

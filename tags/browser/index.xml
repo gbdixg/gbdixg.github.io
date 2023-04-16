@@ -59,189 +59,189 @@ The PowerShell script below gets the installed extensions using the following me
 </span></span><span class="line"><span class="cl">Gmail                           8.2          Fast, searchable email with less spam.
 </span></span><span class="line"><span class="cl">Chrome Cast                     7519.422.0.3
 </span></span></code></pre></div><h2 id="powershell-script">PowerShell Script</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="k">function</span> Get-ChromeExtension <span class="o">{</span>
-</span></span><span class="line"><span class="cl">&lt;<span class="c1">#</span>
-</span></span><span class="line"><span class="cl"> .SYNOPSIS
-</span></span><span class="line"><span class="cl">    Gets Chrome Extensions from a <span class="nb">local</span> or remote computer
-</span></span><span class="line"><span class="cl"> .DESCRIPTION
-</span></span><span class="line"><span class="cl">    Gets the name, version and description of the installed extensions
-</span></span><span class="line"><span class="cl">    Admin rights are required to access other profiles on the <span class="nb">local</span> computer or
-</span></span><span class="line"><span class="cl">    any profiles on a remote computer.
-</span></span><span class="line"><span class="cl">    Internet access is required to lookup the extension ID on the Chrome web store
-</span></span><span class="line"><span class="cl"> .PARAMETER Computername
-</span></span><span class="line"><span class="cl">    The name of the computer to connect to
-</span></span><span class="line"><span class="cl">    The default is the <span class="nb">local</span> machine
-</span></span><span class="line"><span class="cl"> .PARAMETER Username
-</span></span><span class="line"><span class="cl">    The username to query i.e. the userprofile <span class="o">(</span>c:<span class="se">\u</span>sers<span class="se">\&lt;</span>username&gt;<span class="o">)</span>
-</span></span><span class="line"><span class="cl">    If this parameter is omitted, all userprofiles are searched
-</span></span><span class="line"><span class="cl"> .EXAMPLE
-</span></span><span class="line"><span class="cl">    PS C:<span class="se">\&gt;</span> Get-ChromeExtension
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="kd">function</span><span class="w"> </span><span class="nb">Get-ChromeExtension</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="cm">&lt;#
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .</span><span class="sd">SYNOPSIS</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">    Gets Chrome Extensions from a local or remote computer
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .</span><span class="sd">DESCRIPTION</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">    Gets the name, version and description of the installed extensions
+</span></span></span><span class="line"><span class="cl"><span class="cm">    Admin rights are required to access other profiles on the local computer or
+</span></span></span><span class="line"><span class="cl"><span class="cm">    any profiles on a remote computer.
+</span></span></span><span class="line"><span class="cl"><span class="cm">    Internet access is required to lookup the extension ID on the Chrome web store
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .PARAMETER Computername
+</span></span></span><span class="line"><span class="cl"><span class="cm">    The name of the computer to connect to
+</span></span></span><span class="line"><span class="cl"><span class="cm">    The default is the local machine
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .PARAMETER Username
+</span></span></span><span class="line"><span class="cl"><span class="cm">    The username to query i.e. the userprofile (c:\users\&lt;username&gt;)
+</span></span></span><span class="line"><span class="cl"><span class="cm">    If this parameter is omitted, all userprofiles are searched
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .</span><span class="sd">EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">    PS C:\&gt; Get-ChromeExtension
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">    This command will get the Chrome extensions from all the user profiles on the local computer
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .</span><span class="sd">EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">    PS C:\&gt; Get-ChromeExtension -username Jsmith
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">    This command will get the Chrome extensions installed under c:\users\jsmith on the local computer
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .</span><span class="sd">EXAMPLE</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">    PS C:\&gt; Get-ChromeExtension -Computername PC1234,PC4567
+</span></span></span><span class="line"><span class="cl"><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">    This command will get the Chrome extensions from all the user profiles on the two remote computers specified
+</span></span></span><span class="line"><span class="cl"><span class="cm"> .</span><span class="sd">NOTES</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">    Version 1.0
+</span></span></span><span class="line"><span class="cl"><span class="cm">#&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="nb">cmdletbinding</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">PARAM</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="nb">parameter</span><span class="p">(</span><span class="na">Position</span> <span class="p">=</span> <span class="mf">0</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="no">string</span><span class="p">]</span><span class="nv">$Computername</span> <span class="p">=</span> <span class="nv">$ENV:COMPUTERNAME</span>
+</span></span><span class="line"><span class="cl">        <span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="nb">parameter</span><span class="p">(</span><span class="na">Position</span> <span class="p">=</span> <span class="mf">1</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="no">string</span><span class="p">]</span><span class="nv">$Username</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">BEGIN</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c">#REGION --- Child function</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">function</span><span class="w"> </span><span class="nb">Get-ExtensionInfo</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="cm">&lt;#
+</span></span></span><span class="line"><span class="cl"><span class="cm">         .</span><span class="sd">SYNOPSIS</span><span class="cm">
+</span></span></span><span class="line"><span class="cl"><span class="cm">            Get Name and Version of the a Chrome extension
+</span></span></span><span class="line"><span class="cl"><span class="cm">         .PARAMETER Folder
+</span></span></span><span class="line"><span class="cl"><span class="cm">            A directory object (under %userprofile%\AppData\Local\Google\Chrome\User Data\Default\Extensions)
+</span></span></span><span class="line"><span class="cl"><span class="cm">        #&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">[</span><span class="nb">cmdletbinding</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">            <span class="k">PARAM</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">                <span class="p">[</span><span class="nb">parameter</span><span class="p">(</span><span class="na">Position</span> <span class="p">=</span> <span class="mf">0</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">                <span class="p">[</span><span class="no">IO.DirectoryInfo</span><span class="p">]</span><span class="nv">$Folder</span>
+</span></span><span class="line"><span class="cl">            <span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">BEGIN</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    This <span class="nb">command</span> will get the Chrome extensions from all the user profiles on the <span class="nb">local</span> computer
-</span></span><span class="line"><span class="cl"> .EXAMPLE
-</span></span><span class="line"><span class="cl">    PS C:<span class="se">\&gt;</span> Get-ChromeExtension -username Jsmith
+</span></span><span class="line"><span class="cl">                <span class="nv">$BuiltInExtensions</span> <span class="p">=</span> <span class="vm">@</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="s1">&#39;nmmhkkegccagdldgiimedpiccmgmieda&#39;</span> <span class="p">=</span> <span class="s1">&#39;Google Wallet&#39;</span>
+</span></span><span class="line"><span class="cl">                    <span class="s1">&#39;mhjfbmdgcfjbbpaeojofohoefgiehjai&#39;</span> <span class="p">=</span> <span class="s1">&#39;Chrome PDF Viewer&#39;</span>
+</span></span><span class="line"><span class="cl">                    <span class="s1">&#39;pkedcjkdefgpdelpbcmbmeomcjbeemfm&#39;</span> <span class="p">=</span> <span class="s1">&#39;Chrome Cast&#39;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    This <span class="nb">command</span> will get the Chrome extensions installed under c:<span class="se">\u</span>sers<span class="se">\j</span>smith on the <span class="nb">local</span> computer
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="k">PROCESS</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="c"># Extension folders are under %userprofile%\AppData\Local\Google\Chrome\User Data\Default\Extensions</span>
+</span></span><span class="line"><span class="cl">                <span class="c"># Folder names match extension ID e.g. blpcfgokakmgnkcojhhkbfbldkacnbeo</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$ExtID</span> <span class="p">=</span> <span class="nv">$Folder</span><span class="p">.</span><span class="py">Name</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"> .EXAMPLE
-</span></span><span class="line"><span class="cl">    PS C:<span class="se">\&gt;</span> Get-ChromeExtension -Computername PC1234,PC4567
+</span></span><span class="line"><span class="cl">                <span class="k">if</span><span class="p">(</span><span class="nv">$Folder</span><span class="p">.</span><span class="py">FullName</span> <span class="o">-match</span> <span class="s1">&#39;\\Users\\(?&lt;username&gt;[^\\]+)\\&#39;</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$Username</span> <span class="p">=</span> <span class="nv">$Matches</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$Username</span> <span class="p">=</span> <span class="s1">&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    This <span class="nb">command</span> will get the Chrome extensions from all the user profiles on the two remote computers specified
-</span></span><span class="line"><span class="cl"> .NOTES
-</span></span><span class="line"><span class="cl">    Version 1.0
-</span></span><span class="line"><span class="cl"><span class="c1">#&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="o">[</span>cmdletbinding<span class="o">()]</span>
-</span></span><span class="line"><span class="cl">    PARAM<span class="o">(</span>
-</span></span><span class="line"><span class="cl">        <span class="o">[</span>parameter<span class="o">(</span><span class="nv">Position</span> <span class="o">=</span> 0<span class="o">)]</span>
-</span></span><span class="line"><span class="cl">        <span class="o">[</span>string<span class="o">]</span><span class="nv">$Computername</span> <span class="o">=</span> <span class="nv">$ENV</span>:COMPUTERNAME
-</span></span><span class="line"><span class="cl">        ,
-</span></span><span class="line"><span class="cl">        <span class="o">[</span>parameter<span class="o">(</span><span class="nv">Position</span> <span class="o">=</span> 1<span class="o">)]</span>
-</span></span><span class="line"><span class="cl">        <span class="o">[</span>string<span class="o">]</span><span class="nv">$Username</span>
-</span></span><span class="line"><span class="cl">    <span class="o">)</span>
-</span></span><span class="line"><span class="cl">    BEGIN <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="c1">#REGION --- Child function</span>
-</span></span><span class="line"><span class="cl">        <span class="k">function</span> Get-ExtensionInfo <span class="o">{</span>
-</span></span><span class="line"><span class="cl">            &lt;<span class="c1">#</span>
-</span></span><span class="line"><span class="cl">         .SYNOPSIS
-</span></span><span class="line"><span class="cl">            Get Name and Version of the a Chrome extension
-</span></span><span class="line"><span class="cl">         .PARAMETER Folder
-</span></span><span class="line"><span class="cl">            A directory object <span class="o">(</span>under %userprofile%<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\G</span>oogle<span class="se">\C</span>hrome<span class="se">\U</span>ser Data<span class="se">\D</span>efault<span class="se">\E</span>xtensions<span class="o">)</span>
-</span></span><span class="line"><span class="cl">        <span class="c1">#&gt;</span>
-</span></span><span class="line"><span class="cl">            <span class="o">[</span>cmdletbinding<span class="o">()]</span>
-</span></span><span class="line"><span class="cl">            PARAM<span class="o">(</span>
-</span></span><span class="line"><span class="cl">                <span class="o">[</span>parameter<span class="o">(</span><span class="nv">Position</span> <span class="o">=</span> 0<span class="o">)]</span>
-</span></span><span class="line"><span class="cl">                <span class="o">[</span>IO.DirectoryInfo<span class="o">]</span><span class="nv">$Folder</span>
-</span></span><span class="line"><span class="cl">            <span class="o">)</span>
-</span></span><span class="line"><span class="cl">            BEGIN<span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="c"># There can be more than one version installed. Get the latest one</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$LastestExtVersionInstallFolder</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="nv">$Folder</span><span class="p">.</span><span class="py">Fullname</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="py">Name</span> <span class="o">-match</span> <span class="s1">&#39;^[0-9\._-]+$&#39;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">-Property</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="mf">1</span> <span class="n">-ExpandProperty</span> <span class="n">Name</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                <span class="nv">$BuiltInExtensions</span> <span class="o">=</span> @<span class="o">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="s1">&#39;nmmhkkegccagdldgiimedpiccmgmieda&#39;</span> <span class="o">=</span> <span class="s1">&#39;Google Wallet&#39;</span>
-</span></span><span class="line"><span class="cl">                    <span class="s1">&#39;mhjfbmdgcfjbbpaeojofohoefgiehjai&#39;</span> <span class="o">=</span> <span class="s1">&#39;Chrome PDF Viewer&#39;</span>
-</span></span><span class="line"><span class="cl">                    <span class="s1">&#39;pkedcjkdefgpdelpbcmbmeomcjbeemfm&#39;</span> <span class="o">=</span> <span class="s1">&#39;Chrome Cast&#39;</span>
-</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                <span class="c"># Get the version from the JSON manifest</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="nb">Test-Path</span> <span class="n">-Path</span> <span class="s2">&#34;</span><span class="p">$(</span><span class="nv">$Folder</span><span class="p">.</span><span class="n">Fullname</span><span class="p">)</span><span class="s2">\</span><span class="nv">$LastestExtVersionInstallFolder</span><span class="s2">\Manifest.json&#34;</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="o">}</span>
-</span></span><span class="line"><span class="cl">            PROCESS <span class="o">{</span>
-</span></span><span class="line"><span class="cl">                <span class="c1"># Extension folders are under %userprofile%\AppData\Local\Google\Chrome\User Data\Default\Extensions</span>
-</span></span><span class="line"><span class="cl">                <span class="c1"># Folder names match extension ID e.g. blpcfgokakmgnkcojhhkbfbldkacnbeo</span>
-</span></span><span class="line"><span class="cl">                <span class="nv">$ExtID</span> <span class="o">=</span> <span class="nv">$Folder</span>.Name
+</span></span><span class="line"><span class="cl">                    <span class="nv">$Manifest</span> <span class="p">=</span> <span class="nb">Get-Content</span> <span class="n">-Path</span> <span class="s2">&#34;</span><span class="p">$(</span><span class="nv">$Folder</span><span class="p">.</span><span class="n">Fullname</span><span class="p">)</span><span class="s2">\</span><span class="nv">$LastestExtVersionInstallFolder</span><span class="s2">\Manifest.json&#34;</span> <span class="n">-Raw</span> <span class="p">|</span> <span class="nb">ConvertFrom-Json</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="p">(</span><span class="nv">$Manifest</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="k">if</span> <span class="p">(</span><span class="o">-not</span><span class="p">([</span><span class="no">string</span><span class="p">]::</span><span class="n">IsNullOrEmpty</span><span class="p">(</span><span class="nv">$Manifest</span><span class="p">.</span><span class="n">version</span><span class="p">)))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="nv">$Version</span> <span class="p">=</span> <span class="nv">$Manifest</span><span class="p">.</span><span class="py">version</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="c"># Just use the folder name as the version</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$Version</span> <span class="p">=</span> <span class="nv">$LastestExtVersionInstallFolder</span><span class="p">.</span><span class="py">Name</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                <span class="k">if</span><span class="o">(</span><span class="nv">$Folder</span>.FullName -match <span class="s1">&#39;\\Users\\(?&lt;username&gt;[^\\]+)\\&#39;</span><span class="o">){</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Username</span> <span class="o">=</span> <span class="nv">$Matches</span><span class="o">[</span><span class="s1">&#39;username&#39;</span><span class="o">]</span>
-</span></span><span class="line"><span class="cl">                <span class="o">}</span><span class="k">else</span><span class="o">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Username</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span><span class="p">(</span><span class="nv">$BuiltInExtensions</span><span class="p">.</span><span class="py">ContainsKey</span><span class="p">(</span><span class="nv">$ExtID</span><span class="p">)){</span>
+</span></span><span class="line"><span class="cl">                    <span class="c"># Built-in extensions do not appear in the Chrome Store</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                <span class="c1"># There can be more than one version installed. Get the latest one</span>
-</span></span><span class="line"><span class="cl">                <span class="nv">$LastestExtVersionInstallFolder</span> <span class="o">=</span> Get-ChildItem -Path <span class="nv">$Folder</span>.Fullname <span class="p">|</span> Where-Object <span class="o">{</span> <span class="nv">$_</span>.Name -match <span class="s1">&#39;^[0-9\._-]+$&#39;</span> <span class="o">}</span> <span class="p">|</span> Sort-Object -Property CreationTime -Descending <span class="p">|</span> Select-Object -First <span class="m">1</span> -ExpandProperty Name
+</span></span><span class="line"><span class="cl">                    <span class="nv">$Title</span> <span class="p">=</span> <span class="nv">$BuiltInExtensions</span><span class="p">[</span><span class="nv">$ExtID</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$Description</span> <span class="p">=</span> <span class="s1">&#39;&#39;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                <span class="c1"># Get the version from the JSON manifest</span>
-</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="o">(</span>Test-Path -Path <span class="s2">&#34;</span><span class="k">$(</span><span class="nv">$Folder</span>.Fullname<span class="k">)</span><span class="s2">\$LastestExtVersionInstallFolder\Manifest.json&#34;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="c"># Lookup the extension in the Store</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$url</span> <span class="p">=</span> <span class="s2">&#34;https://chrome.google.com/webstore/detail/&#34;</span> <span class="p">+</span> <span class="nv">$ExtID</span> <span class="p">+</span> <span class="s2">&#34;?hl=en-us&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Manifest</span> <span class="o">=</span> Get-Content -Path <span class="s2">&#34;</span><span class="k">$(</span><span class="nv">$Folder</span>.Fullname<span class="k">)</span><span class="s2">\$LastestExtVersionInstallFolder\Manifest.json&#34;</span> -Raw <span class="p">|</span> ConvertFrom-Json
-</span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="o">(</span><span class="nv">$Manifest</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">                        <span class="k">if</span> <span class="o">(</span>-not<span class="o">([</span>string<span class="o">]</span>::IsNullOrEmpty<span class="o">(</span><span class="nv">$Manifest</span>.version<span class="o">)))</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">                            <span class="nv">$Version</span> <span class="o">=</span> <span class="nv">$Manifest</span>.version
-</span></span><span class="line"><span class="cl">                        <span class="o">}</span>
-</span></span><span class="line"><span class="cl">                    <span class="o">}</span>
-</span></span><span class="line"><span class="cl">                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="c1"># Just use the folder name as the version</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Version</span> <span class="o">=</span> <span class="nv">$LastestExtVersionInstallFolder</span>.Name
-</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">try</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="c"># You may need to include proxy information</span>
+</span></span><span class="line"><span class="cl">                        <span class="c"># $WebRequest = Invoke-WebRequest -Uri $url -ErrorAction Stop -Proxy &#39;http://proxy:port&#39; -ProxyUseDefaultCredentials</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                <span class="k">if</span><span class="o">(</span><span class="nv">$BuiltInExtensions</span>.ContainsKey<span class="o">(</span><span class="nv">$ExtID</span><span class="o">)){</span>
-</span></span><span class="line"><span class="cl">                    <span class="c1"># Built-in extensions do not appear in the Chrome Store</span>
+</span></span><span class="line"><span class="cl">                        <span class="nv">$WebRequest</span> <span class="p">=</span> <span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="nv">$url</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Title</span> <span class="o">=</span> <span class="nv">$BuiltInExtensions</span><span class="o">[</span><span class="nv">$ExtID</span><span class="o">]</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Description</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">                        <span class="k">if</span> <span class="p">(</span><span class="nv">$WebRequest</span><span class="p">.</span><span class="py">StatusCode</span> <span class="o">-eq</span> <span class="mf">200</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                <span class="o">}</span><span class="k">else</span><span class="o">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="c1"># Lookup the extension in the Store</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$url</span> <span class="o">=</span> <span class="s2">&#34;https://chrome.google.com/webstore/detail/&#34;</span> + <span class="nv">$ExtID</span> + <span class="s2">&#34;?hl=en-us&#34;</span>
+</span></span><span class="line"><span class="cl">                            <span class="c"># Get the HTML Page Title but remove &#39; - Chrome Web Store&#39;</span>
+</span></span><span class="line"><span class="cl">                            <span class="k">if</span> <span class="p">(</span><span class="o">-not</span><span class="p">([</span><span class="no">string</span><span class="p">]::</span><span class="n">IsNullOrEmpty</span><span class="p">(</span><span class="nv">$WebRequest</span><span class="p">.</span><span class="py">ParsedHtml</span><span class="p">.</span><span class="n">title</span><span class="p">)))</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                    try <span class="o">{</span>
-</span></span><span class="line"><span class="cl">                        <span class="c1"># You may need to include proxy information</span>
-</span></span><span class="line"><span class="cl">                        <span class="c1"># $WebRequest = Invoke-WebRequest -Uri $url -ErrorAction Stop -Proxy &#39;http://proxy:port&#39; -ProxyUseDefaultCredentials</span>
+</span></span><span class="line"><span class="cl">                                <span class="nv">$ExtTitle</span> <span class="p">=</span> <span class="nv">$WebRequest</span><span class="p">.</span><span class="py">ParsedHtml</span><span class="p">.</span><span class="py">title</span>
+</span></span><span class="line"><span class="cl">                                <span class="k">if</span> <span class="p">(</span><span class="nv">$ExtTitle</span> <span class="o">-match</span> <span class="s1">&#39;\s-\s.*$&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                                    <span class="nv">$Title</span> <span class="p">=</span> <span class="nv">$ExtTitle</span> <span class="o">-replace</span> <span class="s1">&#39;\s-\s.*$&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">                                    <span class="nv">$extType</span> <span class="p">=</span> <span class="s1">&#39;ChromeStore&#39;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                        <span class="nv">$WebRequest</span> <span class="o">=</span> Invoke-WebRequest -Uri <span class="nv">$url</span> -ErrorAction Stop
+</span></span><span class="line"><span class="cl">                                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                                    <span class="nv">$Title</span> <span class="p">=</span> <span class="nv">$ExtTitle</span>
+</span></span><span class="line"><span class="cl">                                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                            <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                        <span class="k">if</span> <span class="o">(</span><span class="nv">$WebRequest</span>.StatusCode -eq 200<span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="c"># Screen scrape the Description meta-data</span>
+</span></span><span class="line"><span class="cl">                            <span class="nv">$Description</span> <span class="p">=</span> <span class="nv">$webRequest</span><span class="p">.</span><span class="py">AllElements</span><span class="p">.</span><span class="py">InnerHTML</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span> <span class="o">-match</span> <span class="s1">&#39;&lt;meta name=&#34;Description&#34; content=&#34;([^&#34;]+)&#34;&gt;&#39;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select-object</span> <span class="n">-First</span> <span class="mf">1</span> <span class="p">|</span> <span class="nb">ForEach-Object</span> <span class="p">{</span> <span class="nv">$Matches</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="nb">Write-Warning</span> <span class="s2">&#34;Error during webstore lookup for &#39;</span><span class="nv">$ExtID</span><span class="s2">&#39; - &#39;</span><span class="nv">$_</span><span class="s2">&#39;&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                            <span class="c1"># Get the HTML Page Title but remove &#39; - Chrome Web Store&#39;</span>
-</span></span><span class="line"><span class="cl">                            <span class="k">if</span> <span class="o">(</span>-not<span class="o">([</span>string<span class="o">]</span>::IsNullOrEmpty<span class="o">(</span><span class="nv">$WebRequest</span>.ParsedHtml.title<span class="o">)))</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                                <span class="nv">$ExtTitle</span> <span class="o">=</span> <span class="nv">$WebRequest</span>.ParsedHtml.title
-</span></span><span class="line"><span class="cl">                                <span class="k">if</span> <span class="o">(</span><span class="nv">$ExtTitle</span> -match <span class="s1">&#39;\s-\s.*$&#39;</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">                                    <span class="nv">$Title</span> <span class="o">=</span> <span class="nv">$ExtTitle</span> -replace <span class="s1">&#39;\s-\s.*$&#39;</span>,<span class="s1">&#39;&#39;</span>
-</span></span><span class="line"><span class="cl">                                    <span class="nv">$extType</span> <span class="o">=</span> <span class="s1">&#39;ChromeStore&#39;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">[</span><span class="no">PSCustomObject][Ordered</span><span class="p">]</span><span class="vm">@</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">Name</span>        <span class="p">=</span> <span class="nv">$Title</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">Version</span>     <span class="p">=</span> <span class="nv">$Version</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">Description</span> <span class="p">=</span> <span class="nv">$Description</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">Username</span>    <span class="p">=</span> <span class="nv">$Username</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">ID</span>          <span class="p">=</span> <span class="nv">$ExtID</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                                <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">                                    <span class="nv">$Title</span> <span class="o">=</span> <span class="nv">$ExtTitle</span>
-</span></span><span class="line"><span class="cl">                                <span class="o">}</span>
-</span></span><span class="line"><span class="cl">                            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span><span class="c">#End function</span>
+</span></span><span class="line"><span class="cl">        <span class="c">#ENDREGION -----</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                            <span class="c1"># Screen scrape the Description meta-data</span>
-</span></span><span class="line"><span class="cl">                            <span class="nv">$Description</span> <span class="o">=</span> <span class="nv">$webRequest</span>.AllElements.InnerHTML <span class="p">|</span> Where-Object <span class="o">{</span> <span class="nv">$_</span> -match <span class="s1">&#39;&lt;meta name=&#34;Description&#34; content=&#34;([^&#34;]+)&#34;&gt;&#39;</span> <span class="o">}</span> <span class="p">|</span> Select-object -First <span class="m">1</span> <span class="p">|</span> ForEach-Object <span class="o">{</span> <span class="nv">$Matches</span><span class="o">[</span>1<span class="o">]</span> <span class="o">}</span>
-</span></span><span class="line"><span class="cl">                        <span class="o">}</span>
-</span></span><span class="line"><span class="cl">                    <span class="o">}</span> catch <span class="o">{</span>
-</span></span><span class="line"><span class="cl">                        Write-Warning <span class="s2">&#34;Error during webstore lookup for &#39;</span><span class="nv">$ExtID</span><span class="s2">&#39; - &#39;</span><span class="nv">$_</span><span class="s2">&#39;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$ExtensionFolderPath</span> <span class="p">=</span> <span class="s1">&#39;AppData\Local\Google\Chrome\User Data\Default\Extensions&#39;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                    <span class="o">}</span>
-</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                <span class="o">[</span>PSCustomObject<span class="o">][</span>Ordered<span class="o">]</span>@<span class="o">{</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">Name</span>        <span class="o">=</span> <span class="nv">$Title</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">Version</span>     <span class="o">=</span> <span class="nv">$Version</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">Description</span> <span class="o">=</span> <span class="nv">$Description</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">Username</span>    <span class="o">=</span> <span class="nv">$Username</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">ID</span>          <span class="o">=</span> <span class="nv">$ExtID</span>
-</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">PROCESS</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">Foreach</span> <span class="p">(</span><span class="nv">$Computer</span> <span class="k">in</span> <span class="nv">$Computername</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="o">}</span>
-</span></span><span class="line"><span class="cl">        <span class="o">}</span><span class="c1">#End function</span>
-</span></span><span class="line"><span class="cl">        <span class="c1">#ENDREGION -----</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="nv">$Username</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="c"># Single userprofile</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$Path</span> <span class="p">=</span> <span class="nb">Join-path</span> <span class="n">-path</span> <span class="s2">&#34;fileSystem::\\</span><span class="nv">$Computer</span><span class="s2">\C$\Users\</span><span class="nv">$Username</span><span class="s2">&#34;</span> <span class="n">-ChildPath</span> <span class="nv">$ExtensionFolderPath</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$Extensions</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="nv">$Path</span> <span class="n">-Directory</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="nv">$ExtensionFolderPath</span> <span class="o">=</span> <span class="s1">&#39;AppData\Local\Google\Chrome\User Data\Default\Extensions&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="c"># All user profiles that contain this a Chrome extensions folder</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$Path</span> <span class="p">=</span> <span class="nb">Join-path</span> <span class="n">-path</span> <span class="s2">&#34;fileSystem::\\</span><span class="nv">$Computer</span><span class="s2">\C$\Users\*&#34;</span> <span class="n">-ChildPath</span> <span class="nv">$ExtensionFolderPath</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$Extensions</span> <span class="p">=</span><span class="vm">@</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">Get-Item</span> <span class="n">-Path</span> <span class="nv">$Path</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span> <span class="p">|</span> <span class="nb">ForEach-Object</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$Extensions</span> <span class="p">+=</span> <span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="nv">$_</span> <span class="n">-Directory</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    PROCESS <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        Foreach <span class="o">(</span><span class="nv">$Computer</span> in <span class="nv">$Computername</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="o">(</span><span class="nv">$Username</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">                <span class="c1"># Single userprofile</span>
-</span></span><span class="line"><span class="cl">                <span class="nv">$Path</span> <span class="o">=</span> Join-path -path <span class="s2">&#34;fileSystem::\\</span><span class="nv">$Computer</span><span class="s2">\C</span>$<span class="s2">\Users\$Username&#34;</span> -ChildPath <span class="nv">$ExtensionFolderPath</span>
-</span></span><span class="line"><span class="cl">                <span class="nv">$Extensions</span> <span class="o">=</span> Get-ChildItem -Path <span class="nv">$Path</span> -Directory -ErrorAction SilentlyContinue
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="o">-not</span><span class="p">(</span><span class="vm">$null</span> <span class="o">-eq</span> <span class="nv">$Extensions</span><span class="p">))</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">                <span class="c1"># All user profiles that contain this a Chrome extensions folder</span>
-</span></span><span class="line"><span class="cl">                <span class="nv">$Path</span> <span class="o">=</span> Join-path -path <span class="s2">&#34;fileSystem::\\</span><span class="nv">$Computer</span><span class="s2">\C</span>$<span class="s2">\Users\*&#34;</span> -ChildPath <span class="nv">$ExtensionFolderPath</span>
-</span></span><span class="line"><span class="cl">                <span class="nv">$Extensions</span> <span class="o">=</span>@<span class="o">()</span>
-</span></span><span class="line"><span class="cl">                Get-Item -Path <span class="nv">$Path</span> -ErrorAction SilentlyContinue <span class="p">|</span> ForEach-Object<span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">Foreach</span> <span class="p">(</span><span class="nv">$Extension</span> <span class="k">in</span> <span class="nv">$Extensions</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Extensions</span> +<span class="o">=</span> Get-ChildItem -Path <span class="nv">$_</span> -Directory -ErrorAction SilentlyContinue
-</span></span><span class="line"><span class="cl">                <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="o">(</span>-not<span class="o">(</span><span class="nv">$null</span> -eq <span class="nv">$Extensions</span><span class="o">))</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                Foreach <span class="o">(</span><span class="nv">$Extension</span> in <span class="nv">$Extensions</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Output</span> <span class="o">=</span> Get-ExtensionInfo -Folder <span class="nv">$Extension</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Output</span> <span class="p">|</span> Add-Member -MemberType NoteProperty -Name <span class="s1">&#39;Computername&#39;</span> -Value <span class="nv">$Computer</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$Output</span> <span class="p">=</span> <span class="nb">Get-ExtensionInfo</span> <span class="n">-Folder</span> <span class="nv">$Extension</span>
+</span></span><span class="line"><span class="cl">                    <span class="nv">$Output</span> <span class="p">|</span> <span class="nb">Add-Member</span> <span class="n">-MemberType</span> <span class="n">NoteProperty</span> <span class="n">-Name</span> <span class="s1">&#39;Computername&#39;</span> <span class="n">-Value</span> <span class="nv">$Computer</span>
 </span></span><span class="line"><span class="cl">                    <span class="nv">$Output</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">                Write-Warning <span class="s2">&#34;</span><span class="nv">$Computer</span><span class="s2"> : no extensions were found&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">Write-Warning</span> <span class="s2">&#34;</span><span class="nv">$Computer</span><span class="s2"> : no extensions were found&#34;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="o">}</span><span class="c1">#foreach</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span><span class="c">#foreach</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
 <p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>

@@ -53,7 +53,7 @@ For example, <code>[^:]+</code> means match one or more characters that are not 
 </span></span><span class="line"><span class="cl">Hosted network status  : Not available
 </span></span></code></pre></div><h3 id="the-regex-explained">The regex explained</h3>
 <p>The PowerShell snippet below shows the regular expression and how the matches are added to a hash table collection as name = value.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="nv">$Properties</span> <span class="p">=</span> <span class="vm">@</span><span class="p">{}</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nv">$Properties</span> <span class="p">=</span> <span class="vm">@</span><span class="p">{}</span>
 </span></span><span class="line"><span class="cl"><span class="nv">$result</span> <span class="p">=</span> <span class="n">netsh</span> <span class="n">wlan</span> <span class="n">show</span> <span class="n">interfaces</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="nv">$Result</span> <span class="p">|</span> <span class="nb">ForEach-Object</span> <span class="p">{</span>
@@ -79,7 +79,7 @@ Each line (the $_ variable) is tested for a match against the RegEx expression u
 </p>
 <p>A complete Get-WLAN PowerShell function is provided below.</p>
 <h2 id="powershell-script">PowerShell Script</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="kd">Function</span><span class="w"> </span><span class="nb">Get-WLAN</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="kd">Function</span><span class="w"> </span><span class="nb">Get-WLAN</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="cm">&lt;#
 </span></span></span><span class="line"><span class="cl"><span class="cm">  .</span><span class="sd">SYNOPSIS</span><span class="cm">
 </span></span></span><span class="line"><span class="cl"><span class="cm">    Gets the properties of WiFI connections
