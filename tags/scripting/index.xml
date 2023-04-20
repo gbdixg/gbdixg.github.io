@@ -17,7 +17,7 @@
       <pubDate>Mon, 17 Apr 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2023/04/17/readimelog/</guid>
-      <description>&lt;p&gt;Read-IMELog - A PowerShell script to read Intune Management Extension (IME) logs&lt;/p&gt;</description>
+      <description>A PowerShell function to read Intune Management Extension logs</description>
       <content:encoded><![CDATA[<p>Read-IMELog - A PowerShell script to read Intune Management Extension (IME) logs</p>
 <h2 id="background">Background</h2>
 <p>The Intune Management Extension is a Windows client component responsible for running Intune scripts and installing Win32 apps. It creates log files in the following folder:<br>
@@ -53,7 +53,7 @@
       <pubDate>Sat, 13 Apr 2019 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/04/13/find-adsite/</guid>
-      <description>&lt;p&gt;Read-on for a PowerShell command to get the Active Directory Subnet and Site from the computername or IP Address.&lt;/p&gt;</description>
+      <description>Use PowerShell to get the AD Site and Subnet of a Windows computer</description>
       <content:encoded><![CDATA[<p>Read-on for a PowerShell command to get the Active Directory Subnet and Site from the computername or IP Address.</p>
 <p><strong>Active Directory Sites</strong> represent locations with good network connectivity. An ADSite is often created for each office or a group of offices in a metropolitan area, to generate the replication topology between Domain Controllers, and to help workstations/servers locate closest services.</p>
 <p><strong>Active Directory Subnets</strong> define the IP ranges included in an AD Site. A member workstation/server will have an IP address that should fall within a defined AD subnet, making it part of an AD Site.</p>
@@ -155,7 +155,7 @@ If a company populates subnet descriptions with useful information, it can also 
       <pubDate>Sun, 06 Jan 2019 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/01/06/powershell-toolmaking-regex/</guid>
-      <description>&lt;p&gt;This post includes a Get-WLAN function to show information about wireless LAN connections, including the SSID and signal strength. It also demonstrates creating a PowerShell wrapper for a built-in Windows command.&lt;/p&gt;</description>
+      <description>PowerShell function to show WIFI connections, using Regular expressions to convert netsh output into PSObjects</description>
       <content:encoded><![CDATA[<p>This post includes a Get-WLAN function to show information about wireless LAN connections, including the SSID and signal strength. It also demonstrates creating a PowerShell wrapper for a built-in Windows command.</p>
 <h2 id="why-create-a-powershell-exe-wrapper">Why create a PowerShell exe wrapper</h2>
 <blockquote>

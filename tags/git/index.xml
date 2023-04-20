@@ -17,7 +17,7 @@
       <pubDate>Sun, 04 Jul 2021 14:27:50 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/07/04/gitedgecases/</guid>
-      <description>&lt;p&gt;Most of the time in GIT we are working at the file level.  It is possible to get more granualar and work with &lt;em&gt;hunks&lt;/em&gt; which are parts of a file e.g. a number of lines.&lt;/p&gt;</description>
+      <description>A post about some of the less used commands in GIT.</description>
       <content:encoded><![CDATA[<p>Most of the time in GIT we are working at the file level.  It is possible to get more granualar and work with <em>hunks</em> which are parts of a file e.g. a number of lines.</p>
 <h2 id="using-hunks">Using Hunks</h2>
 <p>The <code>--patch</code> option of the <code>git add</code> command causes GIT to automatically split an updated file into hunks.  It then prompts for each hunk and the contributor can decide whether to stage some or all of the hunks.<br>
@@ -75,8 +75,7 @@ GIT actually enters a menu system that allows granular control, such as splittin
       <pubDate>Wed, 30 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/06/30/github/</guid>
-      <description>&lt;p&gt;GitHub hosts open source projects that have multiple contributors. Only a few maintainers have read-write access to the repository, so how do people contribute suggested changes?&lt;/p&gt;
-&lt;p&gt;The answer is by copying the repo to their own GitHub account, making changes and submitting a &lt;em&gt;pull request&lt;/em&gt; to the maintainers of the original project. This post explains the steps.&lt;/p&gt;</description>
+      <description>GitHub - Using Fork, Clone, Push and Pull Requests</description>
       <content:encoded><![CDATA[<p>GitHub hosts open source projects that have multiple contributors. Only a few maintainers have read-write access to the repository, so how do people contribute suggested changes?</p>
 <p>The answer is by copying the repo to their own GitHub account, making changes and submitting a <em>pull request</em> to the maintainers of the original project. This post explains the steps.</p>
 <h2 id="contributing-on-github">CONTRIBUTING ON GitHub</h2>
@@ -157,7 +156,7 @@ The next two lines show assign symbols to the two versions of the index.md file 
       <pubDate>Sun, 27 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/06/27/usinggit/</guid>
-      <description>&lt;p&gt;This article focuses on common GIT actions that affect branches, such as merging, rebasing branches and squashing local commits.&lt;/p&gt;</description>
+      <description>GIT commands that affect branches and history, focussing on merge, squashing commits and rebasing.</description>
       <content:encoded><![CDATA[<p>This article focuses on common GIT actions that affect branches, such as merging, rebasing branches and squashing local commits.</p>
 <h2 id="merge">MERGE</h2>
 <p>Merging brings changes from one branch into another. A feature branch is often created to work on a particular update. When complete, the branch needs to be merged back into &ldquo;main&rdquo;. The process would be as follows:</p>
@@ -331,8 +330,7 @@ The existing repo can be local or remote. It can be referenced by an SSH or HTTP
       <pubDate>Thu, 24 Jun 2021 17:45:34 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/06/24/gitandthefourareas/</guid>
-      <description>&lt;p&gt;GIT commands move data between four areas of the object database. This article explores the four areas and the common commands that affect them.&lt;/p&gt;
-&lt;p&gt;See the earlier post on &lt;a href=&#34;https://write-verbose.com/2021/06/17/git-cheatnotes/&#34;&gt;How GIT stores information&lt;/a&gt; for information on the GIT object database.&lt;/p&gt;</description>
+      <description>GIT commands and their effect on the four storage areas</description>
       <content:encoded><![CDATA[<p>GIT commands move data between four areas of the object database. This article explores the four areas and the common commands that affect them.</p>
 <p>See the earlier post on <a href="/2021/06/17/git-cheatnotes/">How GIT stores information</a> for information on the GIT object database.</p>
 <h2 id="what-are-the-four-areas-git-uses">What are the four areas GIT uses?</h2>
@@ -502,7 +500,7 @@ A common use case is to abandon some changes that have been committed and revert
       <pubDate>Thu, 17 Jun 2021 20:11:34 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/06/17/git-cheatnotes/</guid>
-      <description>&lt;p&gt;GIT has become the de-facto version control system, but it can get complicated quickly. A look under-the-hood can help with day-to-day use and file recovery. This article explores the files in the object database laying a foundation for more advanced use.&lt;/p&gt;</description>
+      <description>The basics of how GIT works under the hood, covering the object store, trees, blobs and commits.</description>
       <content:encoded><![CDATA[<p>GIT has become the de-facto version control system, but it can get complicated quickly. A look under-the-hood can help with day-to-day use and file recovery. This article explores the files in the object database laying a foundation for more advanced use.</p>
 <h2 id="how-does-git-store-objects">HOW DOES GIT STORE OBJECTS?</h2>
 <p>GIT stores information in the hidden <code>.git</code> folder in the root of the project. The folder is created when a repository is initialized using <code>git init</code></p>

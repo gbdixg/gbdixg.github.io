@@ -17,7 +17,7 @@
       <pubDate>Sat, 06 Apr 2019 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/04/06/export-eventlog/</guid>
-      <description>&lt;p&gt;This article includes a PowerShell &lt;em&gt;Export-Eventlog&lt;/em&gt; command to quickly export Windows event logs from a remote computer and copy it to the local machine.&lt;/p&gt;</description>
+      <description>A PowerShell function to export and copy Windows Event logs from a remote computer</description>
       <content:encoded><![CDATA[<p>This article includes a PowerShell <em>Export-Eventlog</em> command to quickly export Windows event logs from a remote computer and copy it to the local machine.</p>
 <p>Event logs are a cornerstone of troubleshooting, but getting access to them can be difficult across a network.</p>
 <blockquote>

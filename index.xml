@@ -17,7 +17,7 @@
       <pubDate>Mon, 17 Apr 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2023/04/17/readimelog/</guid>
-      <description>&lt;p&gt;Read-IMELog - A PowerShell script to read Intune Management Extension (IME) logs&lt;/p&gt;</description>
+      <description>A PowerShell function to read Intune Management Extension logs</description>
       <content:encoded><![CDATA[<p>Read-IMELog - A PowerShell script to read Intune Management Extension (IME) logs</p>
 <h2 id="background">Background</h2>
 <p>The Intune Management Extension is a Windows client component responsible for running Intune scripts and installing Win32 apps. It creates log files in the following folder:<br>
@@ -53,8 +53,7 @@
       <pubDate>Wed, 22 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2023/03/21/PowerShellWPFPt2/</guid>
-      <description>&lt;p&gt;&lt;strong&gt;More things I learned creating a GUI tool with PowerShell and WPF.&lt;/strong&gt;&lt;br&gt;
-The snippets in this article are based on the &lt;a href=&#34;https://github.com/gbdixg/Show-Win32AppUI&#34;&gt;Show-Win32AppUI tool&lt;/a&gt; available on GitHub.&lt;/p&gt;</description>
+      <description>Tips for working with the WPF user interface in PowerShell</description>
       <content:encoded><![CDATA[<p><strong>More things I learned creating a GUI tool with PowerShell and WPF.</strong><br>
 The snippets in this article are based on the <a href="https://github.com/gbdixg/Show-Win32AppUI">Show-Win32AppUI tool</a> available on GitHub.</p>
 <h1 id="part2---creating-a-multi-page-wpf-app-in-powershell">Part2 - Creating a multi-page WPF app in PowerShell</h1>
@@ -288,8 +287,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
       <pubDate>Tue, 21 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2023/03/21/PowerShellWPFPt1/</guid>
-      <description>&lt;p&gt;&lt;strong&gt;Things I learned creating a GUI tool with PowerShell and WPF.&lt;/strong&gt;&lt;br&gt;
-The snippets in this article are based on the &lt;a href=&#34;https://github.com/gbdixg/Show-Win32AppUI&#34;&gt;Show-Win32AppUI tool&lt;/a&gt; available on GitHub.&lt;/p&gt;</description>
+      <description>Create a responsive WPF app using PowerShell Runspaces to simulate multiple threads</description>
       <content:encoded><![CDATA[<p><strong>Things I learned creating a GUI tool with PowerShell and WPF.</strong><br>
 The snippets in this article are based on the <a href="https://github.com/gbdixg/Show-Win32AppUI">Show-Win32AppUI tool</a> available on GitHub.</p>
 <h1 id="disclaimer">Disclaimer</h1>
@@ -548,7 +546,7 @@ You will need to implement your own colour-coding to distinguish between warning
       <pubDate>Sat, 18 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2023/03/19/AzureAppRegistration/</guid>
-      <description>&lt;p&gt;A step by step guide to registering a custom Azure application for interactive MSGraph PowerShell. The example will create an app for use with the &lt;a href=&#34;https://write-verbose.com/2023/03/18/Show-Win32AppUI/&#34;&gt;Show-Win32AppUI tool&lt;/a&gt;.&lt;/p&gt;</description>
+      <description>Step by step guide to creating an Azure App for granular access to MS Graph</description>
       <content:encoded><![CDATA[<p>A step by step guide to registering a custom Azure application for interactive MSGraph PowerShell. The example will create an app for use with the <a href="/2023/03/18/Show-Win32AppUI/">Show-Win32AppUI tool</a>.</p>
 <h1 id="why-use-a-custom-app">Why use a custom app?</h1>
 <p>The Microsoft Graph enables access to a wide scope of Azure / Microsoft 365 providers and resources. A compromised Global Administrator account or errant script could cause widespread damage very quickly.</p>
@@ -693,7 +691,7 @@ Click <strong>Grant admin consent for <tenant></strong></p>
       <pubDate>Sat, 18 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2023/03/18/Show-Win32AppUI/</guid>
-      <description>&lt;p&gt;A GUI tool for end-to-end creation of Win32 Apps in Microsoft Intune.&lt;/p&gt;</description>
+      <description>A PowerShell GUI app to simplify creating Win32 Apps in Intune</description>
       <content:encoded><![CDATA[<p>A GUI tool for end-to-end creation of Win32 Apps in Microsoft Intune.</p>
 <p>This post provides details of &ldquo;Show-Win32AppUI&rdquo;, a GUI tool that simplifies the end-to-end process of creating Win32 Apps in Intune.</p>
 <p>The GitHub source is <a href="https://github.com/gbdixg/Show-Win32AppUI">available here</a>.  Instructions for setup and use are below.</p>
@@ -1020,7 +1018,7 @@ The technicians managing and monitoring the data migrations will need the ShareP
       <pubDate>Sun, 04 Jul 2021 14:27:50 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/07/04/gitedgecases/</guid>
-      <description>&lt;p&gt;Most of the time in GIT we are working at the file level.  It is possible to get more granualar and work with &lt;em&gt;hunks&lt;/em&gt; which are parts of a file e.g. a number of lines.&lt;/p&gt;</description>
+      <description>A post about some of the less used commands in GIT.</description>
       <content:encoded><![CDATA[<p>Most of the time in GIT we are working at the file level.  It is possible to get more granualar and work with <em>hunks</em> which are parts of a file e.g. a number of lines.</p>
 <h2 id="using-hunks">Using Hunks</h2>
 <p>The <code>--patch</code> option of the <code>git add</code> command causes GIT to automatically split an updated file into hunks.  It then prompts for each hunk and the contributor can decide whether to stage some or all of the hunks.<br>
@@ -1078,8 +1076,7 @@ GIT actually enters a menu system that allows granular control, such as splittin
       <pubDate>Wed, 30 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/06/30/github/</guid>
-      <description>&lt;p&gt;GitHub hosts open source projects that have multiple contributors. Only a few maintainers have read-write access to the repository, so how do people contribute suggested changes?&lt;/p&gt;
-&lt;p&gt;The answer is by copying the repo to their own GitHub account, making changes and submitting a &lt;em&gt;pull request&lt;/em&gt; to the maintainers of the original project. This post explains the steps.&lt;/p&gt;</description>
+      <description>GitHub - Using Fork, Clone, Push and Pull Requests</description>
       <content:encoded><![CDATA[<p>GitHub hosts open source projects that have multiple contributors. Only a few maintainers have read-write access to the repository, so how do people contribute suggested changes?</p>
 <p>The answer is by copying the repo to their own GitHub account, making changes and submitting a <em>pull request</em> to the maintainers of the original project. This post explains the steps.</p>
 <h2 id="contributing-on-github">CONTRIBUTING ON GitHub</h2>
@@ -1160,7 +1157,7 @@ The next two lines show assign symbols to the two versions of the index.md file 
       <pubDate>Sun, 27 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/06/27/usinggit/</guid>
-      <description>&lt;p&gt;This article focuses on common GIT actions that affect branches, such as merging, rebasing branches and squashing local commits.&lt;/p&gt;</description>
+      <description>GIT commands that affect branches and history, focussing on merge, squashing commits and rebasing.</description>
       <content:encoded><![CDATA[<p>This article focuses on common GIT actions that affect branches, such as merging, rebasing branches and squashing local commits.</p>
 <h2 id="merge">MERGE</h2>
 <p>Merging brings changes from one branch into another. A feature branch is often created to work on a particular update. When complete, the branch needs to be merged back into &ldquo;main&rdquo;. The process would be as follows:</p>
@@ -1334,8 +1331,7 @@ The existing repo can be local or remote. It can be referenced by an SSH or HTTP
       <pubDate>Thu, 24 Jun 2021 17:45:34 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/06/24/gitandthefourareas/</guid>
-      <description>&lt;p&gt;GIT commands move data between four areas of the object database. This article explores the four areas and the common commands that affect them.&lt;/p&gt;
-&lt;p&gt;See the earlier post on &lt;a href=&#34;https://write-verbose.com/2021/06/17/git-cheatnotes/&#34;&gt;How GIT stores information&lt;/a&gt; for information on the GIT object database.&lt;/p&gt;</description>
+      <description>GIT commands and their effect on the four storage areas</description>
       <content:encoded><![CDATA[<p>GIT commands move data between four areas of the object database. This article explores the four areas and the common commands that affect them.</p>
 <p>See the earlier post on <a href="/2021/06/17/git-cheatnotes/">How GIT stores information</a> for information on the GIT object database.</p>
 <h2 id="what-are-the-four-areas-git-uses">What are the four areas GIT uses?</h2>
@@ -1505,7 +1501,7 @@ A common use case is to abandon some changes that have been committed and revert
       <pubDate>Thu, 17 Jun 2021 20:11:34 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/06/17/git-cheatnotes/</guid>
-      <description>&lt;p&gt;GIT has become the de-facto version control system, but it can get complicated quickly. A look under-the-hood can help with day-to-day use and file recovery. This article explores the files in the object database laying a foundation for more advanced use.&lt;/p&gt;</description>
+      <description>The basics of how GIT works under the hood, covering the object store, trees, blobs and commits.</description>
       <content:encoded><![CDATA[<p>GIT has become the de-facto version control system, but it can get complicated quickly. A look under-the-hood can help with day-to-day use and file recovery. This article explores the files in the object database laying a foundation for more advanced use.</p>
 <h2 id="how-does-git-store-objects">HOW DOES GIT STORE OBJECTS?</h2>
 <p>GIT stores information in the hidden <code>.git</code> folder in the root of the project. The folder is created when a repository is initialized using <code>git init</code></p>
@@ -1626,7 +1622,7 @@ Local branches are stored in the .git/refs/heads folder:</p>
       <pubDate>Sat, 15 May 2021 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/05/15/wsl2-quick/</guid>
-      <description>&lt;p&gt;Windows Subsystem for Linux (WSL) is a fantastic Dev and Test environment, providing seamless integration for Linux apps and shells running on Windows 10. This post is a quick summary of the manual steps to enable WSL2 in Windows 10.&lt;/p&gt;</description>
+      <description>Quick notes on enabling Windows Services for Linux v2 on Windows 10</description>
       <content:encoded><![CDATA[<p>Windows Subsystem for Linux (WSL) is a fantastic Dev and Test environment, providing seamless integration for Linux apps and shells running on Windows 10. This post is a quick summary of the manual steps to enable WSL2 in Windows 10.</p>
 <h2 id="windows-insider-builds">Windows Insider Builds</h2>
 <p>At the time of writing, Microsoft is making it much simpler to install and enable WSL2 using a single command. This option is only available in Insider Builds 20262 and higher.</p>
@@ -1677,8 +1673,7 @@ Local branches are stored in the .git/refs/heads folder:</p>
       <pubDate>Fri, 07 May 2021 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/05/07/vscodesnippets/</guid>
-      <description>&lt;h2 id=&#34;background&#34;&gt;BACKGROUND&lt;/h2&gt;
-&lt;p&gt;VSCode snippets are a productivity feature allowing blocks of code to be inserted with a couple of keystrokes or tab completion. Its simple to add your own Snippets and dramatically boost your productivity. Read on for the details.&lt;/p&gt;</description>
+      <description>Create and manage code Snippets in Visual Studio Code</description>
       <content:encoded><![CDATA[<h2 id="background">BACKGROUND</h2>
 <p>VSCode snippets are a productivity feature allowing blocks of code to be inserted with a couple of keystrokes or tab completion. Its simple to add your own Snippets and dramatically boost your productivity. Read on for the details.</p>
 <blockquote>
@@ -1812,7 +1807,7 @@ Local branches are stored in the .git/refs/heads folder:</p>
       <pubDate>Sat, 13 Apr 2019 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/04/13/find-adsite/</guid>
-      <description>&lt;p&gt;Read-on for a PowerShell command to get the Active Directory Subnet and Site from the computername or IP Address.&lt;/p&gt;</description>
+      <description>Use PowerShell to get the AD Site and Subnet of a Windows computer</description>
       <content:encoded><![CDATA[<p>Read-on for a PowerShell command to get the Active Directory Subnet and Site from the computername or IP Address.</p>
 <p><strong>Active Directory Sites</strong> represent locations with good network connectivity. An ADSite is often created for each office or a group of offices in a metropolitan area, to generate the replication topology between Domain Controllers, and to help workstations/servers locate closest services.</p>
 <p><strong>Active Directory Subnets</strong> define the IP ranges included in an AD Site. A member workstation/server will have an IP address that should fall within a defined AD subnet, making it part of an AD Site.</p>
@@ -1840,7 +1835,7 @@ If a company populates subnet descriptions with useful information, it can also 
       <pubDate>Sat, 06 Apr 2019 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/04/06/export-eventlog/</guid>
-      <description>&lt;p&gt;This article includes a PowerShell &lt;em&gt;Export-Eventlog&lt;/em&gt; command to quickly export Windows event logs from a remote computer and copy it to the local machine.&lt;/p&gt;</description>
+      <description>A PowerShell function to export and copy Windows Event logs from a remote computer</description>
       <content:encoded><![CDATA[<p>This article includes a PowerShell <em>Export-Eventlog</em> command to quickly export Windows event logs from a remote computer and copy it to the local machine.</p>
 <p>Event logs are a cornerstone of troubleshooting, but getting access to them can be difficult across a network.</p>
 <blockquote>
@@ -1937,7 +1932,7 @@ If a company populates subnet descriptions with useful information, it can also 
       <pubDate>Sun, 06 Jan 2019 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/01/06/powershell-toolmaking-regex/</guid>
-      <description>&lt;p&gt;This post includes a Get-WLAN function to show information about wireless LAN connections, including the SSID and signal strength. It also demonstrates creating a PowerShell wrapper for a built-in Windows command.&lt;/p&gt;</description>
+      <description>PowerShell function to show WIFI connections, using Regular expressions to convert netsh output into PSObjects</description>
       <content:encoded><![CDATA[<p>This post includes a Get-WLAN function to show information about wireless LAN connections, including the SSID and signal strength. It also demonstrates creating a PowerShell wrapper for a built-in Windows command.</p>
 <h2 id="why-create-a-powershell-exe-wrapper">Why create a PowerShell exe wrapper</h2>
 <blockquote>

@@ -17,7 +17,7 @@
       <pubDate>Sun, 27 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/06/27/usinggit/</guid>
-      <description>&lt;p&gt;This article focuses on common GIT actions that affect branches, such as merging, rebasing branches and squashing local commits.&lt;/p&gt;</description>
+      <description>GIT commands that affect branches and history, focussing on merge, squashing commits and rebasing.</description>
       <content:encoded><![CDATA[<p>This article focuses on common GIT actions that affect branches, such as merging, rebasing branches and squashing local commits.</p>
 <h2 id="merge">MERGE</h2>
 <p>Merging brings changes from one branch into another. A feature branch is often created to work on a particular update. When complete, the branch needs to be merged back into &ldquo;main&rdquo;. The process would be as follows:</p>

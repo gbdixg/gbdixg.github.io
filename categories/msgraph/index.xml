@@ -17,7 +17,7 @@
       <pubDate>Sat, 18 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2023/03/19/AzureAppRegistration/</guid>
-      <description>&lt;p&gt;A step by step guide to registering a custom Azure application for interactive MSGraph PowerShell. The example will create an app for use with the &lt;a href=&#34;https://write-verbose.com/2023/03/18/Show-Win32AppUI/&#34;&gt;Show-Win32AppUI tool&lt;/a&gt;.&lt;/p&gt;</description>
+      <description>Step by step guide to creating an Azure App for granular access to MS Graph</description>
       <content:encoded><![CDATA[<p>A step by step guide to registering a custom Azure application for interactive MSGraph PowerShell. The example will create an app for use with the <a href="/2023/03/18/Show-Win32AppUI/">Show-Win32AppUI tool</a>.</p>
 <h1 id="why-use-a-custom-app">Why use a custom app?</h1>
 <p>The Microsoft Graph enables access to a wide scope of Azure / Microsoft 365 providers and resources. A compromised Global Administrator account or errant script could cause widespread damage very quickly.</p>

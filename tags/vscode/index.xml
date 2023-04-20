@@ -17,8 +17,7 @@
       <pubDate>Fri, 07 May 2021 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/05/07/vscodesnippets/</guid>
-      <description>&lt;h2 id=&#34;background&#34;&gt;BACKGROUND&lt;/h2&gt;
-&lt;p&gt;VSCode snippets are a productivity feature allowing blocks of code to be inserted with a couple of keystrokes or tab completion. Its simple to add your own Snippets and dramatically boost your productivity. Read on for the details.&lt;/p&gt;</description>
+      <description>Create and manage code Snippets in Visual Studio Code</description>
       <content:encoded><![CDATA[<h2 id="background">BACKGROUND</h2>
 <p>VSCode snippets are a productivity feature allowing blocks of code to be inserted with a couple of keystrokes or tab completion. Its simple to add your own Snippets and dramatically boost your productivity. Read on for the details.</p>
 <blockquote>

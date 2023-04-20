@@ -17,7 +17,7 @@
       <pubDate>Sat, 13 Apr 2019 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/04/13/find-adsite/</guid>
-      <description>&lt;p&gt;Read-on for a PowerShell command to get the Active Directory Subnet and Site from the computername or IP Address.&lt;/p&gt;</description>
+      <description>Use PowerShell to get the AD Site and Subnet of a Windows computer</description>
       <content:encoded><![CDATA[<p>Read-on for a PowerShell command to get the Active Directory Subnet and Site from the computername or IP Address.</p>
 <p><strong>Active Directory Sites</strong> represent locations with good network connectivity. An ADSite is often created for each office or a group of offices in a metropolitan area, to generate the replication topology between Domain Controllers, and to help workstations/servers locate closest services.</p>
 <p><strong>Active Directory Subnets</strong> define the IP ranges included in an AD Site. A member workstation/server will have an IP address that should fall within a defined AD subnet, making it part of an AD Site.</p>

@@ -17,8 +17,7 @@
       <pubDate>Wed, 22 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2023/03/21/PowerShellWPFPt2/</guid>
-      <description>&lt;p&gt;&lt;strong&gt;More things I learned creating a GUI tool with PowerShell and WPF.&lt;/strong&gt;&lt;br&gt;
-The snippets in this article are based on the &lt;a href=&#34;https://github.com/gbdixg/Show-Win32AppUI&#34;&gt;Show-Win32AppUI tool&lt;/a&gt; available on GitHub.&lt;/p&gt;</description>
+      <description>Tips for working with the WPF user interface in PowerShell</description>
       <content:encoded><![CDATA[<p><strong>More things I learned creating a GUI tool with PowerShell and WPF.</strong><br>
 The snippets in this article are based on the <a href="https://github.com/gbdixg/Show-Win32AppUI">Show-Win32AppUI tool</a> available on GitHub.</p>
 <h1 id="part2---creating-a-multi-page-wpf-app-in-powershell">Part2 - Creating a multi-page WPF app in PowerShell</h1>
@@ -252,8 +251,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
       <pubDate>Tue, 21 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2023/03/21/PowerShellWPFPt1/</guid>
-      <description>&lt;p&gt;&lt;strong&gt;Things I learned creating a GUI tool with PowerShell and WPF.&lt;/strong&gt;&lt;br&gt;
-The snippets in this article are based on the &lt;a href=&#34;https://github.com/gbdixg/Show-Win32AppUI&#34;&gt;Show-Win32AppUI tool&lt;/a&gt; available on GitHub.&lt;/p&gt;</description>
+      <description>Create a responsive WPF app using PowerShell Runspaces to simulate multiple threads</description>
       <content:encoded><![CDATA[<p><strong>Things I learned creating a GUI tool with PowerShell and WPF.</strong><br>
 The snippets in this article are based on the <a href="https://github.com/gbdixg/Show-Win32AppUI">Show-Win32AppUI tool</a> available on GitHub.</p>
 <h1 id="disclaimer">Disclaimer</h1>
@@ -512,7 +510,7 @@ You will need to implement your own colour-coding to distinguish between warning
       <pubDate>Sat, 18 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2023/03/18/Show-Win32AppUI/</guid>
-      <description>&lt;p&gt;A GUI tool for end-to-end creation of Win32 Apps in Microsoft Intune.&lt;/p&gt;</description>
+      <description>A PowerShell GUI app to simplify creating Win32 Apps in Intune</description>
       <content:encoded><![CDATA[<p>A GUI tool for end-to-end creation of Win32 Apps in Microsoft Intune.</p>
 <p>This post provides details of &ldquo;Show-Win32AppUI&rdquo;, a GUI tool that simplifies the end-to-end process of creating Win32 Apps in Intune.</p>
 <p>The GitHub source is <a href="https://github.com/gbdixg/Show-Win32AppUI">available here</a>.  Instructions for setup and use are below.</p>

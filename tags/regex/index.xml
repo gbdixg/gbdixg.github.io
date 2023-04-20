@@ -17,7 +17,7 @@
       <pubDate>Sun, 06 Jan 2019 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/01/06/powershell-toolmaking-regex/</guid>
-      <description>&lt;p&gt;This post includes a Get-WLAN function to show information about wireless LAN connections, including the SSID and signal strength. It also demonstrates creating a PowerShell wrapper for a built-in Windows command.&lt;/p&gt;</description>
+      <description>PowerShell function to show WIFI connections, using Regular expressions to convert netsh output into PSObjects</description>
       <content:encoded><![CDATA[<p>This post includes a Get-WLAN function to show information about wireless LAN connections, including the SSID and signal strength. It also demonstrates creating a PowerShell wrapper for a built-in Windows command.</p>
 <h2 id="why-create-a-powershell-exe-wrapper">Why create a PowerShell exe wrapper</h2>
 <blockquote>

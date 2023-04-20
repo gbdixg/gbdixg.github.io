@@ -17,7 +17,7 @@
       <pubDate>Sat, 15 May 2021 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/05/15/wsl2-quick/</guid>
-      <description>&lt;p&gt;Windows Subsystem for Linux (WSL) is a fantastic Dev and Test environment, providing seamless integration for Linux apps and shells running on Windows 10. This post is a quick summary of the manual steps to enable WSL2 in Windows 10.&lt;/p&gt;</description>
+      <description>Quick notes on enabling Windows Services for Linux v2 on Windows 10</description>
       <content:encoded><![CDATA[<p>Windows Subsystem for Linux (WSL) is a fantastic Dev and Test environment, providing seamless integration for Linux apps and shells running on Windows 10. This post is a quick summary of the manual steps to enable WSL2 in Windows 10.</p>
 <h2 id="windows-insider-builds">Windows Insider Builds</h2>
 <p>At the time of writing, Microsoft is making it much simpler to install and enable WSL2 using a single command. This option is only available in Insider Builds 20262 and higher.</p>

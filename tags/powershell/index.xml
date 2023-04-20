@@ -17,7 +17,7 @@
       <pubDate>Mon, 17 Apr 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2023/04/17/readimelog/</guid>
-      <description>&lt;p&gt;Read-IMELog - A PowerShell script to read Intune Management Extension (IME) logs&lt;/p&gt;</description>
+      <description>A PowerShell function to read Intune Management Extension logs</description>
       <content:encoded><![CDATA[<p>Read-IMELog - A PowerShell script to read Intune Management Extension (IME) logs</p>
 <h2 id="background">Background</h2>
 <p>The Intune Management Extension is a Windows client component responsible for running Intune scripts and installing Win32 apps. It creates log files in the following folder:<br>
@@ -53,8 +53,7 @@
       <pubDate>Wed, 22 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2023/03/21/PowerShellWPFPt2/</guid>
-      <description>&lt;p&gt;&lt;strong&gt;More things I learned creating a GUI tool with PowerShell and WPF.&lt;/strong&gt;&lt;br&gt;
-The snippets in this article are based on the &lt;a href=&#34;https://github.com/gbdixg/Show-Win32AppUI&#34;&gt;Show-Win32AppUI tool&lt;/a&gt; available on GitHub.&lt;/p&gt;</description>
+      <description>Tips for working with the WPF user interface in PowerShell</description>
       <content:encoded><![CDATA[<p><strong>More things I learned creating a GUI tool with PowerShell and WPF.</strong><br>
 The snippets in this article are based on the <a href="https://github.com/gbdixg/Show-Win32AppUI">Show-Win32AppUI tool</a> available on GitHub.</p>
 <h1 id="part2---creating-a-multi-page-wpf-app-in-powershell">Part2 - Creating a multi-page WPF app in PowerShell</h1>
@@ -288,8 +287,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
       <pubDate>Tue, 21 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2023/03/21/PowerShellWPFPt1/</guid>
-      <description>&lt;p&gt;&lt;strong&gt;Things I learned creating a GUI tool with PowerShell and WPF.&lt;/strong&gt;&lt;br&gt;
-The snippets in this article are based on the &lt;a href=&#34;https://github.com/gbdixg/Show-Win32AppUI&#34;&gt;Show-Win32AppUI tool&lt;/a&gt; available on GitHub.&lt;/p&gt;</description>
+      <description>Create a responsive WPF app using PowerShell Runspaces to simulate multiple threads</description>
       <content:encoded><![CDATA[<p><strong>Things I learned creating a GUI tool with PowerShell and WPF.</strong><br>
 The snippets in this article are based on the <a href="https://github.com/gbdixg/Show-Win32AppUI">Show-Win32AppUI tool</a> available on GitHub.</p>
 <h1 id="disclaimer">Disclaimer</h1>
@@ -548,7 +546,7 @@ You will need to implement your own colour-coding to distinguish between warning
       <pubDate>Sat, 18 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2023/03/19/AzureAppRegistration/</guid>
-      <description>&lt;p&gt;A step by step guide to registering a custom Azure application for interactive MSGraph PowerShell. The example will create an app for use with the &lt;a href=&#34;https://write-verbose.com/2023/03/18/Show-Win32AppUI/&#34;&gt;Show-Win32AppUI tool&lt;/a&gt;.&lt;/p&gt;</description>
+      <description>Step by step guide to creating an Azure App for granular access to MS Graph</description>
       <content:encoded><![CDATA[<p>A step by step guide to registering a custom Azure application for interactive MSGraph PowerShell. The example will create an app for use with the <a href="/2023/03/18/Show-Win32AppUI/">Show-Win32AppUI tool</a>.</p>
 <h1 id="why-use-a-custom-app">Why use a custom app?</h1>
 <p>The Microsoft Graph enables access to a wide scope of Azure / Microsoft 365 providers and resources. A compromised Global Administrator account or errant script could cause widespread damage very quickly.</p>
@@ -693,8 +691,7 @@ Click <strong>Grant admin consent for <tenant></strong></p>
       <pubDate>Fri, 07 May 2021 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/05/07/vscodesnippets/</guid>
-      <description>&lt;h2 id=&#34;background&#34;&gt;BACKGROUND&lt;/h2&gt;
-&lt;p&gt;VSCode snippets are a productivity feature allowing blocks of code to be inserted with a couple of keystrokes or tab completion. Its simple to add your own Snippets and dramatically boost your productivity. Read on for the details.&lt;/p&gt;</description>
+      <description>Create and manage code Snippets in Visual Studio Code</description>
       <content:encoded><![CDATA[<h2 id="background">BACKGROUND</h2>
 <p>VSCode snippets are a productivity feature allowing blocks of code to be inserted with a couple of keystrokes or tab completion. Its simple to add your own Snippets and dramatically boost your productivity. Read on for the details.</p>
 <blockquote>
@@ -828,7 +825,7 @@ Click <strong>Grant admin consent for <tenant></strong></p>
       <pubDate>Sat, 13 Apr 2019 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/04/13/find-adsite/</guid>
-      <description>&lt;p&gt;Read-on for a PowerShell command to get the Active Directory Subnet and Site from the computername or IP Address.&lt;/p&gt;</description>
+      <description>Use PowerShell to get the AD Site and Subnet of a Windows computer</description>
       <content:encoded><![CDATA[<p>Read-on for a PowerShell command to get the Active Directory Subnet and Site from the computername or IP Address.</p>
 <p><strong>Active Directory Sites</strong> represent locations with good network connectivity. An ADSite is often created for each office or a group of offices in a metropolitan area, to generate the replication topology between Domain Controllers, and to help workstations/servers locate closest services.</p>
 <p><strong>Active Directory Subnets</strong> define the IP ranges included in an AD Site. A member workstation/server will have an IP address that should fall within a defined AD subnet, making it part of an AD Site.</p>
@@ -856,7 +853,7 @@ If a company populates subnet descriptions with useful information, it can also 
       <pubDate>Sat, 06 Apr 2019 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/04/06/export-eventlog/</guid>
-      <description>&lt;p&gt;This article includes a PowerShell &lt;em&gt;Export-Eventlog&lt;/em&gt; command to quickly export Windows event logs from a remote computer and copy it to the local machine.&lt;/p&gt;</description>
+      <description>A PowerShell function to export and copy Windows Event logs from a remote computer</description>
       <content:encoded><![CDATA[<p>This article includes a PowerShell <em>Export-Eventlog</em> command to quickly export Windows event logs from a remote computer and copy it to the local machine.</p>
 <p>Event logs are a cornerstone of troubleshooting, but getting access to them can be difficult across a network.</p>
 <blockquote>
@@ -953,7 +950,7 @@ If a company populates subnet descriptions with useful information, it can also 
       <pubDate>Sun, 06 Jan 2019 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2019/01/06/powershell-toolmaking-regex/</guid>
-      <description>&lt;p&gt;This post includes a Get-WLAN function to show information about wireless LAN connections, including the SSID and signal strength. It also demonstrates creating a PowerShell wrapper for a built-in Windows command.&lt;/p&gt;</description>
+      <description>PowerShell function to show WIFI connections, using Regular expressions to convert netsh output into PSObjects</description>
       <content:encoded><![CDATA[<p>This post includes a Get-WLAN function to show information about wireless LAN connections, including the SSID and signal strength. It also demonstrates creating a PowerShell wrapper for a built-in Windows command.</p>
 <h2 id="why-create-a-powershell-exe-wrapper">Why create a PowerShell exe wrapper</h2>
 <blockquote>

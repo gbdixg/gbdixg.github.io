@@ -17,8 +17,7 @@
       <pubDate>Wed, 30 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/06/30/github/</guid>
-      <description>&lt;p&gt;GitHub hosts open source projects that have multiple contributors. Only a few maintainers have read-write access to the repository, so how do people contribute suggested changes?&lt;/p&gt;
-&lt;p&gt;The answer is by copying the repo to their own GitHub account, making changes and submitting a &lt;em&gt;pull request&lt;/em&gt; to the maintainers of the original project. This post explains the steps.&lt;/p&gt;</description>
+      <description>GitHub - Using Fork, Clone, Push and Pull Requests</description>
       <content:encoded><![CDATA[<p>GitHub hosts open source projects that have multiple contributors. Only a few maintainers have read-write access to the repository, so how do people contribute suggested changes?</p>
 <p>The answer is by copying the repo to their own GitHub account, making changes and submitting a <em>pull request</em> to the maintainers of the original project. This post explains the steps.</p>
 <h2 id="contributing-on-github">CONTRIBUTING ON GitHub</h2>
@@ -99,7 +98,7 @@ The next two lines show assign symbols to the two versions of the index.md file 
       <pubDate>Sun, 27 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2021/06/27/usinggit/</guid>
-      <description>&lt;p&gt;This article focuses on common GIT actions that affect branches, such as merging, rebasing branches and squashing local commits.&lt;/p&gt;</description>
+      <description>GIT commands that affect branches and history, focussing on merge, squashing commits and rebasing.</description>
       <content:encoded><![CDATA[<p>This article focuses on common GIT actions that affect branches, such as merging, rebasing branches and squashing local commits.</p>
 <h2 id="merge">MERGE</h2>
 <p>Merging brings changes from one branch into another. A feature branch is often created to work on a particular update. When complete, the branch needs to be merged back into &ldquo;main&rdquo;. The process would be as follows:</p>
