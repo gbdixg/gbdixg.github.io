@@ -1204,61 +1204,9 @@ Each line (the $_ variable) is tested for a match against the RegEx expression u
 </p>
 <p>A complete Get-WLAN PowerShell function is provided below.</p>
 <h2 id="powershell-script">PowerShell Script</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="kd">Function</span><span class="w"> </span><span class="nb">Get-WLAN</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="cm">&lt;#
-</span></span></span><span class="line"><span class="cl"><span class="cm">  .</span><span class="sd">SYNOPSIS</span><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">    Gets the properties of WiFI connections
-</span></span></span><span class="line"><span class="cl"><span class="cm">  .</span><span class="sd">DESCRIPTION</span><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">    A PowerShell wrapper around NETSH WLAN to convert the output into a PS object
-</span></span></span><span class="line"><span class="cl"><span class="cm">  .</span><span class="sd">INPUTS</span><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">    None
-</span></span></span><span class="line"><span class="cl"><span class="cm">  .</span><span class="sd">OUTPUTS</span><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">    PSObject
-</span></span></span><span class="line"><span class="cl"><span class="cm">  .</span><span class="sd">EXAMPLE</span><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">    Get-WLAN
-</span></span></span><span class="line"><span class="cl"><span class="cm">  .</span><span class="sd">NOTES</span><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">    Author:GD
-</span></span></span><span class="line"><span class="cl"><span class="cm">    Website: www.write-verbose.com
-</span></span></span><span class="line"><span class="cl"><span class="cm">    Twitter: @writeverbose
-</span></span></span><span class="line"><span class="cl"><span class="cm">  #&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="nb">cmdletBinding</span><span class="p">()]</span>
-</span></span><span class="line"><span class="cl">    <span class="k">param</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">    <span class="k">PROCESS</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nv">$Properties</span> <span class="p">=</span> <span class="vm">@</span><span class="p">{}</span>
-</span></span><span class="line"><span class="cl">        <span class="nv">$result</span> <span class="p">=</span> <span class="n">netsh</span> <span class="n">wlan</span> <span class="n">show</span> <span class="n">interfaces</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nv">$LASTEXITCODE</span> <span class="o">-eq</span> <span class="mf">0</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="nv">$Properties</span><span class="p">.</span><span class="py">Add</span><span class="p">(</span><span class="s1">&#39;Computername&#39;</span><span class="p">,</span> <span class="nv">$ENV:COMPUTERNAME</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="nv">$Result</span> <span class="p">|</span> <span class="nb">ForEach-Object</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                <span class="cm">&lt;# Example NETSH command output:
-</span></span></span><span class="line"><span class="cl"><span class="cm">                Name                   : Wi-Fi
-</span></span></span><span class="line"><span class="cl"><span class="cm">                Description            : Intel(R) Dual Band Wireless-AC 8260
-</span></span></span><span class="line"><span class="cl"><span class="cm">                State                  : connected
-</span></span></span><span class="line"><span class="cl"><span class="cm">                SSID                   : MyWiFi
-</span></span></span><span class="line"><span class="cl"><span class="cm">                #&gt;</span>
-</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="nv">$_</span> <span class="o">-match</span> <span class="s1">&#39;^\s+(?&lt;name&gt;[^:]+):\s(?&lt;value&gt;.*)$&#39;</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                    <span class="nv">$name</span> <span class="p">=</span> <span class="nv">$Matches</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">].</span><span class="py">Trim</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">                    <span class="nv">$val</span> <span class="p">=</span> <span class="nv">$Matches</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">].</span><span class="py">Trim</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">                    <span class="nv">$Properties</span><span class="p">.</span><span class="py">Add</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$val</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">                <span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="p">}</span> <span class="c">#foreach</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="nv">$Properties</span><span class="p">.</span><span class="py">Count</span> <span class="o">-gt</span> <span class="mf">0</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                <span class="p">[</span><span class="no">PSCustomObject][Ordered</span><span class="p">]</span><span class="nv">$Properties</span>
-</span></span><span class="line"><span class="cl">            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">                <span class="nb">Write-Warning</span> <span class="s2">&#34;Failed to parse NETSH output&#34;</span>
-</span></span><span class="line"><span class="cl">            <span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="nb">Write-Warning</span> <span class="s2">&#34;Error from NETSH - &#39;</span><span class="p">$(</span><span class="nv">$Error</span><span class="p">[</span><span class="mf">0</span><span class="p">])</span><span class="s2">&#39;&#34;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="p">}</span><span class="c">#process</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><h2 id="regex-links">Regex Links</h2>
+<script type="application/javascript" src="https://gist.github.com/gbdixg/e931a3056a56af3e7de1460eb0571fff.js"></script>
+
+<h2 id="regex-links">Regex Links</h2>
 <p>For some practice with Regular Expressions, check out <a href="https://alf.nu/RegexGolf/">RegEx Golf</a> or <a href="https://regexcrossword.com/">Regex Crosswords</a>. There is even a <a href="https://www.bennadel.com/blog/3629-the-12th-annual-regular-expression-day---june-1st-2019.htm">Regular Expressions day</a>.</p>
 <p><br/><br/></p>
 <blockquote>

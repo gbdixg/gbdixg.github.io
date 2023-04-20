@@ -337,5 +337,84 @@ If a company populates subnet descriptions with useful information, it can also 
 </blockquote>]]></content:encoded>
     </item>
     
+    <item>
+      <title>Get-WLAN - PowerShell Toolmaking</title>
+      <link>https://write-verbose.com/2019/01/06/powershell-toolmaking-regex/</link>
+      <pubDate>Sun, 06 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2019/01/06/powershell-toolmaking-regex/</guid>
+      <description>&lt;p&gt;This post includes a Get-WLAN function to show information about wireless LAN connections, including the SSID and signal strength. It also demonstrates creating a PowerShell wrapper for a built-in Windows command.&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<p>This post includes a Get-WLAN function to show information about wireless LAN connections, including the SSID and signal strength. It also demonstrates creating a PowerShell wrapper for a built-in Windows command.</p>
+<h2 id="why-create-a-powershell-exe-wrapper">Why create a PowerShell exe wrapper</h2>
+<blockquote>
+<p>PowerShell Tools are re-usable functions that can be used stand-alone or in a pipeline</p>
+</blockquote>
+<p>Sometimes its more convenient to create a <em>wrapper script</em> using the output of a command line tool than try to create the function entirely in PowerShell. The example below creates a PowerShell command to get information about WI-Fi connections on the local computer.</p>
+<h2 id="using-regex-to-parse-text-output">Using Regex to parse text output</h2>
+<p><strong>Regular expressions are the ideal way to convert text output from a command line tool into PowerShell objects, making a re-usable pipeline tool</strong>.  Regex is very powerful, but also intimidating. The solution below uses a handy shortcut to identify boundaries in the output - the <em>not</em> operator - ^.<br>
+For example, <code>[^:]+</code> means match one or more characters that are not a colon. In the example below, this is used to split the text on each line in the command output.</p>
+<p><strong>The netsh output below needs to be split into key value pairs</strong> (e.g. SSID = MyWifi) and converted to a PSObject. For each line of output, the colon character is the obvious boundary between the key name and the value.</p>
+<h3 id="native-command-output">Native Command Output</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">C<span class="p">:</span><span class="nl">\</span><span class="c1">&gt; netsh wlan show interfaces</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">There is 1 interface on the system:
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Name                   : Wi-Fi
+</span></span><span class="line"><span class="cl">Description            : Intel(r) Dual Band Wireless-AC 8260
+</span></span><span class="line"><span class="cl">GUID                   : 42bce393-237c-4bd4-9d5e-18020ba8bb87
+</span></span><span class="line"><span class="cl">Physical address       : b7:8a:60:a5:f7:d8
+</span></span><span class="line"><span class="cl">State                  : connected
+</span></span><span class="line"><span class="cl">SSID                   : MyWiFi
+</span></span><span class="line"><span class="cl">BSSID                  : 30:d4:2e:50:de:7f
+</span></span><span class="line"><span class="cl">Network type           : Infrastructure
+</span></span><span class="line"><span class="cl">Radio type             : 802.11n
+</span></span><span class="line"><span class="cl">Authentication         : WPA2-Personal
+</span></span><span class="line"><span class="cl">Cipher                 : CCMP
+</span></span><span class="line"><span class="cl">Connection mode        : Profile
+</span></span><span class="line"><span class="cl">Channel                : 6
+</span></span><span class="line"><span class="cl">Receive rate (Mbps)    : 115.6
+</span></span><span class="line"><span class="cl">Transmit rate (Mbps)   : 115.6
+</span></span><span class="line"><span class="cl">Signal                 : 97%
+</span></span><span class="line"><span class="cl">Profile                : MyWiFi
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Hosted network status  : Not available
+</span></span></code></pre></div><h3 id="the-regex-explained">The regex explained</h3>
+<p>The PowerShell snippet below shows the regular expression and how the matches are added to a hash table collection as name = value.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nv">$Properties</span> <span class="p">=</span> <span class="vm">@</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$result</span> <span class="p">=</span> <span class="n">netsh</span> <span class="n">wlan</span> <span class="n">show</span> <span class="n">interfaces</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">$Result</span> <span class="p">|</span> <span class="nb">ForEach-Object</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nv">$_</span> <span class="o">-match</span> <span class="s1">&#39;^\s+(?&lt;name&gt;[^:]+):\s(?&lt;value&gt;.*)$&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="nv">$name</span> <span class="p">=</span> <span class="nv">$Matches</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">].</span><span class="py">Trim</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$val</span> <span class="p">=</span> <span class="nv">$Matches</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">].</span><span class="py">Trim</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="nv">$Properties</span><span class="p">.</span><span class="py">Add</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$val</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>The Foreach-Object loop above processes the NetSH command output line-by-line.<br>
+Each line (the $_ variable) is tested for a match against the RegEx expression using the PowerShell -match operator.</p>
+<p>The &ldquo;not&rdquo; operator <code>[^:]+</code> captures all the characters until the colon and saves them in the named capture group &ldquo;name&rdquo; <code>?&lt;name&gt;</code>. The match then expects a colon followed by a space. Finally, everything until the end of the line is saved to the named capture group &ldquo;value&rdquo; <code>?&lt;value&gt;</code>.</p>
+<ul>
+<li>MATCHES(0) = the entire line</li>
+<li>MATCHES(&rsquo;name&rsquo;) = from the start of the line, match any character that is not a colon</li>
+<li>MATCHES(&lsquo;value&rsquo;) = match everything from colon [space] to the end of the line</li>
+</ul>
+<p><img loading="lazy" src="/img/powershell-toolmaking-regex1.png" alt="RegEx"  />
+</p>
+<p>A complete Get-WLAN PowerShell function is provided below.</p>
+<h2 id="powershell-script">PowerShell Script</h2>
+<script type="application/javascript" src="https://gist.github.com/gbdixg/e931a3056a56af3e7de1460eb0571fff.js"></script>
+
+<h2 id="regex-links">Regex Links</h2>
+<p>For some practice with Regular Expressions, check out <a href="https://alf.nu/RegexGolf/">RegEx Golf</a> or <a href="https://regexcrossword.com/">Regex Crosswords</a>. There is even a <a href="https://www.bennadel.com/blog/3629-the-12th-annual-regular-expression-day---june-1st-2019.htm">Regular Expressions day</a>.</p>
+<p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
   </channel>
 </rss>
