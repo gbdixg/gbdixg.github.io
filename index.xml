@@ -1346,7 +1346,7 @@ The existing repo can be local or remote. It can be referenced by an SSH or HTTP
 <li>The <em>Stash</em> is a temporary area, a bit like a clipboard, that can store and retrieve a saved copy of the working area and index</li>
 </ol>
 <p>Understanding git requires understanding how commands move data between these four areas.</p>
-<p><img loading="lazy" src="/assets/images/gitnotes-git1.jpg" alt="FourAreas"  />
+<p><img loading="lazy" src="/img/gitnotes-git1.jpg" alt="FourAreas"  />
 </p>
 <h2 id="git-status">GIT STATUS</h2>
 <p><code>git status</code> is one of the most important commands. It shows the status of the working area and index. The most common output shows untracked files and modified files.</p>
