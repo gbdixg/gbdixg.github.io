@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>troubleshooting on Write-Verbose</title>
+    <link>https://write-verbose.com/tags/troubleshooting/</link>
+    <description>Recent content in troubleshooting on Write-Verbose</description>
+    <image>
+      <title>Write-Verbose</title>
+      <url>https://write-verbose.com/papermod-cover.png</url>
+      <link>https://write-verbose.com/papermod-cover.png</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sat, 06 Apr 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/troubleshooting/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Export Remote Eventlog with PowerShell</title>
+      <link>https://write-verbose.com/2019/04/06/export-eventlog/</link>
+      <pubDate>Sat, 06 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2019/04/06/export-eventlog/</guid>
+      <description>&lt;p&gt;This article includes a PowerShell &lt;em&gt;Export-Eventlog&lt;/em&gt; command to quickly export Windows event logs from a remote computer and copy it to the local machine.&lt;/p&gt;</description>
+      <content:encoded><![CDATA[<p>This article includes a PowerShell <em>Export-Eventlog</em> command to quickly export Windows event logs from a remote computer and copy it to the local machine.</p>
+<p>Event logs are a cornerstone of troubleshooting, but getting access to them can be difficult across a network.</p>
+<blockquote>
+<p>It can be faster to export a Windows event log on a remote computer,  copy the .evtx file over the network and then query it locally.</p>
+</blockquote>
+<p>The PowerShell <strong>Get-Winevent</strong> command can work against remote event logs, but it can be painfully slow over the network. Copying an entire exported log (.evtx file) across the same connection is much faster. Get-Winevent can still be used with the <em>-path</em> parameter to query the locally copied .evtx file.</p>
+<h2 id="powershell-script">PowerShell Script</h2>
+<p><strong>wevtutil.exe</strong> is Windows .exe that can export event logs.  The PowerShell function below uses wevtutil to export one ore more event logs and copy them locally. The computer name is pre-pended to the exported log name.</p>
+<script type="application/javascript" src="https://gist.github.com/gbdixg/02215dd747bafb1e42a6c9cf2e36a542.js"></script>
+
+<p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
+  </channel>
+</rss>

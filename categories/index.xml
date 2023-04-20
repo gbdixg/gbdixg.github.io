@@ -12,7 +12,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Wed, 22 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>powershell</title>
+      <title>PowerShell</title>
       <link>https://write-verbose.com/categories/powershell/</link>
       <pubDate>Wed, 22 Mar 2023 00:00:00 +0000</pubDate>
       
@@ -67,16 +67,6 @@
       <pubDate>Sun, 27 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/categories/git/</guid>
-      <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
-    </item>
-    
-    <item>
-      <title>troubleshooting</title>
-      <link>https://write-verbose.com/categories/troubleshooting/</link>
-      <pubDate>Sat, 06 Apr 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://write-verbose.com/categories/troubleshooting/</guid>
       <description></description>
       <content:encoded><![CDATA[]]></content:encoded>
     </item>
