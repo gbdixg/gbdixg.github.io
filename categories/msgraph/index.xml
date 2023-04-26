@@ -12,12 +12,12 @@
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Sat, 18 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/categories/msgraph/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Avoid excess permissions with a custom app to access MSGraph PowerShell</title>
+      <title>A custom Azure app with limited Microsoft Graph consent for PowerShell</title>
       <link>https://write-verbose.com/2023/03/19/AzureAppRegistration/</link>
       <pubDate>Sat, 18 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2023/03/19/AzureAppRegistration/</guid>
-      <description>Step by step guide to creating an Azure App for granular access to MS Graph</description>
+      <description>Step by step guide to creating an Azure App with granular access to MS Graph PowerShell</description>
       <content:encoded><![CDATA[<p>A step by step guide to registering a custom Azure application for interactive MSGraph PowerShell. The example will create an app for use with the <a href="/2023/03/18/Show-Win32AppUI/">Show-Win32AppUI tool</a>.</p>
 <h1 id="why-use-a-custom-app">Why use a custom app?</h1>
 <p>The Microsoft Graph enables access to a wide scope of Azure / Microsoft 365 providers and resources. A compromised Global Administrator account or errant script could cause widespread damage very quickly.</p>
@@ -26,7 +26,7 @@
 <p>The first step is to prevent users granting application consent. User consent is enabled by default and presents a risk of unwanted access to company data.</p>
 <p>In the <a href="https://aad.portal.azure.com/">Azure AD portal</a>, navigate to <strong>Enterprise applications</strong> and then <strong>Consent and permissions</strong>.</p>
 <p>Many companies change the setting to <strong>Do not allow user consent</strong>. Note that this does create an admin overhead, so you could look into the advanced options of defining low-risk permissions or using conditional access.</p>
-<p><img loading="lazy" src="/img/CustomApp0.png" alt="User consent"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp0.png" alt="User consent"  />
 </p>
 <p>The following admin roles can then grant application consent:</p>
 <ul>
@@ -39,7 +39,7 @@
 <p>In the <a href="https://aad.portal.azure.com/">Azure AD portal</a>, navigate to <strong>Enterprise applications</strong><br>
 In the <em>All applications</em> view, select <strong>Microsoft Graph PowerShell</strong> and then <strong>Permissions</strong><br>
 Click <strong>Review Permissions</strong></p>
-<p><img loading="lazy" src="/img/CustomApp05.png" alt="User consent"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp05.png" alt="User consent"  />
 </p>
 <p>Select <strong>This application has more permissions that I want</strong>. The following PowerShell is displayed (uses the AzureAD module):</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Connect-AzureAD</span>
@@ -66,24 +66,24 @@ Click <strong>Review Permissions</strong></p>
 <p>The following steps create a new application with delegated API access to MSGraph, suitable for use from a PowerShell script. The permissions are specific to the <a href="/2023/03/18/Show-Win32AppUI/">Show-Win32AppUI</a></p>
 <p>Open the <a href="https://aad.portal.azure.com/">Azure AD portal</a> and select <strong>App registrations</strong></p>
 <p>Click on <strong>New Registration</strong> to start the process</p>
-<p><img loading="lazy" src="/img/CustomApp1.png" alt="New registration"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp1.png" alt="New registration"  />
 </p>
 <p>Enter a name for the application and select the <strong>single tenant</strong> option. Do not enter a redirect URI at this stage.</p>
-<p><img loading="lazy" src="/img/CustomApp2.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp2.png" alt="App Name"  />
 </p>
 <p>Click on <strong>Register</strong></p>
 <p>The application is created and the admin center shows the <em>Overview</em> page.</p>
 <p>Click <strong>Add a Redirect URI</strong></p>
-<p><img loading="lazy" src="/img/CustomApp3.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp3.png" alt="App Name"  />
 </p>
 <p>The authentication step is displayed. Click on <strong>Add a platform</strong></p>
-<p><img loading="lazy" src="/img/CustomApp4.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp4.png" alt="App Name"  />
 </p>
 <p>Select <strong>Mobile and desktop applications</strong></p>
-<p><img loading="lazy" src="/img/CustomApp5.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp5.png" alt="App Name"  />
 </p>
 <p>Enable the <em>nativeclient</em> URI to support PowerShell 5.1 scripts. Add a custom redirect URI of <em>http://localhost</em> to support PowerShell 7.x scripts.</p>
-<p><img loading="lazy" src="/img/CustomApp6.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp6.png" alt="App Name"  />
 </p>
 <p>Click <strong>Configure</strong> to save the URIs</p>
 <p>Now back on the Authentication page, ensure the following options are set:</p>
@@ -91,23 +91,23 @@ Click <strong>Review Permissions</strong></p>
 <li>Supported account types = <strong>Accounts in this organizational directory only</strong></li>
 <li>Allow public client flows = <strong>No</strong></li>
 </ul>
-<p><img loading="lazy" src="/img/CustomApp7.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp7.png" alt="App Name"  />
 </p>
 <p>Click <strong>API permissions</strong> in the left pane</p>
 <p>User.Read delegated access is already assigned by default.  Click <strong>Add a permission</strong></p>
-<p><img loading="lazy" src="/img/CustomApp8.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp8.png" alt="App Name"  />
 </p>
 <p>Select the <strong>Microsoft Graph</strong> API</p>
-<p><img loading="lazy" src="/img/CustomApp9.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp9.png" alt="App Name"  />
 </p>
 <p>Select <strong>Delegated permissions</strong></p>
-<p><img loading="lazy" src="/img/CustomApp10.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp10.png" alt="App Name"  />
 </p>
 <p>Search for each of the following delegated permissions, enable and click <strong>Add permissions</strong></p>
 <ul>
 <li>DeviceManagementApps.ReadWrite.All</li>
 </ul>
-<p><img loading="lazy" src="/img/CustomApp11.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp11.png" alt="App Name"  />
 </p>
 <p>Repeat the process to add permissions for the following:</p>
 <ul>
@@ -117,22 +117,22 @@ Click <strong>Review Permissions</strong></p>
 </ul>
 <p>The API permissions page will show the list of added permissions with a warning that consent is <em>not granted</em>.<br>
 Click <strong>Grant admin consent for <tenant></strong></p>
-<p><img loading="lazy" src="/img/CustomApp12.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp12.png" alt="App Name"  />
 </p>
 <p>The warnings will be replaced by a green tick.</p>
 <p>Return to the application <strong>Overview</strong> page and note the <em>Application (client) ID</em> - this will be used to authenticate</p>
 <h1 id="add-assignment-restrictions">Add assignment restrictions</h1>
 <p>By default anyone in the tenant can access the application (although they need Role permissions to make changes in Azure AD and Intune). This step will limit access to a specific group.</p>
 <p>View the <strong>Properties</strong> page of the app and change <strong>Assignment required</strong> to <em>Yes</em></p>
-<p><img loading="lazy" src="/img/CustomApp125.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp125.png" alt="App Name"  />
 </p>
 <p>Next click on <strong>Users and groups</strong> then <strong>add user/group</strong>. Select the required Azure AD group and <em>Assign</em>. Only members of this group can authenticate using the app.</p>
-<p><img loading="lazy" src="/img/CustomApp126.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp126.png" alt="App Name"  />
 </p>
 <h1 id="authenticating-using-the-custom-app">Authenticating using the custom app</h1>
 <p><em>Delegated consent</em> uses the intersection of application permissions and user permissions to authorise access. i.e. the authenticated user must have the required permissions as well as the application.</p>
 <p>Use interactive authentication to provide credentials with the required role permissions. Interactive auth prompts using the familiar browser page:</p>
-<p><img loading="lazy" src="/img/CustomApp13.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp13.png" alt="App Name"  />
 </p>
 <p>Examples of PowerShell authentication using the app are below:</p>
 <h2 id="msalps-authentication">MSAL.PS authentication</h2>

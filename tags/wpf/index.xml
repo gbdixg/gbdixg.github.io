@@ -514,7 +514,7 @@ You will need to implement your own colour-coding to distinguish between warning
       <content:encoded><![CDATA[<p>A GUI tool for end-to-end creation of Win32 Apps in Microsoft Intune.</p>
 <p>This post provides details of &ldquo;Show-Win32AppUI&rdquo;, a GUI tool that simplifies the end-to-end process of creating Win32 Apps in Intune.</p>
 <p>The GitHub source is <a href="https://github.com/gbdixg/Show-Win32AppUI">available here</a>.  Instructions for setup and use are below.</p>
-<p><img loading="lazy" src="/img/Show-Win32AppUI.gif" alt="Show-Win32AppUI"  />
+<p><img loading="lazy" src="/img/Show-Win32AppUI/Show-Win32AppUI.gif" alt="Show-Win32AppUI"  />
 </p>
 <p>This isn&rsquo;t a one size fits all community tool. You will likely need to modify it to meet your needs. However, its written in PowerShell and has code comments and blog posts to make editing simpler.</p>
 <h1 id="setup">SETUP</h1>
@@ -577,7 +577,7 @@ Whether you use a custom app or Microsoft Graph PowerShell, the app must be conf
     The tool creates installation wrapper scripts called install.ps1 and uninstall.ps1 in the package source folder. Existing files with these names are overwritten.<br><br>
     The <i>Next</i> button is only available when required fields have been completed.
     </td>
-    <td width="450"><img src="/img/Win32AppUI-Page1.png" alt="1" width = "450px" height = "850px"></td>
+    <td width="450"><img src="/img/Show-Win32AppUI/Win32AppUI-Page1.png" alt="1" width = "450px" height = "850px"></td>
    </tr>
    <tr>
       <td><h3>Page2 - Deployment</h3>
@@ -586,7 +586,7 @@ Whether you use a custom app or Microsoft Graph PowerShell, the app must be conf
       If there is already an Intune application with the same Display Name a warning will appear in the status bar. The simplest solution is to increment the Package Number.<br><br>
       The <i>Next</i> button is only available when required fields have been completed.
       </td>
-      <td width="450"><img src="/img/Win32AppUI-Page2.png" alt="2" width = "450px" height = "850px"></td>
+      <td width="450"><img src="/img/Show-Win32AppUI/Win32AppUI-Page2.png" alt="2" width = "450px" height = "850px"></td>
   </tr>
   <tr>
     <td><h3>Page3 - Assignment</h3>
@@ -596,7 +596,7 @@ Whether you use a custom app or Microsoft Graph PowerShell, the app must be conf
     Click on the Logo box to select a image file for display with the application in the Company Portal.<br><br>
     The <i>Next</i> button is only available when required fields have been completed.
     </td>
-    <td width="450"><img src="/img/Win32AppUI-Page3.png" alt="3" width = "450px" height = "850px"></td>
+    <td width="450"><img src="/img/Show-Win32AppUI/Win32AppUI-Page3.png" alt="3" width = "450px" height = "850px"></td>
   </tr>
   <tr>
     <td><h3>Page3 - Implement</h3>
@@ -608,18 +608,18 @@ Whether you use a custom app or Microsoft Graph PowerShell, the app must be conf
     <b>Configure Dependency / Configure Supercedence</b> modifies the Win32 App in Intune. These steps are skipped if they are set to None.<br><br>
     <b>Configure Assignment</b> modifies the Win32 App in Intune to add the assignment groups created in the earlier step.
     </td>
-    <td width="450"><img src="/img/Win32AppUI-Page4.png" alt="4" width = "450px" height = "850px"></td>
+    <td width="450"><img src="/img/Show-Win32AppUI/Win32AppUI-Page4.png" alt="4" width = "450px" height = "850px"></td>
   </tr>
 </table>
 <h1 id="troubleshooting">Troubleshooting</h1>
 <p>The tool creates a debug log on every run with detailed information and error messages. The default LogFolder is C:\Temp, but can be modified on Line 8 of Show-Win32AppUI.ps1.</p>
 <p>The -WriteHost switch will also show the debug output in the console.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="p">.\</span><span class="nb">Show-Win32AppUI</span><span class="p">.</span><span class="py">ps1</span> <span class="n">-writehost</span>
-</span></span></code></pre></div><p><img loading="lazy" src="/img/Win32AppUI-WriteHost.png" alt="WriteHost"  />
+</span></span></code></pre></div><p><img loading="lazy" src="/img/Show-Win32AppUI/Win32AppUI-WriteHost.png" alt="WriteHost"  />
 </p>
 <h1 id="options">Options</h1>
 <p>The variables section in Show-Win32AppUI.ps1 allows default settings to be modified. The following section is at Line 50:</p>
-<p><img loading="lazy" src="/img/Win32AppUI-Defaults.png" alt="WriteHost"  />
+<p><img loading="lazy" src="/img/Show-Win32AppUI/Win32AppUI-Defaults.png" alt="WriteHost"  />
 </p>
 <h1 id="detection-method">Detection Method</h1>
 <p>The Win32 app detection is hardcoded to use a file exists method. The <em>Install.ps1</em> script wrapper creates a &ldquo;.ps1.tag&rdquo; file under the %PROGRAMDATA% folder and <em>Uninstall.ps1</em> deletes it - a detection method <a href="https://oofhours.com/2020/05/18/two-for-one-updated-autopilot-branding-and-update-os-scripts/">first suggested by Michael Niehaus</a></p>

@@ -12,12 +12,12 @@
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Sat, 18 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/categories/intune/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Avoid excess permissions with a custom app to access MSGraph PowerShell</title>
+      <title>A custom Azure app with limited Microsoft Graph consent for PowerShell</title>
       <link>https://write-verbose.com/2023/03/19/AzureAppRegistration/</link>
       <pubDate>Sat, 18 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2023/03/19/AzureAppRegistration/</guid>
-      <description>Step by step guide to creating an Azure App for granular access to MS Graph</description>
+      <description>Step by step guide to creating an Azure App with granular access to MS Graph PowerShell</description>
       <content:encoded><![CDATA[<p>A step by step guide to registering a custom Azure application for interactive MSGraph PowerShell. The example will create an app for use with the <a href="/2023/03/18/Show-Win32AppUI/">Show-Win32AppUI tool</a>.</p>
 <h1 id="why-use-a-custom-app">Why use a custom app?</h1>
 <p>The Microsoft Graph enables access to a wide scope of Azure / Microsoft 365 providers and resources. A compromised Global Administrator account or errant script could cause widespread damage very quickly.</p>
@@ -26,7 +26,7 @@
 <p>The first step is to prevent users granting application consent. User consent is enabled by default and presents a risk of unwanted access to company data.</p>
 <p>In the <a href="https://aad.portal.azure.com/">Azure AD portal</a>, navigate to <strong>Enterprise applications</strong> and then <strong>Consent and permissions</strong>.</p>
 <p>Many companies change the setting to <strong>Do not allow user consent</strong>. Note that this does create an admin overhead, so you could look into the advanced options of defining low-risk permissions or using conditional access.</p>
-<p><img loading="lazy" src="/img/CustomApp0.png" alt="User consent"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp0.png" alt="User consent"  />
 </p>
 <p>The following admin roles can then grant application consent:</p>
 <ul>
@@ -39,7 +39,7 @@
 <p>In the <a href="https://aad.portal.azure.com/">Azure AD portal</a>, navigate to <strong>Enterprise applications</strong><br>
 In the <em>All applications</em> view, select <strong>Microsoft Graph PowerShell</strong> and then <strong>Permissions</strong><br>
 Click <strong>Review Permissions</strong></p>
-<p><img loading="lazy" src="/img/CustomApp05.png" alt="User consent"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp05.png" alt="User consent"  />
 </p>
 <p>Select <strong>This application has more permissions that I want</strong>. The following PowerShell is displayed (uses the AzureAD module):</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Connect-AzureAD</span>
@@ -66,24 +66,24 @@ Click <strong>Review Permissions</strong></p>
 <p>The following steps create a new application with delegated API access to MSGraph, suitable for use from a PowerShell script. The permissions are specific to the <a href="/2023/03/18/Show-Win32AppUI/">Show-Win32AppUI</a></p>
 <p>Open the <a href="https://aad.portal.azure.com/">Azure AD portal</a> and select <strong>App registrations</strong></p>
 <p>Click on <strong>New Registration</strong> to start the process</p>
-<p><img loading="lazy" src="/img/CustomApp1.png" alt="New registration"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp1.png" alt="New registration"  />
 </p>
 <p>Enter a name for the application and select the <strong>single tenant</strong> option. Do not enter a redirect URI at this stage.</p>
-<p><img loading="lazy" src="/img/CustomApp2.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp2.png" alt="App Name"  />
 </p>
 <p>Click on <strong>Register</strong></p>
 <p>The application is created and the admin center shows the <em>Overview</em> page.</p>
 <p>Click <strong>Add a Redirect URI</strong></p>
-<p><img loading="lazy" src="/img/CustomApp3.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp3.png" alt="App Name"  />
 </p>
 <p>The authentication step is displayed. Click on <strong>Add a platform</strong></p>
-<p><img loading="lazy" src="/img/CustomApp4.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp4.png" alt="App Name"  />
 </p>
 <p>Select <strong>Mobile and desktop applications</strong></p>
-<p><img loading="lazy" src="/img/CustomApp5.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp5.png" alt="App Name"  />
 </p>
 <p>Enable the <em>nativeclient</em> URI to support PowerShell 5.1 scripts. Add a custom redirect URI of <em>http://localhost</em> to support PowerShell 7.x scripts.</p>
-<p><img loading="lazy" src="/img/CustomApp6.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp6.png" alt="App Name"  />
 </p>
 <p>Click <strong>Configure</strong> to save the URIs</p>
 <p>Now back on the Authentication page, ensure the following options are set:</p>
@@ -91,23 +91,23 @@ Click <strong>Review Permissions</strong></p>
 <li>Supported account types = <strong>Accounts in this organizational directory only</strong></li>
 <li>Allow public client flows = <strong>No</strong></li>
 </ul>
-<p><img loading="lazy" src="/img/CustomApp7.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp7.png" alt="App Name"  />
 </p>
 <p>Click <strong>API permissions</strong> in the left pane</p>
 <p>User.Read delegated access is already assigned by default.  Click <strong>Add a permission</strong></p>
-<p><img loading="lazy" src="/img/CustomApp8.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp8.png" alt="App Name"  />
 </p>
 <p>Select the <strong>Microsoft Graph</strong> API</p>
-<p><img loading="lazy" src="/img/CustomApp9.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp9.png" alt="App Name"  />
 </p>
 <p>Select <strong>Delegated permissions</strong></p>
-<p><img loading="lazy" src="/img/CustomApp10.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp10.png" alt="App Name"  />
 </p>
 <p>Search for each of the following delegated permissions, enable and click <strong>Add permissions</strong></p>
 <ul>
 <li>DeviceManagementApps.ReadWrite.All</li>
 </ul>
-<p><img loading="lazy" src="/img/CustomApp11.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp11.png" alt="App Name"  />
 </p>
 <p>Repeat the process to add permissions for the following:</p>
 <ul>
@@ -117,22 +117,22 @@ Click <strong>Review Permissions</strong></p>
 </ul>
 <p>The API permissions page will show the list of added permissions with a warning that consent is <em>not granted</em>.<br>
 Click <strong>Grant admin consent for <tenant></strong></p>
-<p><img loading="lazy" src="/img/CustomApp12.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp12.png" alt="App Name"  />
 </p>
 <p>The warnings will be replaced by a green tick.</p>
 <p>Return to the application <strong>Overview</strong> page and note the <em>Application (client) ID</em> - this will be used to authenticate</p>
 <h1 id="add-assignment-restrictions">Add assignment restrictions</h1>
 <p>By default anyone in the tenant can access the application (although they need Role permissions to make changes in Azure AD and Intune). This step will limit access to a specific group.</p>
 <p>View the <strong>Properties</strong> page of the app and change <strong>Assignment required</strong> to <em>Yes</em></p>
-<p><img loading="lazy" src="/img/CustomApp125.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp125.png" alt="App Name"  />
 </p>
 <p>Next click on <strong>Users and groups</strong> then <strong>add user/group</strong>. Select the required Azure AD group and <em>Assign</em>. Only members of this group can authenticate using the app.</p>
-<p><img loading="lazy" src="/img/CustomApp126.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp126.png" alt="App Name"  />
 </p>
 <h1 id="authenticating-using-the-custom-app">Authenticating using the custom app</h1>
 <p><em>Delegated consent</em> uses the intersection of application permissions and user permissions to authorise access. i.e. the authenticated user must have the required permissions as well as the application.</p>
 <p>Use interactive authentication to provide credentials with the required role permissions. Interactive auth prompts using the familiar browser page:</p>
-<p><img loading="lazy" src="/img/CustomApp13.png" alt="App Name"  />
+<p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp13.png" alt="App Name"  />
 </p>
 <p>Examples of PowerShell authentication using the app are below:</p>
 <h2 id="msalps-authentication">MSAL.PS authentication</h2>
@@ -166,7 +166,7 @@ Click <strong>Grant admin consent for <tenant></strong></p>
       <content:encoded><![CDATA[<p>A GUI tool for end-to-end creation of Win32 Apps in Microsoft Intune.</p>
 <p>This post provides details of &ldquo;Show-Win32AppUI&rdquo;, a GUI tool that simplifies the end-to-end process of creating Win32 Apps in Intune.</p>
 <p>The GitHub source is <a href="https://github.com/gbdixg/Show-Win32AppUI">available here</a>.  Instructions for setup and use are below.</p>
-<p><img loading="lazy" src="/img/Show-Win32AppUI.gif" alt="Show-Win32AppUI"  />
+<p><img loading="lazy" src="/img/Show-Win32AppUI/Show-Win32AppUI.gif" alt="Show-Win32AppUI"  />
 </p>
 <p>This isn&rsquo;t a one size fits all community tool. You will likely need to modify it to meet your needs. However, its written in PowerShell and has code comments and blog posts to make editing simpler.</p>
 <h1 id="setup">SETUP</h1>
@@ -229,7 +229,7 @@ Whether you use a custom app or Microsoft Graph PowerShell, the app must be conf
     The tool creates installation wrapper scripts called install.ps1 and uninstall.ps1 in the package source folder. Existing files with these names are overwritten.<br><br>
     The <i>Next</i> button is only available when required fields have been completed.
     </td>
-    <td width="450"><img src="/img/Win32AppUI-Page1.png" alt="1" width = "450px" height = "850px"></td>
+    <td width="450"><img src="/img/Show-Win32AppUI/Win32AppUI-Page1.png" alt="1" width = "450px" height = "850px"></td>
    </tr>
    <tr>
       <td><h3>Page2 - Deployment</h3>
@@ -238,7 +238,7 @@ Whether you use a custom app or Microsoft Graph PowerShell, the app must be conf
       If there is already an Intune application with the same Display Name a warning will appear in the status bar. The simplest solution is to increment the Package Number.<br><br>
       The <i>Next</i> button is only available when required fields have been completed.
       </td>
-      <td width="450"><img src="/img/Win32AppUI-Page2.png" alt="2" width = "450px" height = "850px"></td>
+      <td width="450"><img src="/img/Show-Win32AppUI/Win32AppUI-Page2.png" alt="2" width = "450px" height = "850px"></td>
   </tr>
   <tr>
     <td><h3>Page3 - Assignment</h3>
@@ -248,7 +248,7 @@ Whether you use a custom app or Microsoft Graph PowerShell, the app must be conf
     Click on the Logo box to select a image file for display with the application in the Company Portal.<br><br>
     The <i>Next</i> button is only available when required fields have been completed.
     </td>
-    <td width="450"><img src="/img/Win32AppUI-Page3.png" alt="3" width = "450px" height = "850px"></td>
+    <td width="450"><img src="/img/Show-Win32AppUI/Win32AppUI-Page3.png" alt="3" width = "450px" height = "850px"></td>
   </tr>
   <tr>
     <td><h3>Page3 - Implement</h3>
@@ -260,18 +260,18 @@ Whether you use a custom app or Microsoft Graph PowerShell, the app must be conf
     <b>Configure Dependency / Configure Supercedence</b> modifies the Win32 App in Intune. These steps are skipped if they are set to None.<br><br>
     <b>Configure Assignment</b> modifies the Win32 App in Intune to add the assignment groups created in the earlier step.
     </td>
-    <td width="450"><img src="/img/Win32AppUI-Page4.png" alt="4" width = "450px" height = "850px"></td>
+    <td width="450"><img src="/img/Show-Win32AppUI/Win32AppUI-Page4.png" alt="4" width = "450px" height = "850px"></td>
   </tr>
 </table>
 <h1 id="troubleshooting">Troubleshooting</h1>
 <p>The tool creates a debug log on every run with detailed information and error messages. The default LogFolder is C:\Temp, but can be modified on Line 8 of Show-Win32AppUI.ps1.</p>
 <p>The -WriteHost switch will also show the debug output in the console.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="p">.\</span><span class="nb">Show-Win32AppUI</span><span class="p">.</span><span class="py">ps1</span> <span class="n">-writehost</span>
-</span></span></code></pre></div><p><img loading="lazy" src="/img/Win32AppUI-WriteHost.png" alt="WriteHost"  />
+</span></span></code></pre></div><p><img loading="lazy" src="/img/Show-Win32AppUI/Win32AppUI-WriteHost.png" alt="WriteHost"  />
 </p>
 <h1 id="options">Options</h1>
 <p>The variables section in Show-Win32AppUI.ps1 allows default settings to be modified. The following section is at Line 50:</p>
-<p><img loading="lazy" src="/img/Win32AppUI-Defaults.png" alt="WriteHost"  />
+<p><img loading="lazy" src="/img/Show-Win32AppUI/Win32AppUI-Defaults.png" alt="WriteHost"  />
 </p>
 <h1 id="detection-method">Detection Method</h1>
 <p>The Win32 app detection is hardcoded to use a file exists method. The <em>Install.ps1</em> script wrapper creates a &ldquo;.ps1.tag&rdquo; file under the %PROGRAMDATA% folder and <em>Uninstall.ps1</em> deletes it - a detection method <a href="https://oofhours.com/2020/05/18/two-for-one-updated-autopilot-branding-and-update-os-scripts/">first suggested by Michael Niehaus</a></p>
