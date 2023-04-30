@@ -10,7 +10,908 @@
       <link>https://write-verbose.com/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 11 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/m365/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 26 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/m365/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Purview Information Protection Deep Dive Pt3 - Recommendations and Limitations</title>
+      <link>https://write-verbose.com/2023/04/26/sensitivitylabelspt2/</link>
+      <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2023/04/26/sensitivitylabelspt2/</guid>
+      <description>Sensitivity Labels and Purview Information Protection Policies Part Three</description>
+      <content:encoded><![CDATA[<p>Part three of a deep dive series on Purview Sensitivity Labels:</p>
+<p>Part 1 - <a href="/2023/04/24/sensitivitylabelspt1/">Manual Labelling</a><br>
+Part 2 - <a href="/2023/04/25/sensitivitylabelspt2/">Automatic Labelling</a><br>
+Part 3 - Recommendations and Limitations</p>
+<h2 id="labelling-recommendations">Labelling Recommendations</h2>
+<p>Data Classification requires broad organizational support to be successful. The following design recommendations should help with implementation&hellip;</p>
+<p><strong>Keep the number of labels to a minimum</strong><br>
+Labelling needs to be simple and the options clearly defined, otherwise adoption will suffer</p>
+<p><strong>Create separate labels for Items and Containers</strong><br>
+Item and Container Labels apply different controls. Separate labels means the name and description can be clearer. For example, <em>Confidential</em> may be suitable for documents, but it would be less clear for M365 Groups.</p>
+<p><strong>Create separate labels for Files, Emails and Meetings</strong><br>
+There are sub-scopes within Items for Files, Emails and Meetings (Calendar events). Again, the controls are different so labels can be more specific if targeted. For example, email labels can control view, reply, forwarding, whereas file labels can control Save, Print, Copy, Expiry, Offline Access.</p>
+<p>It helps that client apps only show labels applicable to the current scope, so a label scoped to <strong>Items - Email</strong> will not be displayed in a document, spreadsheet or presentation.</p>
+<p><strong>Create a baseline set of company-wide labels and a small number of targeted additions</strong><br>
+A core set of labels should be applicable to everyone. Specific departments or teams may need extra labels for custom data, such as <a href="https://csrc.nist.gov/glossary/term/PII">PII</a>, or <em>Blueprints</em>. Label policies can deploy the extra labels just to specific AAD groups.</p>
+<p><strong>Create labels that will endure over a long period</strong><br>
+Choose labels that will still be applicable in years to come and then consult users (and perhaps run a limited pilot) to get labels right before mass adoption.  Deleting labels is problematic. The label is added to the metadata of items and deleting the label does not remove it from the metadata. The recommended way to retire a label is to stop publishing it (label policy), but don&rsquo;t delete the label itself.</p>
+<p><strong>Avoid sub labels</strong><br>
+There are some quirks with sub labels and they don&rsquo;t add much value.</p>
+<p><strong>Use same text for the Label Name and Display Name</strong><br>
+The Label Name is used internally and the Display Name is visible to users. Making them different is just adding complexity. The label is actually assigned a GUID that must be used in advanced administrator operations anyway.</p>
+<p><strong>Don&rsquo;t apply policy controls straight-away</strong><br>
+Consider publishing Labels and using them without controls initially. You can then use the Data Classification <em>Content Explorer</em> and <em>Activity Explorer</em> to review how Labels are being used before applying that knowledge to policy creation.</p>
+<p><strong>Use file encryption to protect intellectual property</strong><br>
+Employee-only content can be encrypted with <em>Co-Author permissions</em> for <em>All users and groups in your organization</em>. Leavers who attempt to take protected data with them will be denied access when their account is disabled. Protected Data sent or copied to a third party will be inaccessible.</p>
+<p><strong>Create an FAQ and include the link in the Label Policy</strong>
+Users will need reassurance to feel confident in applying labels with content restrictions. There will also be edge cases that need more information. Label Policies include an option to deploy a URL help link.</p>
+<h2 id="check-your-service-and-tenant-settings">Check your Service and Tenant settings</h2>
+<p>Depending on the age of your Tenant, the following may already be enabled&hellip;</p>
+<h3 id="enable-sensitivity-labels-for-office-files-in-sharepoint-and-onedrive">Enable sensitivity labels for Office files in SharePoint and OneDrive</h3>
+<p>Data Classification support is not enabled by default in SharePoint. The following features are turned on when enabled:</p>
+<ul>
+<li>Default Sensitivity Label option is available for Document Libraries</li>
+<li><em>Sensitivity</em> column can be added to Library views</li>
+<li>Encrypted document can be indexed and returned in search results</li>
+<li>Data classification reports can show documents by Label in SharePoint and OneDirve</li>
+<li>Auto-labelling policies can apply to data at reset in SharePoint and OneDrive</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Install-module</span> <span class="n">-Name</span> <span class="n">Microsoft</span><span class="p">.</span><span class="py">Online</span><span class="p">.</span><span class="py">SharePoint</span><span class="p">.</span><span class="py">PowerShell</span>
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Connect-SPOService</span> <span class="n">-Url</span> <span class="s2">&#34;https://</span><span class="p">$(</span><span class="nv">$tenant</span><span class="p">)</span><span class="s2">-admin.sharepoint.com&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Get-SPOTenant</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">EnableAIPIntegration</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">EnableAIPIntegration</span>
+</span></span><span class="line"><span class="cl"><span class="p">--------------------</span>
+</span></span><span class="line"><span class="cl">                <span class="n">False</span>
+</span></span><span class="line"><span class="cl">                
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Set-SPOTenant</span> <span class="n">-EnableAIPIntegration</span> <span class="vm">$True</span>
+</span></span></code></pre></div><h3 id="enable-co-authoring-for-files-encrypted-with-sensitivity-labels">Enable co-authoring for files encrypted with sensitivity labels</h3>
+<p>Check that document co-authoring is enabled in the Tenant. Older versions of the Information Protection SDK (before v1.7) did not support co-authoring or Autosave. In version 1.7, changes were made to encrypted document metadata to enable these features.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Instal-module</span> <span class="n">-Name</span> <span class="n">ExchangeOnlineManagement</span>
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Connect-IPPSSession</span>
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">get-PolicyConfig</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">EnableLabelCoauth</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">EnableLabelCoauth</span>
+</span></span><span class="line"><span class="cl"><span class="p">------------------</span>
+</span></span><span class="line"><span class="cl">             <span class="n">False</span>
+</span></span><span class="line"><span class="cl">             
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Set-PolicyConfig</span> <span class="n">-EnableLabelCoauth</span> <span class="vm">$True</span>
+</span></span></code></pre></div><h3 id="enable-cross-tenant-access-for-encrypted-files">Enable cross-Tenant access for encrypted files</h3>
+<p>By default, a Tenant will accept B2B authentication from other Azure AD Tenants, but if users receive error messages, it&rsquo;s possible these settings have been restricted by an Administrator.</p>
+<p>For example, on attempting to authenticate and decrypt a document the user may see one of the following messages, depending on whether B2B authentication has been restricted in the source organization (inbound) or the receiving organization (outbound)</p>
+<p><em><strong>Your tenant administrator has restricted which organizations can be accessed. Contact your IT department to request access to the Wingtiptoys.com organization</strong></em></p>
+<p><em><strong>The Contoso.com administrator has restricted which organizations can access their tenant. Contact the Contoso.com IT department to request access</strong></em></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Import-Module</span> <span class="n">Microsoft</span><span class="p">.</span><span class="py">Graph</span><span class="p">.</span><span class="py">Identity</span><span class="p">.</span><span class="py">SignIns</span>
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Connect-MGGraph</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># INBOUND</span>
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Get-MgPolicyCrossTenantAccessPolicyDefault</span> <span class="p">|</span> <span class="nb">select </span><span class="n">-ExpandProperty</span> <span class="n">B2BCollaborationInbound</span> <span class="p">|</span> <span class="nb">select </span><span class="n">-ExpandProperty</span> <span class="n">UsersAndGroups</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">AccessType</span>
+</span></span><span class="line"><span class="cl"><span class="p">----------</span>
+</span></span><span class="line"><span class="cl"><span class="n">allowed</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Get-MgPolicyCrossTenantAccessPolicyDefault</span> <span class="p">|</span> <span class="nb">select </span><span class="n">-ExpandProperty</span> <span class="n">B2BCollaborationInbound</span> <span class="p">|</span> <span class="nb">select </span><span class="n">-ExpandProperty</span> <span class="n">Applications</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">AccessType</span>
+</span></span><span class="line"><span class="cl"><span class="p">----------</span>
+</span></span><span class="line"><span class="cl"><span class="n">allowed</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># OUTBOUND</span>
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Get-MgPolicyCrossTenantAccessPolicyDefault</span> <span class="p">|</span> <span class="nb">select </span><span class="n">-ExpandProperty</span> <span class="n">B2BCollaborationOutbound</span> <span class="p">|</span> <span class="nb">select </span><span class="n">-ExpandProperty</span> <span class="n">UsersAndGroups</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">AccessType</span>
+</span></span><span class="line"><span class="cl"><span class="p">----------</span>
+</span></span><span class="line"><span class="cl"><span class="n">allowed</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Get-MgPolicyCrossTenantAccessPolicyDefault</span> <span class="p">|</span> <span class="nb">select </span><span class="n">-ExpandProperty</span> <span class="n">B2BCollaborationOutbound</span> <span class="p">|</span> <span class="nb">select </span><span class="n">-ExpandProperty</span> <span class="n">Applications</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">AccessType</span>
+</span></span><span class="line"><span class="cl"><span class="p">----------</span>
+</span></span><span class="line"><span class="cl"><span class="n">allowed</span>
+</span></span></code></pre></div><p>If needed, the settings can be modified in the <a href="https://portal.azure.com/#view/Microsoft_AAD_IAM/CompanyRelationshipsMenuBlade/~/CrossTenantAccessSettings">Azure AD portal</a>, External Identities &gt; Cross-tenant access settings &gt; Default settings, or using the <a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.identity.signins/update-mgpolicycrosstenantaccesspolicydefault?view=graph-powershell-1.0">Update-MgPolicyCrossTenantAccessPolicyDefault</a> command.</p>
+<h3 id="exchange-online-irm-configuration">Exchange Online: IRM Configuration</h3>
+<p>The following features are dependent on Information Rights Management Licensing in Exchange Online:</p>
+<ul>
+<li>Message Encryption using mail flow rules</li>
+<li>Encryption using DLP policies</li>
+<li>Support for sensitivity labels with encryption using Outlook on the Web, Mac, iOS and Android</li>
+<li>Auto-labelling policies in Exchange with encryption</li>
+</ul>
+<p>Ensure <em>Azure RMS licensing</em> is enabled as follows:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Instal-module</span> <span class="n">-Name</span> <span class="n">ExchangeOnlineManagement</span>
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Connect-ExchangeOnline</span>
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Get-IRMConfiguration</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">AzureRMSLicensingEnabled</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">AzureRMSLicensingEnabled</span>
+</span></span><span class="line"><span class="cl"><span class="p">-------------------------</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">False</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">Set-IRMConfiguration</span> <span class="n">-AzureRMSLicensingEnabled</span> <span class="vm">$True</span>
+</span></span></code></pre></div><h3 id="multi-language-support">Multi-language support</h3>
+<p>Sensitivity Labels and their descriptions can be localised to match the Office language. Local language support can only be added using the <a href="https://docs.microsoft.com/en-us/powershell/module/exchange/set-label?view=exchange-ps#example-1">Set-Language PowerShell command</a>.</p>
+<p>Set-Label is available in the Security and Compliance PowerShell module (available after using Connect-IPPSSession from the ExchangeOnlineManagement PowerShell module).</p>
+<p>You may see references to adding multi-language support using an XML export and import process in the Azure Information Protection blade of the Azure Portal. This method relates to AIP Classic that is now deprecated.</p>
+<h2 id="limitations">Limitations</h2>
+<h3 id="supported-office-versions">Supported Office versions</h3>
+<p>Sensitivity Labels are not supported in the Office Desktop <em>Perpetual Editions</em> (standalone). In addition, a subscription version of Office must be:</p>
+<ul>
+<li>Semi-annual Enterprise 2002+</li>
+<li>Monthly Enterprise and Current Channel 1910+</li>
+</ul>
+<p>There are <a href="https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitivity-labels-versions?view=o365-worldwide#sensitivity-label-capabilities-in-word-excel-and-powerpoint">some features that require later versions</a>, such as <em>Dynamic content marking</em>, <em>Let users assign permissions</em> and <em>audit label-related user activity</em>.</p>
+<h3 id="user-encryption-over-ride">User encryption over-ride</h3>
+<p>Users are able to over-ride the encryption settings applied by a manual label. After they apply the label to their content, they can make changes to the protection using File &gt; Info &gt; Protect Document &gt; Restrict Access.</p>
+<p>The only way to avoid this is to provide at least one Label with <em>Let users assign their own permissions</em> and educate users to choose this Label rather than modifying a pre-configured one.</p>
+<h3 id="lost-email-labels">Lost Email Labels</h3>
+<p>Labelled emails can lose their Label when a reply comes from an external organization that doesn&rsquo;t use Outlook.  Any encryption is retained, but the original Label will be removed.</p>
+<h3 id="encrypt-with-password-missing-in-pdf">&ldquo;Encrypt with Password&rdquo; missing in PDF</h3>
+<p>If a PDF is encrypted with Information Protection, the Adobe option to <em>Encrypt with Password</em> is no longer available.</p>
+<h3 id="limits-on-sharepoint-auto-labelling">Limits on SharePoint auto-labelling</h3>
+<p>Service-side Auto-Labelling for SharePoint and OneDrive has some limitations when scanning data at rest:</p>
+<ul>
+<li>Maximum of 25,000 files labelled per day</li>
+<li>Maximum of 100 Auto-label policies per Tenant</li>
+<li>Maximum of 100 Sites (SPO or OneDrive) when targeting individual Sites in a policy (alternative is to target <em>All Sites</em>)</li>
+</ul>
+<h3 id="limits-on-sharepoint-indexing">Limits on SharePoint indexing</h3>
+<p>SharePoint can&rsquo;t index encrypted files that have any of the following:</p>
+<ul>
+<li>Expiring access</li>
+<li>Double-key encryption</li>
+</ul>
+<p>This affects search, preview and e-Discovery.</p>
+<h3 id="update-delays">Update delays</h3>
+<p>Updates to Labels can take a few hours to apply and be visible to users. Similarly, there is often a delay with publishing Label Policies.</p>
+<p>SharePoint caches Labels and Label Policies, so changes can take even longer e.g. 24hrs.</p>
+<p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>Purview Information Protection Deep Dive Pt2 - Automatic Labelling</title>
+      <link>https://write-verbose.com/2023/04/25/sensitivitylabelspt2/</link>
+      <pubDate>Tue, 25 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2023/04/25/sensitivitylabelspt2/</guid>
+      <description>Sensitivity Labels and Purview Information Protection Policies Part Two</description>
+      <content:encoded><![CDATA[<p>Part two of a deep dive series on Purview Sensitivity Labels:</p>
+<p>Part 1 - <a href="/2023/04/24/sensitivitylabelspt1/">Manual Labelling</a><br>
+Part 2 - Automatic Labelling<br>
+Part 3 - <a href="/2023/04/26/sensitivitylabelspt2/">Recommendations and Limitations</a></p>
+<h2 id="automatic-labelling">Automatic Labelling</h2>
+<p>Manual Labelling is often the introduction to Sensitivity Labels, but eventually you will want to look at automation. In particular, it will be needed to add coverage of data at rest. Manual labelling, even if mandatory, only applies when an existing file is re-saved.</p>
+<p>The main blocker for many companies is that Automatic Labelling is not available with an E3 license. It requires either Microsoft 365 E5, or E3 plus <em>Microsoft 365 E5 Compliance</em> or <em>Microsoft 365 E5 Information Protection and Governance</em>.</p>
+<p>There are two options for automatically applying Sensitivity Labels:</p>
+<ol>
+<li><strong>Client-side auto-labelling</strong> for files and emails</li>
+<li><strong>Service-side auto-labelling</strong> for SharePoint Online, Exchange Online and OneDrive</li>
+</ol>
+<h3 id="client-side-auto-labelling">Client-side Auto-labelling</h3>
+<p><em>Auto-labelling for files and emails</em> is a client option, configured per-label, that either automatically applies the label, or recommends it to the user based on pattern matching in the content.</p>
+<p>Client-side auto-labelling only occurs when an item is being created or edited, it doesn&rsquo;t apply to data at rest or in-transit.
+The auto-label policy is based on matching one or more <strong>Sensitive Info Types</strong> or <strong>Trainable Classifiers</strong>. For example, if the content matches a passport number.</p>
+<p><img loading="lazy" src="/img/UsingMIPLabels/Label-AutoLabellingFiles.png" alt="Client Auto-Labelling"  />
+</p>
+<h3 id="service-side-auto-labelling">Service-side auto-labelling</h3>
+<p><em>Service-side auto-labelling</em> is a separate option in the Information Protection blade of the Purview Compliance Center.  This option is not dependent on supported client apps or reliant on user adoption. Labels are applied by the back-end M365 services.</p>
+<p>Create an <strong>Auto-labelling policy</strong> to apply one of the pre-defined labels to unlabelled data at rest in supported locations.<br>
+The policy wizard has pre-defined <strong>Templates</strong> for matching content based on well-known regulatory and enterprise requirements. For example, the <em>UK Financial Template</em> includes the <em>Sensitive Info Types</em> that match credit card numbers, debit card numbers and SWIFT bank codes in the scanned content.</p>
+<p>Alternatively, the <strong>Custom Template</strong> option creates a policy with bespoke pattern matching, as follows&hellip;</p>
+<p>First select one or more of the supported storage locations to apply the automatic labelling:</p>
+<ul>
+<li>Exchange Online</li>
+<li>SharePoint Online</li>
+<li>OneDrive for Business</li>
+</ul>
+<p>SharePoint and OneDrive both support auto-labelling of data at rest. Exchange Online only supports auto-labelling of data in-transit.</p>
+<p><img loading="lazy" src="/img/UsingMIPLabels/Label-Auto1.png" alt="Client Auto-Labelling"  />
+</p>
+<p>Next create rules containing include and exclude <strong>Conditions</strong> to identify items in-scope. A rule can contain multiple conditions and it can apply to all three storage locations, or be specific to a particular one.</p>
+<p><strong>Conditions available for SharePoint Online and OneDrive for Business</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content is shared</td>
+<td>Inside or Outside the organisation</td>
+</tr>
+<tr>
+<td>Content Contains</td>
+<td>Sensitive Info Types and/or Trainable Classifiers</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Exchange Online has many additional Conditions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content is shared</td>
+<td>Inside or Outside the organisation</td>
+</tr>
+<tr>
+<td>Recipient Domain is</td>
+<td>List of email domains</td>
+</tr>
+<tr>
+<td>Recipient is</td>
+<td>Specific email addresses</td>
+</tr>
+<tr>
+<td>Sender IP Address</td>
+<td>Specific IPv4 address or a range</td>
+</tr>
+<tr>
+<td>Sender domain is</td>
+<td>List of email domains</td>
+</tr>
+<tr>
+<td>Sender is</td>
+<td>Specific email addresses</td>
+</tr>
+<tr>
+<td>Attachment file extension is</td>
+<td>List of file extensions</td>
+</tr>
+<tr>
+<td>Attachment is password protected</td>
+<td>Detects email attachments with password protection</td>
+</tr>
+<tr>
+<td>Attachment&rsquo;s content could not be scanned<br/>Attachment&rsquo;s content didn&rsquo;t complete scanning</td>
+<td>Detects emails with attachments that can&rsquo;t be scanned</td>
+</tr>
+<tr>
+<td>Header matches pattern</td>
+<td>Regex match on portion of email header</td>
+</tr>
+<tr>
+<td>Subject matches pattern</td>
+<td>Regex match on email subject</td>
+</tr>
+<tr>
+<td>Recipient address contains words<br/>Recipient address matches pattern</td>
+<td>List of words in recipient address or match to regex pattern</td>
+</tr>
+<tr>
+<td>Sender address matches words<br/>Sender address matches pattern</td>
+<td>List of words in sender address or match to regex pattern</td>
+</tr>
+<tr>
+<td>Content Contains</td>
+<td>Sensitive Info Types and/or Trainable Classifiers</td>
+</tr>
+</tbody>
+</table>
+<br/>
+The additional conditions are only available for Exchange when creating a per-location rule.
+<br/><br/>  
+<p><strong>Simulation mode</strong> is a mandatory step in creating an auto-labelling policy. Content discovery takes place and the administrator can review matched items to ensure rules are correct. The policy can then be turned-on for real.</p>
+<h2 id="sensitive-information-types">Sensitive Information Types</h2>
+<p><em>Sensitive information Types</em> are search patterns for named data types. They are used to automatically classify content that matches the pattern, for example:</p>
+<ul>
+<li>US / UK Passport number</li>
+<li>SWIFT code</li>
+<li>Japan Social Security Number</li>
+<li>Credit Card Number</li>
+<li>Azure AD client secret</li>
+</ul>
+<p>Sensitive Info Types can be used in Client-side and Service-side auto-labelling.</p>
+<p>There is a long list of <a href="https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitive-information-type-entity-definitions?view=o365-worldwide">built-in Sensitive Information Types (SIT) provided by Microsoft</a>. You can also create your own in the <a href="https://compliance.microsoft.com/dataclassificationclassifiers?viewid=sensitiveinfotypes"><em>Data Classification</em> blade</a> of the Purview Compliance Center. Custom SITs are one of the following:</p>
+<h3 id="pattern-based-sit">Pattern-based SIT</h3>
+<p>When you create a pattern-based Sensitive Info Type, you can specify a <strong>Primary element</strong> and <strong>Supporting elements</strong>. The elements consist of the following options:</p>
+<ul>
+<li>Regular Expression</li>
+<li>Keyword list</li>
+<li>Keyword dictionary (longer list of keywords)</li>
+<li>Existing Sensitive Info type</li>
+</ul>
+<p>The Secondary Element can be a list of the above, grouped by <em>Any, All or None</em>. The Primary Element and Supporting Elements can be anywhere in the document or near each other within a specified number of characters.</p>
+<h3 id="fingerprint-based-sit">Fingerprint-based SIT</h3>
+<p>A Fingerprint-based Sensitive Info Type is created by uploading an example document. It works best with Forms and Templates.</p>
+<h2 id="trainable-classifiers">Trainable Classifiers</h2>
+<p>This method of automatic-labelling is based on machine learning. A Classifier is trained to recognise a document through examples. The classifier must first be fed a selection of documents that are in-scope and out-of-scope of the required label.  The administrator must confirm or reject the automatic classification to train the learning model. It can then be applied to a bulk repository such as a document library.</p>
+<p>Microsoft provides many <a href="https://learn.microsoft.com/en-us/microsoft-365/compliance/classifier-tc-definitions?view=o365-worldwide#trainable-classifiers-definitions">&ldquo;ready-to-use&rdquo; classifiers</a>, including ones to detect profanity, threats and discrimination and even resumes (CVs). Creating a custom Trainable Classifier requires at least 50 sample documents. It can take up-to 2 weeks to scan your environment using these classifiers.</p>
+<p>Trainable Classifiers can be used in Client-side and Service-side auto-labelling. They can also be used to apply Retention Labels.</p>
+<p><img loading="lazy" src="/img/UsingMIPLabels/Label-Classifier.png" alt="Trainable Classifiers"  />
+</p>
+<h2 id="exchange-mail-flow-rules">Exchange Mail Flow Rules</h2>
+<p>Encryption can be applied using Labels in Exchange Mail Flow rules.  This option may be an attractive alternative if you don&rsquo;t have an E5 license that supports Automatic Label Policies. The Label and associated encryption is applied to messages in transit (not messages at rest in mailboxes).</p>
+<p>Create a Rule as follows&hellip;<br>
+In the <a href="https://admin.exchange.microsoft.com/">Exchange Admin Portal</a>, select Mail Flow &gt; Rules &gt; Add a rule</p>
+<p>In the drop-down list select the option to <em>Apply Office 365 Message Encryption and rights protection to messages</em></p>
+<p><img loading="lazy" src="/img/UsingMIPLabels/Label-MailFlow1.png" alt="Mail Flow Rule"  />
+</p>
+<p>Complete the <em>Rule Conditions</em> and select <strong>Rights protect message with [SELECTED LABEL]</strong></p>
+<h2 id="sharepoint-default-sensitivity-label">SharePoint Default Sensitivity Label</h2>
+<p>You can set a default Sensitivity Label for SharePoint content and it will apply to documents uploaded or re-saved in a Library. The setting can be applied at the Site Level (Settings &gt; Site Information) or the Library Level (Settings &gt; Library Settings). It requires Site Admin permissions.</p>
+<p><img loading="lazy" src="/img/UsingMIPLabels/Label-SPLibrary.png" alt="SPO Default"  />
+</p>
+<p>A manually-applied label will always <em>win</em> over a SPO Library default. The Library setting can override an auto-labelling policy or label policy default setting, if the Library setting is higher priority.</p>
+<p>A SharePoint default Label only applies to new document uploads. Existing files in the Library only receive the Label when they are re-saved.</p>
+<p>Labels with the following settings can&rsquo;t be used as a SharePoint default label:</p>
+<ul>
+<li>A Label with encryption set to <em>Let users assign permissions when they apply the label</em></li>
+<li>A Label set to <em>In Word, PowerPoint and Excel, prompt users to specify permissions</em></li>
+</ul>
+<p>If a user manually removes encryption from a labelled document in a SharePoint Library, the encryption will be restored the next time it is accessed or downloaded.</p>
+<p>The automatic Labelling process does not affect the Last Modified date of files.</p>
+<p><strong>NOTE</strong> that an SPO Default Label is different to Label Policies that target SharePoint. Label Policies apply container settings such as external access.</p>
+<h2 id="sharepoint-sensitivity-column">SharePoint Sensitivity column</h2>
+<p>Don&rsquo;t forget to update the <em>All Documents</em> view to show a column for Sensitivity</p>
+<p>In a Library &gt; Add column &gt; Show or hide columns &gt; Select Sensitivity &gt; Apply
+Then click the All Documents drop-down and select <em>Save view as</em>, leave the default &ldquo;All Documents&rdquo; and click Save</p>
+<p>The Library will then always show the Sensitivity Label alongside the File Name and Modified Date.</p>
+<h2 id="protecting-teams-meetings-and-chat">Protecting Teams Meetings and Chat</h2>
+<p>A Label can be applied to Teams meetings and Chat if the following are true:</p>
+<ul>
+<li>Organization has a Teams Premium license (included in E5 but not E3)</li>
+<li>The Label is scoped to both Files and Emails</li>
+<li>The meeting owner is using M365 Apps for Enterprise or OWA on a Desktop computer (not supported on mobile apps)</li>
+</ul>
+<p>When encryption is turned-on, the following controls can be configured by the Label:</p>
+<ul>
+<li>Who can bypass the lobby</li>
+<li>Who can present, record</li>
+<li>Automatic recording</li>
+<li>Prevent copy of meeting chat</li>
+<li>Add a watermark during screen sharing and camera streams</li>
+</ul>
+<h2 id="what-is-azure-information-protection">What is Azure Information Protection?</h2>
+<p><em>Azure Information Protection</em> (AIP) extends what is available in <em>Purview Information Protection</em> and also provides some of the services used by Purview Information Protection.
+In its original form AIP used separate Sensitivity Labels managed in the Azure Portal. Since 2019, AIP has been updated with a <em>Unified Labelling Client</em> that uses Purview Sensitivity Labels.</p>
+<p>The following are some reasons to extend the Data Classification Framework with AIP:</p>
+<ul>
+<li>Bulk labelling and protection of <strong>on-prem file shares and SharePoint libraries</strong></li>
+<li>Bulk decryption for data recovery</li>
+<li>Apply labels directly from File Explorer or PowerShell</li>
+<li>Supports additional file types for classification and protection</li>
+<li>Supports Office 2003-2007 file formats</li>
+<li>Logging to the Windows event log</li>
+</ul>
+<p>To use AIP you will need to deploy the <a href="https://www.microsoft.com/download/details.aspx?id=53018">unified labelling client</a> to Windows computers. You may see references in documentation to the AIP Classic Client. This is the older version of AIP that is now deprecated.</p>
+<p>If the AIP client is installed, the built-in labelling interfaces in Office are disabled (e.g. the Ribbon Sensitivity button) and an Office add-in displays an information bar instead. It&rsquo;s a supported scenario to use AIP for some features while still using the built-in labelling for Office. To achieve this, just disable the AIP Office add-ins (MSIP.WordAddin, MSIP.ExcelAddin, MSIP.PowerPointAddin, MSIP.OutlookAddin) using a Group policy / CSP setting.</p>
+<h3 id="aip-unified-labelling-scanner">AIP Unified Labelling Scanner?</h3>
+<p>The Scanner works by running jobs that crawl the specified data stores to label and protect the documents. This can be a one-off exercise to ensure wide coverage (then relying on native labelling options), or it could be a repeat scheduled process.</p>
+<p>The Scanner runs as a service on a Windows Server (2016 or later for long path support) and also requires a SQL server backend. It requires an application registration in Azure AD, that provides a token for the service to authenticate with AIP. The scan jobs are configured in the AIP blade of Azure rather than on the Server.</p>
+<p>The process of scanning large data stores can be time consuming, so the Scanner supports inclusion and exclusion by file type (file extension) to pre-filter the file list.  It can also be clustered with multiple servers working in parallel. It uses the same built-in iFilters used by Windows Search to access document content and look for matches to automatic label patterns.</p>
+<p>The Scanner can be run first in <em>Discovery Mode</em> to create a report of labels and protection that would be applied through automatic classification rules.</p>
+<h3 id="aip-supported-file-types-for-scanner-inspection">AIP Supported file types for scanner inspection</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl"> .doc, docx, .docm, .dot, .dotx, .xls, .xlt, .xlsx, .xlsm, .xlsb, .ppt, .pps, .pot, .pptx, .pdf, .txt, .xml, .csv
+</span></span></code></pre></div><p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>Purview Information Protection Deep Dive Pt1 - Manual Labelling</title>
+      <link>https://write-verbose.com/2023/04/24/sensitivitylabelspt1/</link>
+      <pubDate>Mon, 24 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2023/04/24/sensitivitylabelspt1/</guid>
+      <description>Sensitivity Labels and Purview Information Protection Policies Part One</description>
+      <content:encoded><![CDATA[<p>Part one of a deep dive series on Purview Sensitivity Labels:</p>
+<p>Part 1 - Manual Labelling<br>
+Part 2 - <a href="/2023/04/25/sensitivitylabelspt2/">Automatic Labelling</a><br>
+Part 3 - <a href="/2023/04/26/sensitivitylabelspt2/">Recommendations and Limitations</a></p>
+<p>Purview Information Protection (formerly AIP and then MIP) uses <strong>Labels</strong> to categorise data based on sensitivity and privacy requirements. Settings and Policies linked to the labels apply security controls. This article is a deep dive on Information Protection, including design and configuration.</p>
+<blockquote>
+<p><strong>Sensitivity Labels</strong> are metadata added to <strong>items</strong> and <strong>containers</strong> to identify and enforce privacy constraints using  simple descriptions, such as <em>Company Confidential</em> or <em>Secret</em>.</p>
+</blockquote>
+<h2 id="label-scope">Label Scope</h2>
+<p>Applying Labels and Label Policies to <strong>Items</strong> is known as <strong>Information Protection</strong>.<br>
+Items can be:</p>
+<ul>
+<li>Files (Word, Excel, PowerPoint etc)</li>
+<li>Email messages</li>
+<li>Calendar events and meetings</li>
+<li>Teams meetings and chats (Teams Premium license required)</li>
+</ul>
+<p>M365 Apps (Office) files must be in the Open XML format e.g. docx, xlsx. Older formats such as .doc are not supported.</p>
+<p>Applying Labels and Policies to <strong>Containers</strong> is known as <strong>Container Management</strong>.<br>
+Containers (a.k.a <em>Groups &amp; Sites</em>) can be:</p>
+<ul>
+<li>SharePoint Online sites</li>
+<li>Teams</li>
+<li>M365 Groups</li>
+</ul>
+<p><img loading="lazy" src="/img/UsingMIPLabels/Label-Scope.png" alt="Label scope"  />
+</p>
+<p><strong>Purview Data Map</strong> is a third lesser-used label scope, that allows Labels to be applied to some Azure assets such as:</p>
+<ul>
+<li>Azure SQL columns</li>
+<li>Azure Cosmos DB</li>
+<li>Azure MySQL</li>
+<li>Azure Data Explorer</li>
+</ul>
+<p>Purview Data Labelling is not enabled by default. It can be turned-on in the Information Protection UI, or using the PowerShell compliance module.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Install-Module</span> <span class="n">ExchangeOnlineManagement</span>
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Connect-IPPSSession</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Purview Labelling is disabled by default</span>
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Get-PolicyConfig</span> <span class="p">|</span> <span class="nb">fl </span><span class="n">purview</span><span class="p">*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">PurviewLabelConsent</span>        <span class="err">:</span> <span class="n">False</span>
+</span></span><span class="line"><span class="cl"><span class="n">PurviewLabelConsentCaller</span>  <span class="err">:</span>
+</span></span><span class="line"><span class="cl"><span class="n">PurviewLabelConsentTime</span>    <span class="err">:</span>
+</span></span><span class="line"><span class="cl"><span class="n">PurviewLabelConsentDetails</span> <span class="err">:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Enable Purview Labelling:</span>
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Set-PolicyConfig</span> <span class="n">-PurviewLabelConsent</span> <span class="vm">$True</span>
+</span></span></code></pre></div><h2 id="whats-in-a-name">What&rsquo;s in a name?</h2>
+<p>Label names are freeform, configured by an administrator in the <a href="https://compliance.microsoft.com/">Purview Compliance Center</a>. The label <em>display name</em> and <em>description</em> are visible to users and should be intuitive.</p>
+<p>Items and Containers can only have one Sensitivity Label (although they can also have an M365 Retention Label - a separate topic).</p>
+<h3 id="example-labels">Example Labels</h3>
+<p>The following example is a baseline set of labels published to everyone in an organization:</p>
+<table>
+<thead>
+<tr>
+<th>LABEL NAME</th>
+<th>Scope</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PUBLIC</td>
+<td>Items - Files</td>
+<td>Freely shared with anyone inside and outside the organization</td>
+</tr>
+<tr>
+<td>PARTNER ACCESSIBLE</td>
+<td>Items - Files</td>
+<td>Shared within the organization and with trusted partners</td>
+</tr>
+<tr>
+<td>EMPLOYEES ONLY</td>
+<td>Items - Files</td>
+<td>Only shared within the organization. Encrypted and limited to any member of the organization</td>
+</tr>
+<tr>
+<td>CONFIDENTIAL</td>
+<td>Items - Files</td>
+<td>Sensitive information. Encrypted with permissions set by the owner</td>
+</tr>
+<tr>
+<td>HIGHLY CONFIDENTIAL</td>
+<td>Items - Files</td>
+<td>Do not share - Regulated data such as PII, GDPR, HIPPA, or Company secret. Encrypted and limited to a predefined group</td>
+</tr>
+<tr>
+<td>BLUEPRINT</td>
+<td>Items - Files</td>
+<td>Company-specific design document. Encrypted</td>
+</tr>
+<tr>
+<td>ENCRYPTED</td>
+<td>Items - Email</td>
+<td>Encrypted</td>
+</tr>
+<tr>
+<td>NO FORWARD</td>
+<td>Items - Email</td>
+<td>Encrypted. Forwarding disabled</td>
+</tr>
+<tr>
+<td>OPEN ACCESS</td>
+<td>Groups &amp; Sites</td>
+<td>Employees can join freely and invite external guests</td>
+</tr>
+<tr>
+<td>INVITE ONLY - External</td>
+<td>Groups &amp; Sites</td>
+<td>Employees must be invited. Owners can invite external guests</td>
+</tr>
+<tr>
+<td>INVITE ONLY - Internal</td>
+<td>Groups &amp; Sites</td>
+<td>Employees must be invited. No external guests</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sub-labels">Sub labels</h2>
+<p>Sub labels are used to group similar labels in a parent-child relationship. They are mainly for organisation, there&rsquo;s no inheritance of settings (although they do inherit the colour setting).<br>
+In the example below, <em>Confidential</em> is the parent label and <em>Partners</em> and <em>Employees</em> are the two sub labels.</p>
+<p>CONFIDENTIAL<br>
+CONFIDENTIAL\PARTNERS<br>
+CONFIDENTIAL\EMPLOYEES</p>
+<p>To create a sub label, click the kebab menu (3-dots) next to an existing label and select <em>Create Sublabel</em>.</p>
+<p><img loading="lazy" src="/img/UsingMIPLabels/Label-Sublabel.png" alt="Create sublabel"  />
+</p>
+<h2 id="manage-labels-with-powershell">Manage Labels with PowerShell</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Install-Module</span> <span class="n">exchangeonlinemanagement</span> <span class="n">-MinimumVersion</span> <span class="mf">3.0</span><span class="p">.</span><span class="py">0</span>
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Connect-IPPSSession</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Create a new label</span>
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">New-label</span> <span class="n">-ContentType</span> <span class="s2">&#34;File&#34;</span> <span class="n">-Name</span> <span class="s2">&#34;EMPLOYEES ONLY&#34;</span> <span class="n">-DisplayName</span> <span class="s2">&#34;EMPLOYEES ONLY&#34;</span> <span class="n">-Tooltip</span> <span class="s2">&#34;Only shared within the organization. Encrypted&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Change label priority</span>
+</span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Set-Label</span> <span class="n">-Identity</span> <span class="s2">&#34;EMPLOYEES ONLY&#34;</span> <span class="n">-Priority</span> <span class="mf">2</span>
+</span></span></code></pre></div><h2 id="label-settings">Label Settings</h2>
+<p>Sensitivity Labels aren&rsquo;t just visual markings. They can apply permissions and privacy controls:</p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Scope</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ENCRYPTION</td>
+<td>Items</td>
+<td>Usage Rights: View,Edit,Save,Print,Copy,Allow Macros<br/>Whether access expires<br/>If it can accessed offline.</td>
+</tr>
+<tr>
+<td>CONTENT MARKING</td>
+<td>Items</td>
+<td>Background Watermark (DOCX/PPTX)<br/>Header<br/>Footer</td>
+</tr>
+<tr>
+<td>ENCRYPTION</td>
+<td>Email Messages</td>
+<td>Reply, Reply All, Forward<br/>Encrypt only</td>
+</tr>
+<tr>
+<td>PRIVACY and EXTERNAL ACCESS</td>
+<td>Containers</td>
+<td>Membership: Public, Private, None(Defined by users)<br/>Ability to add guests</td>
+</tr>
+<tr>
+<td>EXTERNAL SHARING AND CONDITIONAL ACCESS</td>
+<td>Containers</td>
+<td>SharePoint external sharing options</td>
+</tr>
+</tbody>
+</table>
+<br/>
+<h2 id="label-priority">Label Priority</h2>
+<p>Labels have a priority with (1) being least sensitive e.g. <em>Public</em>. The priority order is used to identify downgrading and to resolve conflicts.</p>
+<p><em>Downgrading</em> occurs when users manually change a label to a less sensitive option. An Item Owner (person who applied the label) is free to change it.</p>
+<p><img loading="lazy" src="/img/UsingMIPLabels/Label-Priority.png" alt="Create sublabel"  />
+</p>
+<h2 id="label-policies">Label Policies</h2>
+<p><strong>Label Policies</strong> have two purposes:</p>
+<ul>
+<li>Publishing labels so they are visible in supported apps</li>
+<li>Controlling how labels are applied</li>
+</ul>
+<h3 id="publishing-labels">Publishing Labels</h3>
+<p>Sensitivity Labels are published to <strong>users</strong>, either everyone in the organization, or a selected [mail-enabled] group. This is different to <em>Retention Labels</em> that are published to storage locations.</p>
+<h3 id="controlling-how-labels-are-applied">Controlling how labels are applied</h3>
+<p>The following options are available in a Label Policy, depending on the Label scope.</p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Downgrade justification</td>
+<td>Prompt user for a reason when changing to a lower priority label or removing a label</td>
+</tr>
+<tr>
+<td>Mandatory labelling</td>
+<td>Users are forced to apply a label before saving (files) or sending (emails) if the item doesn&rsquo;t already have a label</td>
+</tr>
+<tr>
+<td>Help Link</td>
+<td>A URL to a page with user guidance. The link will be available on the Sensitivity button in MS Office</td>
+</tr>
+<tr>
+<td>Mandatory Power BI labelling</td>
+<td>Not covered in this article</td>
+</tr>
+<tr>
+<td>Default Document Label</td>
+<td>Automatic client-side labelling in supported apps. Applied to new and modified items. Users can override</td>
+</tr>
+<tr>
+<td>Default Email Label</td>
+<td>Automatic client-side labelling in supported apps. Applied to new and existing items. Users can override</td>
+</tr>
+<tr>
+<td>Default Calendar Label</td>
+<td>Automatic client-side labelling in supported apps. Applied to new and existing meetings. Users can override</td>
+</tr>
+<tr>
+<td>Default Sites &amp; Groups Label</td>
+<td>Applied to new SharePoint Sites and M365 Groups. Owners can override</td>
+</tr>
+<tr>
+<td>Default Power BI Label</td>
+<td>Applied to new dashboards, reports and datasets. Users can override.</td>
+</tr>
+</tbody>
+</table>
+<p><img loading="lazy" src="/img/UsingMIPLabels/Label-Default.png" alt="Policy settings"  />
+</p>
+<h3 id="default-vs-mandatory-labelling">Default vs Mandatory Labelling</h3>
+<p><strong>User adoption</strong> is one of the key challenges of Sensitivity Labelling. The following options exist to help with this challenge:</p>
+<ul>
+<li>Default Labels</li>
+<li>Mandatory Labelling</li>
+<li>Automatic Labelling</li>
+</ul>
+<p>It can be difficult to <strong>decide between default and mandatory labelling</strong>. If you configure default labels in the Label Polices, it will achieve the high-level goal of wide adoption, but it may fail to achieve a useful implementation. Users can just accept the default and make no effort to change it to something more appropriate.<br>
+For this reason, <strong>mandatory labelling may be a better choice</strong>, forcing users to choose a label when they save a new item or modify an unlabelled one. If you enable mandatory labelling, make sure the Label Display Names and Descriptions are intuitive and explain details like encryption.</p>
+<p>Mandatory Labelling = <em>Require users to apply a label to their emails and documents.</em></p>
+<p><img loading="lazy" src="/img/UsingMIPLabels/Label-Mandatory.png" alt="Mandatory labelling"  />
+</p>
+<h2 id="encryption-permissions-and-usage-rights">Encryption, Permissions and Usage Rights</h2>
+<p>Sensitivity Labels use AES 256 symmetric encryption to control access to items. Supported apps, such as Word, Excel, PowerPoint, will seamlessly decrypt the item if the recipient is authenticated and authorised. Encryption is not limited to users within the organization, external recipients are also supported.</p>
+<p>Document metadata is not encrypted, allowing other applications to read the Sensitivity Labels on a document regardless of whether it is encrypted. Exchange Online and SharePoint (when enabled) are able to remove encryption and re-apply it, allowing them to index and scan content.</p>
+<p>There are two aspects that control access to protected items:</p>
+<ul>
+<li>Permissions</li>
+<li>Usage Rights</li>
+</ul>
+<h3 id="assigning-permissions">Assigning Permissions</h3>
+<p>The following permission options control who can authenticate for access to a protected item:</p>
+<table>
+<thead>
+<tr>
+<th>Assignee</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All users and groups in your organisation</td>
+<td>Any user in your Tenant</td>
+</tr>
+<tr>
+<td>Any authenticated user</td>
+<td>Users in any Azure AD Tenant, personal MSA accounts, Federated accounts (GMail, Yahoo), Guests, OTP authenticated B2B accounts</td>
+</tr>
+<tr>
+<td>Users or groups</td>
+<td>Specific users or groups in your Tenant</td>
+</tr>
+<tr>
+<td>Specific email addresses or domains</td>
+<td>Individual external recipients or entire external email domains</td>
+</tr>
+</tbody>
+</table>
+<p><strong>External recipients</strong> are fully supported by the above options. If authentication fails the item cannot be opened.</p>
+<h3 id="usage-rights-and-permission-levels">Usage Rights and Permission Levels</h3>
+<p>Once the recipient is authenticated, the <strong>Publishing License</strong> attached to an encrypted item is checked to determine what <em>usage rights</em> have been assigned.</p>
+<p><strong>Usage rights</strong> are granular controls over common activities as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Right</th>
+<th>Scope</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>View content (VIEW)</td>
+<td>Files</td>
+<td>Enables document opening and viewing content. Doesn&rsquo;t allow sorting or filtering in Excel</td>
+</tr>
+<tr>
+<td>View rights (VIEWRIGHTSDATA)</td>
+<td>Files</td>
+<td>Enables viewing the document protection policy</td>
+</tr>
+<tr>
+<td>Edit content (DOCEDIT)</td>
+<td>Files</td>
+<td>Enables document modify, rearrange, sort content. Not Save or Change Tracking</td>
+</tr>
+<tr>
+<td>Save (EDIT)</td>
+<td>Files</td>
+<td>Enables document Save and Save As (Open XML format only)</td>
+</tr>
+<tr>
+<td>Print (PRINT)</td>
+<td>Files</td>
+<td>Enables document printing</td>
+</tr>
+<tr>
+<td>Copy and extract content (EXTRACT)</td>
+<td>Files</td>
+<td>Enables document copy/paste and screen capture/sharing</td>
+</tr>
+<tr>
+<td>Reply (REPLY)</td>
+<td>Email</td>
+<td>Enables email reply, but not changes to recipients. Combine with <em>Save</em> and <em>Edit content</em> to work correctly</td>
+</tr>
+<tr>
+<td>Reply all (REPLYALL)</td>
+<td>Email</td>
+<td>Enables email reply all, but not changes to recipients. Combine with <em>Save</em> and <em>Edit content</em> to work correctly</td>
+</tr>
+<tr>
+<td>Forward (FORWARD)</td>
+<td>Email</td>
+<td>Enables email forward or adding recipients. Combine with <em>Save</em> and <em>Edit content</em> to work correctly</td>
+</tr>
+<tr>
+<td>Edit rights (EDITRIGHTSDATA)</td>
+<td>Files</td>
+<td>Enables changing the protection policy, including removing protection</td>
+</tr>
+<tr>
+<td>Export content (EXPORT)</td>
+<td>Files</td>
+<td>Enables document SaveAs to other formats and integrations such as <em>Send to OneNote</em></td>
+</tr>
+<tr>
+<td>Allow macros (OBJMODEL)</td>
+<td>Files</td>
+<td>Enables run macros option in documents</td>
+</tr>
+<tr>
+<td>Full control (OWNER)</td>
+<td>Files</td>
+<td>Enabled all rights to a document including remove protection</td>
+</tr>
+</tbody>
+</table>
+<p>Caveats: Save (EDIT) only grants Save/Save As in the Desktop versions of Office, but it also grants Edit rights in Office for the Web.</p>
+<p><strong>Permission Levels</strong> are groups of usage rights that meet the most common requirements, as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Permission Level</th>
+<th>Scope</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Viewer</td>
+<td>Files</td>
+<td>Open, Read, View rights, Allow macros</td>
+</tr>
+<tr>
+<td>Reviewer</td>
+<td>Files &amp; Email</td>
+<td>Open, Read, Save, Edit content, View rights<br/>Reply, Reply All, Forward</td>
+</tr>
+<tr>
+<td>Co-Author</td>
+<td>Files &amp; Email</td>
+<td>Open, Read, Save, Edit content, View rights, <strong>Copy, Export, Print</strong></br>Reply, Reply All, Forward</td>
+</tr>
+<tr>
+<td>Co-Owner</td>
+<td>Files &amp; Email</td>
+<td>Open, Read, Save, Edit content, View rights, Copy, Export, Print, <strong>Change Rights</strong></br>Reply, Reply All, Forward,<strong>Full Control</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Co-Authors and Co-Owners can Copy, Export and Print from documents. Co-Owners can change or remove document protection.</p>
+<p><img loading="lazy" src="/img/UsingMIPLabels/Label-CoAuthor.png" alt="Co-Author"  />
+</p>
+<h3 id="pdf-support">PDF Support</h3>
+<p>PDF files can be encrypted and Adobe Acrobat / Acrobat Reader will show a banner message to indicate the applied Sensitivity Label. Since June 2022 versions of Acrobat and Acrobat Reader no longer need a separate plugin.</p>
+<p>MS Edge version 83.0.478.37 or higher can also view encrypted PDF files.</p>
+<p>If you Save or Print an encrypted Office document to PDF, the resulting PDF will inherit the encryption and permissions.</p>
+<h2 id="content-marking">Content Marking</h2>
+<p><em>Content Marking</em> puts visual markers directly in the data, specifically, the header, footer or background of a file item and header or footer of an email.</p>
+<p>This can be useful as the label is <em>hidden</em> in the item metadata and only displayed in the UI of supported applications. Furthermore, the label only displays in the UI if the Tenant ID in the metadata matches the current Tenant.</p>
+<p>In practice, content marking may be as simple as ensuring the Label is clearly visible in the document, or it could be a lengthy paragraph explaining who is allowed to read the content and how it can be shared. Headers and Footers can be up-to 1024 characters in Word and PowerPoint and up to 255 in Excel.</p>
+<p><img loading="lazy" src="/img/UsingMIPLabels/Label-Marking.png" alt="Content Marking"  />
+</p>
+<p>Background Watermarks are not supported in email and are normally only be used for high sensitivity documents e.g. to print <em>Confidential</em> diagonally in the background.</p>
+<h3 id="dynamic-content-marking">Dynamic Content Marking</h3>
+<p>Content Marking supports basic conditions and variables, most commonly used to apply different marking based on the document type.</p>
+<p>An <em>IF</em> condition can include the name of an Office application, or the single character abbreviation for multiple applications, as shown in the Header marking examples below:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1"># LABEL POLICY EXAMPLE 1 - Only mark Excel files </span>
+</span></span><span class="line"><span class="cl"><span class="si">${</span><span class="nv">If</span><span class="p">.App.Excel</span><span class="si">}</span> CONFIDENTIAL SPREADSHEET: INTERNAL RECIPIENTS ONLY <span class="si">${</span><span class="nv">If</span><span class="p">.End</span><span class="si">}</span>
+</span></span></code></pre></div><p>Even though the label applies to Word, Excel and PowerPoint files, the header marking is only applied to Excel files</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1"># LABEL POLICY EXAMPLE 2 - Target multiple apps</span>
+</span></span><span class="line"><span class="cl"><span class="si">${</span><span class="nv">If</span><span class="p">.App.WXP</span><span class="si">}</span> PUBLIC: DISTRIBUTE FREELY <span class="si">${</span><span class="nv">If</span><span class="p">.End</span><span class="si">}</span>
+</span></span></code></pre></div><p>In the second example, the header marking is added to Word, Excel and PowerPoint files, but not Outlook emails.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl"><span class="c1"># LABEL POLICY EXAMPLE - multiple options</span>
+</span></span><span class="line"><span class="cl"><span class="si">${</span><span class="nv">If</span><span class="p">.App.WO</span><span class="si">}</span> <span class="si">${</span><span class="nv">Item</span><span class="p">.Label</span><span class="si">}</span> - This content is confidential. <span class="si">${</span><span class="nv">If</span><span class="p">.End</span><span class="si">}</span> <span class="si">${</span><span class="nv">If</span><span class="p">.App.PowerPoint</span><span class="si">}</span> <span class="si">${</span><span class="nv">Item</span><span class="p">.Label</span><span class="si">}</span> - This presentation is confidential. <span class="si">${</span><span class="nv">If</span><span class="p">.End</span><span class="si">}</span>
+</span></span></code></pre></div><p>In the third example, the header is different for Word and Outlook compared to PowerPoint (and Excel does not apply a header).</p>
+<h3 id="dynamic-content-variables">Dynamic Content Variables</h3>
+<p>There are only a few variables that can be used in content marking:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>${Item.Label}</td>
+<td>The label display name</td>
+</tr>
+<tr>
+<td>${Item.Name}</td>
+<td>File name or email subject of the document</td>
+</tr>
+<tr>
+<td>${Item.Location}</td>
+<td>Full path to document or email subject</td>
+</tr>
+<tr>
+<td>${User.Name}</td>
+<td>Display name of user applying the label</td>
+</tr>
+<tr>
+<td>${User.PrincipalName</td>
+<td>UPN of user applying the label</td>
+</tr>
+<tr>
+<td>${Event.DateTime}</td>
+<td>DateTime when label is applied</td>
+</tr>
+</tbody>
+</table>
+<h2 id="information-protection-licensing">Information Protection Licensing</h2>
+<p>Office 365 E3 includes <strong>Information Protection for Office 365 – Standard</strong> and Office 365 E5 includes <strong>Information Protection for Office 365 – Premium</strong>. Broadly these map to manual and automatic labelling. Information Protection is a separate Service Plan with a SKU, allowing it to be selectively enabled for specific users / groups.</p>
+<p>An O365 E3 license covers most requirements for manual labelling:</p>
+<ul>
+<li>Manual labelling (Sensitivity Labels and Retention Labels) using M365 Apps for Enterprise, Office Online and Office mobile</li>
+<li>Manual labelling for containers (Teams / SharePoint / M365 Groups)</li>
+<li>Basic Office Message Encryption (OME) including Encrypt only and Do Not Forward email templates</li>
+<li>DLP for Exchange Online and SharePoint Online</li>
+</ul>
+<p>NOTES:</p>
+<p>DLP for Teams requires an Office E5 license. Administrators and M365 Group Owners need an Azure AD P1 license to apply labels to containers (included in E3 and E5).</p>
+<p>An Office E5 license is needed for most automatic labelling actions and the following:</p>
+<ul>
+<li>Automatically applying Sensitivity Labels and Retention Labels</li>
+<li>Default container labels inherited by unlabelled documents (e.g. SharePoint)</li>
+<li>Bring Your Own Key (BYOK) and Hold Your Own Key (HYOK) encryption</li>
+<li>Double Key Encryption (DKE)</li>
+<li>Sensitivity Labels for PowerBI</li>
+</ul>
+<p>NOTES:</p>
+<p>Alternative licensing - add one of the following to an E3 license: Microsoft 365 E5 Compliance, Microsoft 365 E5 Information Protection and Governance, Advanced OME and customer key for Office 365. Refer to the downloadable spreadsheet <a href="https://www.microsoft.com/en-us/download/details.aspx?id=103006">Microsoft 365 Compliance Licensing Comparison</a> for more information.</p>
+<h2 id="role-based-admin-delegation">Role Based Admin Delegation</h2>
+<p>M365 administrators working with Information Protection need delegated access to the configuration settings in the Purview Compliance Center. Add users to one of the following built-in roles:</p>
+<ul>
+<li>Global Administrator</li>
+<li>Compliance Data Administrator</li>
+<li>Compliance Administrator</li>
+<li>Security Administrator</li>
+</ul>
+<p>Alternatively, create a custom Azure AD role group and add one of the following:</p>
+<ul>
+<li>Organization Configuration</li>
+<li>Sensitivity Label Administrator</li>
+<li>Sensitivity Label Reader</li>
+</ul>
+<p>To review Data Classification Reports (e.g. simulation mode results) you need:</p>
+<ul>
+<li>Content Explorer List viewer</li>
+<li>Content Explorer Content viewer</li>
+</ul>
+<p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
     <item>
       <title>Migrate home drives to OneDrive with Microsoft Migration Manager - Pt2</title>
       <link>https://write-verbose.com/2022/06/11/migration-manager-notes2/</link>

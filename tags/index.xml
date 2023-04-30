@@ -10,7 +10,57 @@
       <link>https://write-verbose.com/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 17 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 26 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>governance</title>
+      <link>https://write-verbose.com/tags/governance/</link>
+      <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/governance/</guid>
+      <description></description>
+      <content:encoded><![CDATA[]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>m365</title>
+      <link>https://write-verbose.com/tags/m365/</link>
+      <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/m365/</guid>
+      <description></description>
+      <content:encoded><![CDATA[]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>MIP</title>
+      <link>https://write-verbose.com/tags/mip/</link>
+      <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/mip/</guid>
+      <description></description>
+      <content:encoded><![CDATA[]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>Purview</title>
+      <link>https://write-verbose.com/tags/purview/</link>
+      <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/purview/</guid>
+      <description></description>
+      <content:encoded><![CDATA[]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>security</title>
+      <link>https://write-verbose.com/tags/security/</link>
+      <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/security/</guid>
+      <description></description>
+      <content:encoded><![CDATA[]]></content:encoded>
+    </item>
+    
     <item>
       <title>Intune</title>
       <link>https://write-verbose.com/tags/intune/</link>
@@ -57,16 +107,6 @@
       <pubDate>Sat, 18 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/tags/msgraph/</guid>
-      <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
-    </item>
-    
-    <item>
-      <title>m365</title>
-      <link>https://write-verbose.com/tags/m365/</link>
-      <pubDate>Sat, 11 Jun 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://write-verbose.com/tags/m365/</guid>
       <description></description>
       <content:encoded><![CDATA[]]></content:encoded>
     </item>
@@ -197,16 +237,6 @@
       <pubDate>Sat, 15 Dec 2018 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/tags/browser/</guid>
-      <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
-    </item>
-    
-    <item>
-      <title>security</title>
-      <link>https://write-verbose.com/tags/security/</link>
-      <pubDate>Sat, 15 Dec 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://write-verbose.com/tags/security/</guid>
       <description></description>
       <content:encoded><![CDATA[]]></content:encoded>
     </item>

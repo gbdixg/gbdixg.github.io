@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>security on Write-Verbose</title>
-    <link>https://write-verbose.com/tags/security/</link>
-    <description>Recent content in security on Write-Verbose</description>
+    <title>governance on Write-Verbose</title>
+    <link>https://write-verbose.com/tags/governance/</link>
+    <description>Recent content in governance on Write-Verbose</description>
     <image>
       <title>Write-Verbose</title>
       <url>https://write-verbose.com/papermod-cover.png</url>
       <link>https://write-verbose.com/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 26 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/security/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 26 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/governance/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Purview Information Protection Deep Dive Pt3 - Recommendations and Limitations</title>
       <link>https://write-verbose.com/2023/04/26/sensitivitylabelspt2/</link>
@@ -906,64 +906,6 @@ For this reason, <strong>mandatory labelling may be a better choice</strong>, fo
 <li>Content Explorer List viewer</li>
 <li>Content Explorer Content viewer</li>
 </ul>
-<p><br/><br/></p>
-<blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
-</blockquote>]]></content:encoded>
-    </item>
-    
-    <item>
-      <title>Audit Chrome Extensions with PowerShell</title>
-      <link>https://write-verbose.com/2018/12/15/audit-google-chrome-extensions/</link>
-      <pubDate>Sat, 15 Dec 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://write-verbose.com/2018/12/15/audit-google-chrome-extensions/</guid>
-      <description>A PowerShell script to list the installed Google Chrome extensions on a local or remote computer</description>
-      <content:encoded><![CDATA[<p>This post includes a PowerShell <em>Get-ChromeExtension</em> script to list installed extensions on the local or remote computer.</p>
-<p>Browser extensions are supposed to be curated and vetted, but there have been <a href="https://securityboulevard.com/2020/12/3-million-chrome-users-infected-via-extensions-here-we-go-again/">many examples of malware</a>. If you don&rsquo;t already have control of extensions through an allow or blocklist, the first step is to find out what is in-use.</p>
-<p>The code below is a PowerShell function to get the installed Google Chrome browser extensions from a local or remote Windows computer.</p>
-<blockquote>
-<p>Chrome Browser Extensions install into the user profile and do not appear in the Add/Remove Programs list.</p>
-</blockquote>
-<p>Chrome Extensions are a challenge to audit due to the way they install and lack of enumeration options.
-The PowerShell script below gets the installed extensions using the following method:</p>
-<ul>
-<li>Get the <strong>extension IDs</strong> from the folders names under <code>%userprofile%\AppData\Local\Google\Chrome\User Data\Default\Extensions</code></li>
-<li>Lookup the <strong>extension name</strong> on the Chrome Web Store using the extension ID</li>
-<li>Get the <strong>extension version</strong> from the <code>manifest.json</code> file in the extension folder</li>
-</ul>
-<h2 id="example-script-output">Example script output</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">C<span class="p">:</span><span class="nl">\</span><span class="c1">&gt; Get-ChromeExtension | Select Name,Version,Description | ft -AutoSize</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Name                            Version      Description
-</span></span><span class="line"><span class="cl">----                            -------      -----------
-</span></span><span class="line"><span class="cl">Docs                            0.10         Create and edit documents
-</span></span><span class="line"><span class="cl">Google Drive                    14.1         Google Drive: create, share and keep all your stuff in one place.
-</span></span><span class="line"><span class="cl">YouTube                         4.2.8        The official YouTube website
-</span></span><span class="line"><span class="cl">Sheets                          1.2          Create and edit spreadsheets
-</span></span><span class="line"><span class="cl">Google Docs Offline             1.4          Get things done offline with the Google Docs family of products.
-</span></span><span class="line"><span class="cl">Google Wallet                   1.0.0.4
-</span></span><span class="line"><span class="cl">Gmail                           8.1          Fast, searchable email with less spam.
-</span></span><span class="line"><span class="cl">Chrome Cast                     6618.312.0.2
-</span></span><span class="line"><span class="cl">Slides                          0.10         Create and edit presentations
-</span></span><span class="line"><span class="cl">Docs                            0.10         Create and edit documents
-</span></span><span class="line"><span class="cl">Google Drive                    14.2         Google Drive: create, share and keep all your stuff in one place.
-</span></span><span class="line"><span class="cl">YouTube                         4.2.8        The official YouTube website
-</span></span><span class="line"><span class="cl">OneTab                          1.18         Save up to 95% memory and reduce tab clutter
-</span></span><span class="line"><span class="cl">uBlock Origin                   1.20.0       Finally, an efficient blocker. Easy on CPU and memory.
-</span></span><span class="line"><span class="cl">Dark Reader                     4.7.12       Dark mode for every website. Take care of your eyes, use dark theme for night and daily browsing.
-</span></span><span class="line"><span class="cl">Share link via email            3.2.1        Adds a button and context menu item to send the page URL or a link URL via email
-</span></span><span class="line"><span class="cl">Sheets                          1.2          Create and edit spreadsheets
-</span></span><span class="line"><span class="cl">Google Docs Offline             1.7          Get things done offline with the Google Docs family of products.
-</span></span><span class="line"><span class="cl">Pinterest Save Button           4.0.82       Save the things you find on the Web.
-</span></span><span class="line"><span class="cl">Google Wallet                   1.0.0.4
-</span></span><span class="line"><span class="cl">ColorPick Eyedropper            0.0.2.29     An eye-dropper <span class="p">&amp;</span>amp; color-picker tool that allows you to select color values from webpages.
-</span></span><span class="line"><span class="cl">Gmail                           8.2          Fast, searchable email with less spam.
-</span></span><span class="line"><span class="cl">Chrome Cast                     7519.422.0.3
-</span></span></code></pre></div><h2 id="powershell-script">PowerShell Script</h2>
-<p>Get-ChromeExtension.ps1 script:</p>
-<script type="application/javascript" src="https://gist.github.com/gbdixg/7b1b1555b9c3ffc4db7997611caf6646.js"></script>
-
 <p><br/><br/></p>
 <blockquote>
 <p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
