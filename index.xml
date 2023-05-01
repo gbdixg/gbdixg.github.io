@@ -412,6 +412,9 @@ Part 3 - <a href="/2023/04/26/sensitivitylabelspt2/">Recommendations and Limitat
 <blockquote>
 <p><strong>Sensitivity Labels</strong> are metadata added to <strong>items</strong> and <strong>containers</strong> to identify and enforce privacy constraints using  simple descriptions, such as <em>Company Confidential</em> or <em>Secret</em>.</p>
 </blockquote>
+<p>Labels and Label Policies are part of the M365 Data Classification Framework</p>
+<p><img loading="lazy" src="/img/UsingMIPLabels/MSOverview.png" alt="Label scope"  />
+</p>
 <h2 id="label-scope">Label Scope</h2>
 <p>Applying Labels and Label Policies to <strong>Items</strong> is known as <strong>Information Protection</strong>.<br>
 Items can be:</p>
