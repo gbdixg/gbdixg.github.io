@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>EDR on Write-Verbose</title>
+    <link>https://write-verbose.com/tags/edr/</link>
+    <description>Recent content in EDR on Write-Verbose</description>
+    <image>
+      <title>Write-Verbose</title>
+      <url>https://write-verbose.com/papermod-cover.png</url>
+      <link>https://write-verbose.com/papermod-cover.png</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 02 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/edr/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Enable Defender Firewall event forwarding to MDE</title>
+      <link>https://write-verbose.com/2023/02/02/Firewallmde/</link>
+      <pubDate>Thu, 02 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2023/02/02/Firewallmde/</guid>
+      <description>A reminder that Firewall Events are not available in MDE Advanced Hunting by default</description>
+      <content:encoded><![CDATA[<p>You may notice that Windows Firewall events are not available in Defender for Endpoint Advanced Hunting. This is a quick post on the steps required to enable Firewall audit events.</p>
+<p><a href="https://medium.com/@olafhartong">Olaf Hartong&rsquo;s excellent series on MDE Internals</a> highlights that some MDE telemetry is based on Kernel call-backs or drivers, making those areas independent of client audit policy and enabled by default.</p>
+<p>Other settings, however, do rely on ETW providers and therefore on the MDE client&rsquo;s security audit policy. Firewall audit events will only be available in MDE if the relevant audit subcategory is enabled.</p>
+<h2 id="enable-client-side-firewall-auditing">Enable client-side Firewall auditing</h2>
+<p>The following <em>auditpol</em> command will enable Windows Firewall client-side auditing and start sending the telemetry to MDE.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">auditpol /set /subcategory:<span class="s2">&#34;Filtering Platform Connection&#34;</span> /success:disable /failure:enable
+</span></span></code></pre></div><p>It&rsquo;s fine to keep this enabled during day-to-day use as it will result in the following</p>
+<ul>
+<li>Blocked connections create an audit event in the Security Event Log</li>
+<li>Allowed connections do not create an audit event</li>
+<li><strong>A single audit event is created for each connection attempt</strong>, not each packet</li>
+</ul>
+<p>I don&rsquo;t recommend auditing Filtering Platform Connection <em>success</em> events as this will generate a lot of events. You may be tempted to also enable <em>Filtering Platform Packet Drop</em>, but this would also generate a high volume.</p>
+<h2 id="intune">Intune</h2>
+<p>You could of-course use Intune to apply the same setting to an enrolled Windows client. Create a <em>Device Configuration Profile</em> based on the <strong>Settings Catalog</strong>. Enter <em>Filtering</em> in the settings search and enable <em>Success</em> auditing for <strong>Object Access Audit Filtering Platform Connection</strong></p>
+<h2 id="advanced-hunting-query">Advanced Hunting Query</h2>
+<p>You can view the Firewall events in MDE Avanced Hunting as follows:</p>
+<pre tabindex="0"><code class="language-KQL" data-lang="KQL">DeviceEvents
+| where Timestamp &gt; ago(1d)
+| where ActionType startswith &#34;Firewall&#34;
+</code></pre><p>EXAMPLE RESULT:</p>
+<table>
+<thead>
+<tr>
+<th>Timestamp</th>
+<th>ComputerName</th>
+<th>ActionType</th>
+<th>IPAddress</th>
+<th>RemoteIPCountry</th>
+<th>RemoteIPAddr</th>
+<th>RemotePort</th>
+<th>Protocol</th>
+<th>Direction</th>
+<th>NetworkProfile</th>
+<th>InterfaceType</th>
+<th>RuleId</th>
+<th>RuleName</th>
+<th>Action</th>
+<th>Application</th>
+<th>Service</th>
+<th>User</th>
+<th>InitiatingProcess</th>
+<th>InitiatingProcessPath</th>
+<th>InitiatingProcessCommandLine</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023-02-02T10:30:12.000Z</td>
+<td>DESKTOP01</td>
+<td>Firewall</td>
+<td>192.168.1.100</td>
+<td>United States</td>
+<td>54.239.29.192</td>
+<td>443</td>
+<td>TCP</td>
+<td>Outbound</td>
+<td>Domain</td>
+<td>Wi-Fi</td>
+<td></td>
+<td></td>
+<td>Allowed</td>
+<td>Chrome.exe</td>
+<td></td>
+<td>User1</td>
+<td>chrome.exe</td>
+<td>C:\Program Files (x86)\Google\Chrome\chrome.exe</td>
+<td></td>
+</tr>
+<tr>
+<td>2023-02-02T09:01:30.000Z</td>
+<td>DESKTOP02</td>
+<td>Firewall</td>
+<td>192.168.1.200</td>
+<td>United States</td>
+<td>91.189.91.26</td>
+<td>53</td>
+<td>UDP</td>
+<td>Outbound</td>
+<td>Public</td>
+<td>Ethernet</td>
+<td></td>
+<td></td>
+<td>Blocked</td>
+<td>svchost.exe</td>
+<td>DNS</td>
+<td>User2</td>
+<td>svchost.exe</td>
+<td>C:\Windows\System32\svchost.exe</td>
+<td></td>
+</tr>
+<tr>
+<td>2023-02-02T08:45:55.000Z</td>
+<td>DESKTOP03</td>
+<td>Firewall</td>
+<td>192.168.1.150</td>
+<td>Canada</td>
+<td>185.104.10.98</td>
+<td>80</td>
+<td>TCP</td>
+<td>Inbound</td>
+<td>Private</td>
+<td>Wi-Fi</td>
+<td></td>
+<td></td>
+<td>Blocked</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="example-event-in-windows-security-log">Example Event in Windows Security Log</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">Log Name: Security
+</span></span><span class="line"><span class="cl">Source: Microsoft Windows Security Auditing
+</span></span><span class="line"><span class="cl">Date: 5/2/2023 10:31:12 AM
+</span></span><span class="line"><span class="cl">Event ID: <span class="m">5444</span>
+</span></span><span class="line"><span class="cl">Task Category: Filtering Platform Connection
+</span></span><span class="line"><span class="cl">Level: Information
+</span></span><span class="line"><span class="cl">Keywords: Audit Failure
+</span></span><span class="line"><span class="cl">User: N/A
+</span></span><span class="line"><span class="cl">Computer: MyComputer
+</span></span><span class="line"><span class="cl">Description:
+</span></span><span class="line"><span class="cl">A network connection request was blocked.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Subject:
+</span></span><span class="line"><span class="cl">Security ID: S-1-5-18
+</span></span><span class="line"><span class="cl">Account Name: MyComputer$
+</span></span><span class="line"><span class="cl">Account Domain: MYDOMAIN
+</span></span><span class="line"><span class="cl">Logon ID: 0x3E7
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Network Information:
+</span></span><span class="line"><span class="cl">Direction: Inbound
+</span></span><span class="line"><span class="cl">Source Address: 192.168.1.100
+</span></span><span class="line"><span class="cl">Source Port: <span class="m">54321</span>
+</span></span><span class="line"><span class="cl">Destination Address: 192.168.1.200
+</span></span><span class="line"><span class="cl">Destination Port: <span class="m">80</span>
+</span></span><span class="line"><span class="cl">Protocol: TCP
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Filter Information:
+</span></span><span class="line"><span class="cl">Filter Run-Time ID: <span class="m">157314</span>
+</span></span><span class="line"><span class="cl">Layer Name: Transport
+</span></span><span class="line"><span class="cl">Layer Run-Time ID: <span class="m">13</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Additional Information:
+</span></span><span class="line"><span class="cl">Reason: The rule does not match the traffic.
+</span></span></code></pre></div><p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
+  </channel>
+</rss>
