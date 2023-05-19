@@ -10,7 +10,60 @@
       <link>https://write-verbose.com/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 26 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 19 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Audit Installed VSCode Extensions with PowerShell</title>
+      <link>https://write-verbose.com/2023/05/19/AuditVSCodeExt/</link>
+      <pubDate>Fri, 19 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2023/05/19/AuditVSCodeExt/</guid>
+      <description>Get installed Visual Studio Code extensions on a local or remote computer</description>
+      <content:encoded><![CDATA[<p>The recent incident of malicious extensions in the Visual Studio Code Marketplace got me thinking about how to audit extensions across a large estate. This post includes a script to get installed extensions on a local or remote computer.</p>
+<p>You&rsquo;re probably aware of the <a href="https://www.bleepingcomputer.com/news/security/malicious-microsoft-vscode-extensions-steal-passwords-open-remote-shells/">recent discovery of malicious extensions</a> in the VSCode Marketplace.</p>
+<blockquote>
+<p>&lsquo;Theme Darcula dark&rsquo; – Described as &ldquo;an attempt to improve Dracula colors consistency on VS Code,&rdquo; this extension was used to steal basic information about the developer&rsquo;s system&hellip;downloaded over 45,000 times</p>
+</blockquote>
+<blockquote>
+<p>&lsquo;python-vscode&rsquo; – This extension was downloaded 1,384 times despite its empty description and uploader name of &rsquo;testUseracc1111,&rsquo;. Analysis of its code showed that it is a C# shell injector that can execute code or commands on the victim&rsquo;s machine.</p>
+</blockquote>
+<p>VSCode extensions are installed in the user profile and do not appear in Configuration Manager or Intune inventory. Although Defender for Endpoint is able to centrally report on installed Edge browser extensions in the user profile, this does not extend to VSCode.</p>
+<h2 id="enterprise-reporting">Enterprise reporting</h2>
+<p>The script below is just the first part of a solution to audit installed VSCode extensions. Suggestions to capture information across a large estate include:</p>
+<ul>
+<li>Use <a href="https://github.com/proxb/PoshRSJob">PoshRSJob</a> or <a href="https://github.com/PaulHigin/PSThreadJob">PSThreadJob</a> to rapidly query online computers over the network</li>
+<li>Save the output to the local registry and use <a href="https://askgarth.com/blog/how-to-use-regkeytomof/">RegKeytoMof</a> to bring it into the Configuration Manager inventory</li>
+<li>Save the output to a file or registry key and <a href="https://msendpointmgr.com/2021/04/12/enhance-intune-inventory-data-with-proactive-remediations-and-log-analytics/">upload to LogAnalytics</a></li>
+</ul>
+<h2 id="example-script-output">Example script output</h2>
+<p>The VSCode extension script below is similar to the <a href="/2018/12/15/audit-google-chrome-extensions/">Chrome Extension script</a> published some time ago.</p>
+<p>This is what the output looks like:</p>
+<pre tabindex="0"><code class="language-CMD" data-lang="CMD">C:\&gt; Get-VSCodeExt
+
+ExtensionID         : eliostruyf.vscode-msgraph-autocomplete
+Version             : 1.2.0
+Publisher           : Elio Struyf
+Path                : c:/Users/gd/.vscode/extensions/eliostruyf.vscode-msgraph-autocomplete-1.2.0
+MarketPlaceURL      : https://marketplace.visualstudio.com/items?itemName=eliostruyf.vscode-msgraph-autocomplete
+MarketPlaceInstalls : 4359
+Source              : https://github.com/estruyf/vscode-msgraph-autocomplete
+
+ExtensionID         : redhat.vscode-yaml
+Version             : 1.12.2
+Publisher           : Red Hat
+Path                : c:/Users/gd/.vscode/extensions/redhat.vscode-yaml-1.12.2
+MarketPlaceURL      : https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml
+MarketPlaceInstalls : 12120909
+Source              : https://github.com/redhat-developer/vscode-yaml.git
+</code></pre><h2 id="powershell-script">PowerShell Script</h2>
+<p>Get-VSCodeExts.ps1:</p>
+<script type="application/javascript" src="https://gist.github.com/gbdixg/a73a68905b0a630e16c465999e298611.js"></script>
+
+<p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
     <item>
       <title>Purview Information Protection Deep Dive Pt3 - Recommendations and Limitations</title>
       <link>https://write-verbose.com/2023/04/26/sensitivitylabelspt2/</link>

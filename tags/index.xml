@@ -10,7 +10,37 @@
       <link>https://write-verbose.com/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 26 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 19 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>PowerShell</title>
+      <link>https://write-verbose.com/tags/powershell/</link>
+      <pubDate>Fri, 19 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/powershell/</guid>
+      <description></description>
+      <content:encoded><![CDATA[]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>security</title>
+      <link>https://write-verbose.com/tags/security/</link>
+      <pubDate>Fri, 19 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/security/</guid>
+      <description></description>
+      <content:encoded><![CDATA[]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>VSCode</title>
+      <link>https://write-verbose.com/tags/vscode/</link>
+      <pubDate>Fri, 19 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/vscode/</guid>
+      <description></description>
+      <content:encoded><![CDATA[]]></content:encoded>
+    </item>
+    
     <item>
       <title>governance</title>
       <link>https://write-verbose.com/tags/governance/</link>
@@ -52,31 +82,11 @@
     </item>
     
     <item>
-      <title>security</title>
-      <link>https://write-verbose.com/tags/security/</link>
-      <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://write-verbose.com/tags/security/</guid>
-      <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
-    </item>
-    
-    <item>
       <title>Intune</title>
       <link>https://write-verbose.com/tags/intune/</link>
       <pubDate>Mon, 17 Apr 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/tags/intune/</guid>
-      <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
-    </item>
-    
-    <item>
-      <title>PowerShell</title>
-      <link>https://write-verbose.com/tags/powershell/</link>
-      <pubDate>Mon, 17 Apr 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://write-verbose.com/tags/powershell/</guid>
       <description></description>
       <content:encoded><![CDATA[]]></content:encoded>
     </item>
@@ -207,16 +217,6 @@
       <pubDate>Sat, 15 May 2021 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/tags/wsl/</guid>
-      <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
-    </item>
-    
-    <item>
-      <title>vscode</title>
-      <link>https://write-verbose.com/tags/vscode/</link>
-      <pubDate>Fri, 07 May 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://write-verbose.com/tags/vscode/</guid>
       <description></description>
       <content:encoded><![CDATA[]]></content:encoded>
     </item>

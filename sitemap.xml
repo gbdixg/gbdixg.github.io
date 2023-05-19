@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://write-verbose.com/2023/05/19/AuditVSCodeExt/</loc>
+    <lastmod>2023-05-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/posts/</loc>
+    <lastmod>2023-05-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/powershell/</loc>
+    <lastmod>2023-05-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/security/</loc>
+    <lastmod>2023-05-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/</loc>
+    <lastmod>2023-05-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/vscode/</loc>
+    <lastmod>2023-05-19T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/</loc>
+    <lastmod>2023-05-19T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://write-verbose.com/tags/governance/</loc>
     <lastmod>2023-04-26T00:00:00+00:00</lastmod>
   </url><url>
@@ -11,22 +32,10 @@
     <loc>https://write-verbose.com/tags/mip/</loc>
     <lastmod>2023-04-26T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://write-verbose.com/posts/</loc>
-    <lastmod>2023-04-26T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://write-verbose.com/tags/purview/</loc>
     <lastmod>2023-04-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/2023/04/26/sensitivitylabelspt2/</loc>
-    <lastmod>2023-04-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/security/</loc>
-    <lastmod>2023-04-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/</loc>
-    <lastmod>2023-04-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/</loc>
     <lastmod>2023-04-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/2023/04/25/sensitivitylabelspt2/</loc>
@@ -36,9 +45,6 @@
     <lastmod>2023-04-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/intune/</loc>
-    <lastmod>2023-04-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/powershell/</loc>
     <lastmod>2023-04-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/2023/04/17/readimelog/</loc>
@@ -144,9 +150,6 @@
     <lastmod>2021-05-15T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/2021/05/07/vscodesnippets/</loc>
-    <lastmod>2021-05-07T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/vscode/</loc>
     <lastmod>2021-05-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/activedirectory/</loc>
