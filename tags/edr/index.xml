@@ -19,7 +19,7 @@
       <guid>https://write-verbose.com/2023/02/02/Firewallmde/</guid>
       <description>A reminder that Firewall Events are not available in MDE Advanced Hunting by default</description>
       <content:encoded><![CDATA[<p>You may notice that Windows Firewall events are not available in Defender for Endpoint Advanced Hunting. This is a quick post on the steps required to enable Firewall audit events.</p>
-<p><a href="https://medium.com/@olafhartong">Olaf Hartong&rsquo;s excellent series on MDE Internals</a> highlights that some MDE telemetry is based on Kernel call-backs or drivers, making those areas independent of client audit policy and enabled by default.</p>
+<p><a href="https://medium.com/@olafhartong" target="_blank">Olaf Hartong&amp;rsquo;s excellent series on MDE Internals</a> highlights that some MDE telemetry is based on Kernel call-backs or drivers, making those areas independent of client audit policy and enabled by default.</p>
 <p>Other settings, however, do rely on ETW providers and therefore on the MDE client&rsquo;s security audit policy. Firewall audit events will only be available in MDE if the relevant audit subcategory is enabled.</p>
 <h2 id="enable-client-side-firewall-auditing">Enable client-side Firewall auditing</h2>
 <p>The following <em>auditpol</em> command will enable Windows Firewall client-side auditing and start sending the telemetry to MDE.</p>
@@ -169,7 +169,7 @@
 </span></span><span class="line"><span class="cl">Reason: The rule does not match the traffic.
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     

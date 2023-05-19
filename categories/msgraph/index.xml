@@ -24,7 +24,7 @@
 <p>A custom Azure application can limit MS Graph access to specific requirements of a PowerShell script, reducing the risk.</p>
 <h1 id="disable-user-consent">Disable user consent</h1>
 <p>The first step is to prevent users granting application consent. User consent is enabled by default and presents a risk of unwanted access to company data.</p>
-<p>In the <a href="https://aad.portal.azure.com/">Azure AD portal</a>, navigate to <strong>Enterprise applications</strong> and then <strong>Consent and permissions</strong>.</p>
+<p>In the <a href="https://aad.portal.azure.com/" target="_blank">Azure AD portal</a>, navigate to <strong>Enterprise applications</strong> and then <strong>Consent and permissions</strong>.</p>
 <p>Many companies change the setting to <strong>Do not allow user consent</strong>. Note that this does create an admin overhead, so you could look into the advanced options of defining low-risk permissions or using conditional access.</p>
 <p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp0.png" alt="User consent"  />
 </p>
@@ -36,7 +36,7 @@
 <h1 id="clean-up-microsoft-graph-powershell">Clean-up Microsoft Graph PowerShell</h1>
 <p>If you want to implement Custom Apps for access to MSGraph, you should first review and remove excess permissions from the <em>Microsoft Graph PowerShell</em> app. Over time administrators may have consented to more and more permissions.</p>
 <p>It isn&rsquo;t possible to remove permissions or revoke consent in the admin portal, but it does provide the PowerShell commands.</p>
-<p>In the <a href="https://aad.portal.azure.com/">Azure AD portal</a>, navigate to <strong>Enterprise applications</strong><br>
+<p>In the <a href="https://aad.portal.azure.com/" target="_blank">Azure AD portal</a>, navigate to <strong>Enterprise applications</strong><br>
 In the <em>All applications</em> view, select <strong>Microsoft Graph PowerShell</strong> and then <strong>Permissions</strong><br>
 Click <strong>Review Permissions</strong></p>
 <p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp05.png" alt="User consent"  />
@@ -64,7 +64,7 @@ Click <strong>Review Permissions</strong></p>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h1 id="custom-app-step-by-step">Custom app Step by Step</h1>
 <p>The following steps create a new application with delegated API access to MSGraph, suitable for use from a PowerShell script. The permissions are specific to the <a href="/2023/03/18/Show-Win32AppUI/">Show-Win32AppUI</a></p>
-<p>Open the <a href="https://aad.portal.azure.com/">Azure AD portal</a> and select <strong>App registrations</strong></p>
+<p>Open the <a href="https://aad.portal.azure.com/" target="_blank">Azure AD portal</a> and select <strong>App registrations</strong></p>
 <p>Click on <strong>New Registration</strong> to start the process</p>
 <p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp1.png" alt="New registration"  />
 </p>
@@ -152,7 +152,7 @@ Click <strong>Grant admin consent for <tenant></strong></p>
 </ul>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     

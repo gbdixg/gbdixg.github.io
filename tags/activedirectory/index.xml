@@ -28,14 +28,14 @@
 <h2 id="powershell-script">PowerShell script</h2>
 <p>The <strong>Find-ADSite</strong> PowerShell function below will return the AD Site and Subnet for a specified computer name or IP Address.<br>
 If a company populates subnet descriptions with useful information, it can also identify information such as the specific Office or floor.</p>
-<p>AD Administrators may define a <a href="https://blog.mindcore.dk/2013/07/catch-all-or-super-subnet-in-sites-and/">catch-all subnet</a> with a wide address range. By default if the IP address is within more than one subnet, the output will only include the smallest range. Use the -AllMatches parameter to see everything.</p>
+<p>AD Administrators may define a <a href="https://blog.mindcore.dk/2013/07/catch-all-or-super-subnet-in-sites-and/" target="_blank">catch-all subnet</a> with a wide address range. By default if the IP address is within more than one subnet, the output will only include the smallest range. Use the -AllMatches parameter to see everything.</p>
 <p><img loading="lazy" src="/img/find-adsite1.png" alt="Find-ADSite"  />
 </p>
 <script type="application/javascript" src="https://gist.github.com/gbdixg/5cd6ea0c984278b08b36260ada0e3f9c.js"></script>
 
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -109,7 +109,7 @@ If a company populates subnet descriptions with useful information, it can also 
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     

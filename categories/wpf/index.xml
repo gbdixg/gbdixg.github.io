@@ -19,7 +19,7 @@
       <guid>https://write-verbose.com/2023/03/21/PowerShellWPFPt1/</guid>
       <description>Create a responsive WPF app using PowerShell Runspaces to simulate multiple threads</description>
       <content:encoded><![CDATA[<p><strong>Things I learned creating a GUI tool with PowerShell and WPF.</strong><br>
-The snippets in this article are based on the <a href="https://github.com/gbdixg/Show-Win32AppUI">Show-Win32AppUI tool</a> available on GitHub.</p>
+The snippets in this article are based on the <a href="https://github.com/gbdixg/Show-Win32AppUI" target="_blank">Show-Win32AppUI tool</a> available on GitHub.</p>
 <h1 id="disclaimer">Disclaimer</h1>
 <p>I realise PowerShell isn&rsquo;t suited to creating GUI apps. The main reason to use PowerShell is <em>supportability</em>. Specifically, when working with Colleagues who aren&rsquo;t comfortable maintaining a compiled language like C#. Its far easier to make small changes to variables or paths in a script.</p>
 <h1 id="why-wpf">Why WPF?</h1>
@@ -38,7 +38,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </ul>
 <p>These concepts are covered in more detail below.</p>
 <h2 id="sharing-variables-functions-and-modules-with-a-runspace">Sharing variables, functions and modules with a Runspace</h2>
-<p><strong>Required modules</strong> must be specifically loaded into the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.runspaces.initialsessionstate?view=powershellsdk-7.3.0">InitialSessionState</a> of the Runspace. The Runspace won&rsquo;t automatically have access to modules already loaded in the <em>parent</em> PowerShell session.</p>
+<p><strong>Required modules</strong> must be specifically loaded into the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.runspaces.initialsessionstate?view=powershellsdk-7.3.0" target="_blank">InitialSessionState</a> of the Runspace. The Runspace won&rsquo;t automatically have access to modules already loaded in the <em>parent</em> PowerShell session.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example of importing modules into a new Runspace ###</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="nv">$modulesToLoad</span><span class="p">=</span><span class="vm">@</span><span class="p">(</span><span class="s1">&#39;Microsoft.Graph.Intune&#39;</span><span class="p">,</span><span class="s1">&#39;MSAL.PS&#39;</span><span class="p">)</span> <span class="c"># Must be installed on the computer</span>
@@ -59,7 +59,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </span></span><span class="line"><span class="cl">    <span class="nv">$initialSessionState</span><span class="p">.</span><span class="py">Commands</span><span class="p">.</span><span class="py">Add</span><span class="p">(</span><span class="nv">$entry</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span> <span class="p">=</span> <span class="p">[</span><span class="no">runspacefactory</span><span class="p">]::</span><span class="n">CreateRunspace</span><span class="p">(</span><span class="nv">$initialSessionState</span><span class="p">)</span>
-</span></span></code></pre></div><p><strong>Variables</strong> can be shared with a Runspace using the <strong>SetVariable</strong> method of the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.runspaces.sessionstateproxy?view=powershellsdk-7.3.0">SessionStateProxy</a> class.  SetVariable parameters are the <em>variable name</em> (without the &lsquo;$&rsquo;) and the value to set.</p>
+</span></span></code></pre></div><p><strong>Variables</strong> can be shared with a Runspace using the <strong>SetVariable</strong> method of the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.runspaces.sessionstateproxy?view=powershellsdk-7.3.0" target="_blank">SessionStateProxy</a> class.  SetVariable parameters are the <em>variable name</em> (without the &lsquo;$&rsquo;) and the value to set.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example importing parent session variables into a new Runspace ###</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="nv">$VariablesToImport</span> <span class="p">=</span> <span class="vm">@</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">,</span><span class="s1">&#39;password&#39;</span><span class="p">,</span><span class="s1">&#39;displayName&#39;</span><span class="p">)</span> <span class="c"># existing variables in the parent session</span>
@@ -113,7 +113,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    
 </span></span><span class="line"><span class="cl"> <span class="p">},</span><span class="vm">$True</span><span class="p">)</span>   
-</span></span></code></pre></div><p>More information on thread safe collections is available <a href="https://learn.microsoft.com/en-us/dotnet/standard/collections/thread-safe/">here</a></p>
+</span></span></code></pre></div><p>More information on thread safe collections is available <a href="https://learn.microsoft.com/en-us/dotnet/standard/collections/thread-safe/" target="_blank">here</a></p>
 <h2 id="how-to-update-the-wpf-user-interface-from-another-runspace">How to update the WPF user interface from another Runspace</h2>
 <p>If you try to modify the WPF user interface from a separate Runspace, PowerShell will throw an error indicating only the owning thread (Runspace) can update it.</p>
 <p><img loading="lazy" src="/img/UIThreadError2.png" alt="UIError"  />
@@ -127,7 +127,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </span></span><span class="line"><span class="cl">    <span class="nv">$UIControls</span><span class="p">.</span><span class="py">txt_SetupFile</span><span class="p">.</span><span class="py">Text</span> <span class="p">=</span> <span class="s2">&#34;Successfully updated from another Runspace&#34;</span>
 </span></span><span class="line"><span class="cl"><span class="p">},</span><span class="s2">&#34;Normal&#34;</span><span class="p">)</span>
 </span></span></code></pre></div><h2 id="writing-to-the-same-log-file-from-separate-runspaces">Writing to the same log file from separate Runspaces</h2>
-<p>Runspaces also make it more complex to write to a single log file. There is potential for a deadlock or <a href="https://learn.microsoft.com/en-us/dotnet/standard/threading/managed-threading-best-practices#race-conditions">race condition</a> to occur. A <strong>Mutex</strong> is one way to implement the required locking:</p>
+<p>Runspaces also make it more complex to write to a single log file. There is potential for a deadlock or <a href="https://learn.microsoft.com/en-us/dotnet/standard/threading/managed-threading-best-practices#race-conditions" target="_blank">race condition</a> to occur. A <strong>Mutex</strong> is one way to implement the required locking:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example using a Mutex lock before writing to a log file ###</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c"># In the Runspace script block</span>
@@ -262,11 +262,11 @@ You will need to implement your own colour-coding to distinguish between warning
 </span></span><span class="line"><span class="cl"><span class="nv">$ParentHost</span><span class="p">.</span><span class="py">ui</span><span class="p">.</span><span class="py">WriteVerboseLine</span><span class="p">(</span><span class="s2">&#34;Realtime verbose output from Runspace in parent console&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="nv">$ParentHost</span><span class="p">.</span><span class="py">UI</span><span class="p">.</span><span class="py">WriteWarningLine</span><span class="p">(</span><span class="s2">&#34;Realtime warning output from Runspace in parent console&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="nv">$ParentHost</span><span class="p">.</span><span class="py">UI</span><span class="p">.</span><span class="py">WriteErrorLine</span><span class="p">(</span><span class="s2">&#34;Realtime error output from Runspace in parent console&#34;</span><span class="p">)</span>
-</span></span></code></pre></div><p>See the <a href="https://github.com/gbdixg/Show-Win32AppUI">Show-Win32AppUI tool</a> for an example of using these ideas together in a WPF app.</p>
+</span></span></code></pre></div><p>See the <a href="https://github.com/gbdixg/Show-Win32AppUI" target="_blank">Show-Win32AppUI tool</a> for an example of using these ideas together in a WPF app.</p>
 <p>See <a href="/2023/03/21/PowerShellWPFPt2/">part2 of this series</a> for information on WPF controls, events and XAML.</p>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     

@@ -19,7 +19,7 @@
       <guid>https://write-verbose.com/2023/03/21/PowerShellWPFPt2/</guid>
       <description>Tips for working with the WPF user interface in PowerShell</description>
       <content:encoded><![CDATA[<p><strong>More things I learned creating a GUI tool with PowerShell and WPF.</strong><br>
-The snippets in this article are based on the <a href="https://github.com/gbdixg/Show-Win32AppUI">Show-Win32AppUI tool</a> available on GitHub.</p>
+The snippets in this article are based on the <a href="https://github.com/gbdixg/Show-Win32AppUI" target="_blank">Show-Win32AppUI tool</a> available on GitHub.</p>
 <h1 id="part2---creating-a-multi-page-wpf-app-in-powershell">Part2 - Creating a multi-page WPF app in PowerShell</h1>
 <p>(See <a href="/2023/03/21/PowerShellWPFPt1/">part1 of this series</a> for information on using PowerShell Runspaces with WPF).</p>
 <p>WPF uses .XAML text files to define the layout and properties of supported <em>controls</em> such as Textboxes, Buttons, Status bars etc. XAML is a form is XML, with opening and closing tags that create a hierarchy of controls. A <em>child</em> control such as a Combobox is displayed within a parent container such as a <em>Window</em>.</p>
@@ -61,7 +61,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </span></span><span class="line"><span class="cl">        <span class="na">Grid.Row=</span><span class="s">&#34;3&#34;</span>
 </span></span><span class="line"><span class="cl">        <span class="na">Grid.Column=</span><span class="s">&#34;3&#34;</span>
 </span></span><span class="line"><span class="cl">        <span class="na">BorderThickness=</span><span class="s">&#34;0&#34;</span><span class="nt">/&gt;</span>
-</span></span></code></pre></div><p>See the <a href="https://github.com/gbdixg/Show-Win32AppUI/tree/main/Show-Win32AppUI/Xaml">Show-Win32UI tool</a> for an example of separate XAML files per Page and main Window.</p>
+</span></span></code></pre></div><p>See the <a href="https://github.com/gbdixg/Show-Win32AppUI/tree/main/Show-Win32AppUI/Xaml" target="_blank">Show-Win32UI tool</a> for an example of separate XAML files per Page and main Window.</p>
 <h1 id="load-xaml-controls-into-powershell-variables">Load XAML controls into PowerShell variables</h1>
 <p>A thread safe Hashtable collection allows WPF controls to be referenced in PowerShell at runtime. Grouping the controls in a collection is convenient as it simplifies passing them into Runspaces.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example of reading controls from XAML files and assigning them to variables</span>
@@ -225,7 +225,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </span></span><span class="line"><span class="cl">    <span class="na">Margin=</span><span class="s">&#34;5&#34;</span><span class="nt">/&gt;</span>   
 </span></span></code></pre></div><h2 id="defining-event-handlers">Defining Event Handlers</h2>
 <p>WPF controls support events that occur based on user input. Some events are common to most controls, such as <strong>MouseEnter</strong> and <strong>MouseLeave</strong> while other events are specific to a control type, such as <strong>SelectionChanged</strong> in a ComboBox.</p>
-<p>PowerShell uses an &ldquo;Add_[Event Name]&rdquo; syntax to define the code to run when the event fires as below. The per-control event list is available in the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.windows.controls.combobox?view=windowsdesktop-7.0#events">MS Documentation</a>.</p>
+<p>PowerShell uses an &ldquo;Add_[Event Name]&rdquo; syntax to define the code to run when the event fires as below. The per-control event list is available in the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.windows.controls.combobox?view=windowsdesktop-7.0#events" target="_blank">MS Documentation</a>.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c"># Example event handler - code will run when the Combo box selection changes</span>
 </span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span><span class="p">.</span><span class="py">combo_language</span><span class="p">.</span><span class="py">Add_SelectionChanged</span><span class="p">({</span>
 </span></span><span class="line"><span class="cl">    
@@ -241,7 +241,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </span></span><span class="line"><span class="cl"><span class="p">})</span>
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -253,7 +253,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
       <guid>https://write-verbose.com/2023/03/21/PowerShellWPFPt1/</guid>
       <description>Create a responsive WPF app using PowerShell Runspaces to simulate multiple threads</description>
       <content:encoded><![CDATA[<p><strong>Things I learned creating a GUI tool with PowerShell and WPF.</strong><br>
-The snippets in this article are based on the <a href="https://github.com/gbdixg/Show-Win32AppUI">Show-Win32AppUI tool</a> available on GitHub.</p>
+The snippets in this article are based on the <a href="https://github.com/gbdixg/Show-Win32AppUI" target="_blank">Show-Win32AppUI tool</a> available on GitHub.</p>
 <h1 id="disclaimer">Disclaimer</h1>
 <p>I realise PowerShell isn&rsquo;t suited to creating GUI apps. The main reason to use PowerShell is <em>supportability</em>. Specifically, when working with Colleagues who aren&rsquo;t comfortable maintaining a compiled language like C#. Its far easier to make small changes to variables or paths in a script.</p>
 <h1 id="why-wpf">Why WPF?</h1>
@@ -272,7 +272,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </ul>
 <p>These concepts are covered in more detail below.</p>
 <h2 id="sharing-variables-functions-and-modules-with-a-runspace">Sharing variables, functions and modules with a Runspace</h2>
-<p><strong>Required modules</strong> must be specifically loaded into the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.runspaces.initialsessionstate?view=powershellsdk-7.3.0">InitialSessionState</a> of the Runspace. The Runspace won&rsquo;t automatically have access to modules already loaded in the <em>parent</em> PowerShell session.</p>
+<p><strong>Required modules</strong> must be specifically loaded into the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.runspaces.initialsessionstate?view=powershellsdk-7.3.0" target="_blank">InitialSessionState</a> of the Runspace. The Runspace won&rsquo;t automatically have access to modules already loaded in the <em>parent</em> PowerShell session.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example of importing modules into a new Runspace ###</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="nv">$modulesToLoad</span><span class="p">=</span><span class="vm">@</span><span class="p">(</span><span class="s1">&#39;Microsoft.Graph.Intune&#39;</span><span class="p">,</span><span class="s1">&#39;MSAL.PS&#39;</span><span class="p">)</span> <span class="c"># Must be installed on the computer</span>
@@ -293,7 +293,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </span></span><span class="line"><span class="cl">    <span class="nv">$initialSessionState</span><span class="p">.</span><span class="py">Commands</span><span class="p">.</span><span class="py">Add</span><span class="p">(</span><span class="nv">$entry</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span> <span class="p">=</span> <span class="p">[</span><span class="no">runspacefactory</span><span class="p">]::</span><span class="n">CreateRunspace</span><span class="p">(</span><span class="nv">$initialSessionState</span><span class="p">)</span>
-</span></span></code></pre></div><p><strong>Variables</strong> can be shared with a Runspace using the <strong>SetVariable</strong> method of the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.runspaces.sessionstateproxy?view=powershellsdk-7.3.0">SessionStateProxy</a> class.  SetVariable parameters are the <em>variable name</em> (without the &lsquo;$&rsquo;) and the value to set.</p>
+</span></span></code></pre></div><p><strong>Variables</strong> can be shared with a Runspace using the <strong>SetVariable</strong> method of the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.runspaces.sessionstateproxy?view=powershellsdk-7.3.0" target="_blank">SessionStateProxy</a> class.  SetVariable parameters are the <em>variable name</em> (without the &lsquo;$&rsquo;) and the value to set.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example importing parent session variables into a new Runspace ###</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="nv">$VariablesToImport</span> <span class="p">=</span> <span class="vm">@</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">,</span><span class="s1">&#39;password&#39;</span><span class="p">,</span><span class="s1">&#39;displayName&#39;</span><span class="p">)</span> <span class="c"># existing variables in the parent session</span>
@@ -347,7 +347,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    
 </span></span><span class="line"><span class="cl"> <span class="p">},</span><span class="vm">$True</span><span class="p">)</span>   
-</span></span></code></pre></div><p>More information on thread safe collections is available <a href="https://learn.microsoft.com/en-us/dotnet/standard/collections/thread-safe/">here</a></p>
+</span></span></code></pre></div><p>More information on thread safe collections is available <a href="https://learn.microsoft.com/en-us/dotnet/standard/collections/thread-safe/" target="_blank">here</a></p>
 <h2 id="how-to-update-the-wpf-user-interface-from-another-runspace">How to update the WPF user interface from another Runspace</h2>
 <p>If you try to modify the WPF user interface from a separate Runspace, PowerShell will throw an error indicating only the owning thread (Runspace) can update it.</p>
 <p><img loading="lazy" src="/img/UIThreadError2.png" alt="UIError"  />
@@ -361,7 +361,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </span></span><span class="line"><span class="cl">    <span class="nv">$UIControls</span><span class="p">.</span><span class="py">txt_SetupFile</span><span class="p">.</span><span class="py">Text</span> <span class="p">=</span> <span class="s2">&#34;Successfully updated from another Runspace&#34;</span>
 </span></span><span class="line"><span class="cl"><span class="p">},</span><span class="s2">&#34;Normal&#34;</span><span class="p">)</span>
 </span></span></code></pre></div><h2 id="writing-to-the-same-log-file-from-separate-runspaces">Writing to the same log file from separate Runspaces</h2>
-<p>Runspaces also make it more complex to write to a single log file. There is potential for a deadlock or <a href="https://learn.microsoft.com/en-us/dotnet/standard/threading/managed-threading-best-practices#race-conditions">race condition</a> to occur. A <strong>Mutex</strong> is one way to implement the required locking:</p>
+<p>Runspaces also make it more complex to write to a single log file. There is potential for a deadlock or <a href="https://learn.microsoft.com/en-us/dotnet/standard/threading/managed-threading-best-practices#race-conditions" target="_blank">race condition</a> to occur. A <strong>Mutex</strong> is one way to implement the required locking:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example using a Mutex lock before writing to a log file ###</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c"># In the Runspace script block</span>
@@ -496,11 +496,11 @@ You will need to implement your own colour-coding to distinguish between warning
 </span></span><span class="line"><span class="cl"><span class="nv">$ParentHost</span><span class="p">.</span><span class="py">ui</span><span class="p">.</span><span class="py">WriteVerboseLine</span><span class="p">(</span><span class="s2">&#34;Realtime verbose output from Runspace in parent console&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="nv">$ParentHost</span><span class="p">.</span><span class="py">UI</span><span class="p">.</span><span class="py">WriteWarningLine</span><span class="p">(</span><span class="s2">&#34;Realtime warning output from Runspace in parent console&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="nv">$ParentHost</span><span class="p">.</span><span class="py">UI</span><span class="p">.</span><span class="py">WriteErrorLine</span><span class="p">(</span><span class="s2">&#34;Realtime error output from Runspace in parent console&#34;</span><span class="p">)</span>
-</span></span></code></pre></div><p>See the <a href="https://github.com/gbdixg/Show-Win32AppUI">Show-Win32AppUI tool</a> for an example of using these ideas together in a WPF app.</p>
+</span></span></code></pre></div><p>See the <a href="https://github.com/gbdixg/Show-Win32AppUI" target="_blank">Show-Win32AppUI tool</a> for an example of using these ideas together in a WPF app.</p>
 <p>See <a href="/2023/03/21/PowerShellWPFPt2/">part2 of this series</a> for information on WPF controls, events and XAML.</p>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -513,7 +513,7 @@ You will need to implement your own colour-coding to distinguish between warning
       <description>A PowerShell GUI app to simplify creating Win32 Apps in Intune</description>
       <content:encoded><![CDATA[<p>A GUI tool for end-to-end creation of Win32 Apps in Microsoft Intune.</p>
 <p>This post provides details of &ldquo;Show-Win32AppUI&rdquo;, a GUI tool that simplifies the end-to-end process of creating Win32 Apps in Intune.</p>
-<p>The GitHub source is <a href="https://github.com/gbdixg/Show-Win32AppUI">available here</a>.  Instructions for setup and use are below.</p>
+<p>The GitHub source is <a href="https://github.com/gbdixg/Show-Win32AppUI" target="_blank">available here</a>.  Instructions for setup and use are below.</p>
 <p><img loading="lazy" src="/img/Show-Win32AppUI/Show-Win32AppUI.gif" alt="Show-Win32AppUI"  />
 </p>
 <p>This isn&rsquo;t a one size fits all community tool. You will likely need to modify it to meet your needs. However, its written in PowerShell and has code comments and blog posts to make editing simpler.</p>
@@ -526,7 +526,7 @@ You will need to implement your own colour-coding to distinguish between warning
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">MSAL</span><span class="p">.</span><span class="nb">PS </span><span class="n">-RequiredVersion</span> <span class="mf">4.37</span><span class="p">.</span><span class="py">0</span><span class="p">.</span><span class="py">0</span>
 </span></span><span class="line"><span class="cl"><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">IntuneWin32App</span> <span class="n">-RequiredVersion</span> <span class="mf">1.4</span><span class="p">.</span><span class="py">0</span>
 </span></span></code></pre></div><h2 id="tenant-id">Tenant ID</h2>
-<p>Update the $TenantID on line 4 of <em>Show-Win32AppUI.ps1</em> to use your required Azure tenant. Your tenant ID is available from the <a href="https://aad.portal.azure.com/">Azure AD portal</a> <em>Overview</em> page.</p>
+<p>Update the $TenantID on line 4 of <em>Show-Win32AppUI.ps1</em> to use your required Azure tenant. Your tenant ID is available from the <a href="https://aad.portal.azure.com/" target="_blank">Azure AD portal</a> <em>Overview</em> page.</p>
 <h2 id="azure-client-app">Azure Client App</h2>
 <p>An Azure Client App is used with interactive authentication to access the Microsoft Graph. There are two setup steps required:</p>
 <ol>
@@ -554,7 +554,7 @@ Whether you use a custom app or Microsoft Graph PowerShell, the app must be conf
 <li>Global Administrator</li>
 </ul>
 <h2 id="workstation-permissions">Workstation permissions</h2>
-<p>The tool does not need administrative access to the client workstation. Internet access is required, to download the <a href="https://github.com/Microsoft/Microsoft-Win32-Content-Prep-Tool">Win32 Content Prep tool</a> on first use.</p>
+<p>The tool does not need administrative access to the client workstation. Internet access is required, to download the <a href="https://github.com/Microsoft/Microsoft-Win32-Content-Prep-Tool" target="_blank">Win32 Content Prep tool</a> on first use.</p>
 <h2 id="powershell-script-execution">PowerShell script execution</h2>
 <p>PowerShell script execution is disabled on Windows clients by default. Use one of the methods below to allow script execution on the workstation.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">set-executionpolicy</span> <span class="n">Unrestricted</span>
@@ -622,25 +622,25 @@ Whether you use a custom app or Microsoft Graph PowerShell, the app must be conf
 <p><img loading="lazy" src="/img/Show-Win32AppUI/Win32AppUI-Defaults.png" alt="WriteHost"  />
 </p>
 <h1 id="detection-method">Detection Method</h1>
-<p>The Win32 app detection is hardcoded to use a file exists method. The <em>Install.ps1</em> script wrapper creates a &ldquo;.ps1.tag&rdquo; file under the %PROGRAMDATA% folder and <em>Uninstall.ps1</em> deletes it - a detection method <a href="https://oofhours.com/2020/05/18/two-for-one-updated-autopilot-branding-and-update-os-scripts/">first suggested by Michael Niehaus</a></p>
+<p>The Win32 app detection is hardcoded to use a file exists method. The <em>Install.ps1</em> script wrapper creates a &ldquo;.ps1.tag&rdquo; file under the %PROGRAMDATA% folder and <em>Uninstall.ps1</em> deletes it - a detection method <a href="https://oofhours.com/2020/05/18/two-for-one-updated-autopilot-branding-and-update-os-scripts/" target="_blank">first suggested by Michael Niehaus</a></p>
 <h1 id="credits">Credits</h1>
 <ul>
 <li>
-<p>Show-Win32AppUI is a front-end to the excellent <a href="https://github.com/MSEndpointMgr/IntuneWin32App">IntuneWin32App module</a>. Full credit to the contributors of this project.</p>
+<p>Show-Win32AppUI is a front-end to the excellent <a href="https://github.com/MSEndpointMgr/IntuneWin32App" target="_blank">IntuneWin32App module</a>. Full credit to the contributors of this project.</p>
 </li>
 <li>
-<p>The <a href="https://github.com/AzureAD/MSAL.PS">MSAL.PS module</a> has simplified the transition from ADAL to MSAL authentication.</p>
+<p>The <a href="https://github.com/AzureAD/MSAL.PS" target="_blank">MSAL.PS module</a> has simplified the transition from ADAL to MSAL authentication.</p>
 </li>
 <li>
-<p><a href="https://learn-powershell.net/">Boe Prox</a> for PowerShell Runspace tips</p>
+<p><a href="https://learn-powershell.net/" target="_blank">Boe Prox</a> for PowerShell Runspace tips</p>
 </li>
 <li>
-<p><a href="https://smsagent.blog/blog-posts/">SMSAgent</a> for PowerShell WPF tips</p>
+<p><a href="https://smsagent.blog/blog-posts/" target="_blank">SMSAgent</a> for PowerShell WPF tips</p>
 </li>
 </ul>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     

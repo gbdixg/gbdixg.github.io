@@ -19,7 +19,7 @@
       <guid>https://write-verbose.com/2023/05/19/AuditVSCodeExt/</guid>
       <description>Get installed Visual Studio Code extensions on a local or remote computer</description>
       <content:encoded><![CDATA[<p>The recent incident of malicious extensions in the Visual Studio Code Marketplace got me thinking about how to audit extensions across a large estate. This post includes a script to get installed extensions on a local or remote computer.</p>
-<p>You&rsquo;re probably aware of the <a href="https://www.bleepingcomputer.com/news/security/malicious-microsoft-vscode-extensions-steal-passwords-open-remote-shells/">recent discovery of malicious extensions</a> in the VSCode Marketplace.</p>
+<p>You&rsquo;re probably aware of the <a href="https://www.bleepingcomputer.com/news/security/malicious-microsoft-vscode-extensions-steal-passwords-open-remote-shells/" target="_blank">recent discovery of malicious extensions</a> in the VSCode Marketplace.</p>
 <blockquote>
 <p>&lsquo;Theme Darcula dark&rsquo; – Described as &ldquo;an attempt to improve Dracula colors consistency on VS Code,&rdquo; this extension was used to steal basic information about the developer&rsquo;s system&hellip;downloaded over 45,000 times</p>
 </blockquote>
@@ -30,9 +30,9 @@
 <h2 id="enterprise-reporting">Enterprise reporting</h2>
 <p>The script below is just the first part of a solution to audit installed VSCode extensions. Suggestions to capture information across a large estate include:</p>
 <ul>
-<li>Use <a href="https://github.com/proxb/PoshRSJob">PoshRSJob</a> or <a href="https://github.com/PaulHigin/PSThreadJob">PSThreadJob</a> to rapidly query online computers over the network</li>
-<li>Save the output to the local registry and use <a href="https://askgarth.com/blog/how-to-use-regkeytomof/">RegKeytoMof</a> to bring it into the Configuration Manager inventory</li>
-<li>Save the output to a file or registry key and <a href="https://msendpointmgr.com/2021/04/12/enhance-intune-inventory-data-with-proactive-remediations-and-log-analytics/">upload to LogAnalytics</a></li>
+<li>Use <a href="https://github.com/proxb/PoshRSJob" target="_blank">PoshRSJob</a> or <a href="https://github.com/PaulHigin/PSThreadJob" target="_blank">PSThreadJob</a> to rapidly query online computers over the network</li>
+<li>Save the output to the local registry and use <a href="https://askgarth.com/blog/how-to-use-regkeytomof/" target="_blank">RegKeytoMof</a> to bring it into the Configuration Manager inventory</li>
+<li>Save the output to a file or registry key and <a href="https://msendpointmgr.com/2021/04/12/enhance-intune-inventory-data-with-proactive-remediations-and-log-analytics/" target="_blank">upload to LogAnalytics</a></li>
 </ul>
 <h2 id="example-script-output">Example script output</h2>
 <p>The VSCode extension script below is similar to the <a href="/2018/12/15/audit-google-chrome-extensions/">Chrome Extension script</a> published some time ago.</p>
@@ -60,7 +60,7 @@ Source              : https://github.com/redhat-developer/vscode-yaml.git
 
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -78,7 +78,7 @@ Source              : https://github.com/redhat-developer/vscode-yaml.git
 <p>IME Log entries are in the CMTrace format used by System Center Configuration Manager e.g.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-LaTeX" data-lang="LaTeX"><span class="line"><span class="cl">&lt;![LOG[[Win32App] Checking ESP status and phase for sessionId: 0]LOG]!&gt;&lt;time=&#34;23:05:44.2390147&#34; date=&#34;4-16-2023&#34; component=&#34;IntuneManagementExtension&#34; context=&#34;&#34; type=&#34;1&#34; thread=&#34;65&#34; file=&#34;&#34;&gt;
 </span></span><span class="line"><span class="cl">&lt;![LOG[[Proxy Poller] Processing session id 2 starts]LOG]!&gt;&lt;time=&#34;23:05:47.8411669&#34; date=&#34;4-16-2023&#34; component=&#34;IntuneManagementExtension&#34; context=&#34;&#34; type=&#34;1&#34; thread=&#34;25&#34; file=&#34;&#34;&gt;
-</span></span></code></pre></div><p>The log entries are best viewed using the <a href="https://learn.microsoft.com/en-us/mem/configmgr/core/support/cmtrace">CMTrace tool</a>, but this won&rsquo;t be readily available for a company that doesn&rsquo;t use System Center Configuration Manager. There is no official download for cloud-only businesses using Intune.</p>
+</span></span></code></pre></div><p>The log entries are best viewed using the <a href="https://learn.microsoft.com/en-us/mem/configmgr/core/support/cmtrace" target="_blank">CMTrace tool</a>, but this won&rsquo;t be readily available for a company that doesn&rsquo;t use System Center Configuration Manager. There is no official download for cloud-only businesses using Intune.</p>
 <p><strong>Read-IMELog</strong> is a PowerShell script that converts IME logs to PowerShell objects, allowing flexible filtering and sorting.  It can also be used for Config Manager logs.</p>
 <h2 id="example-usage-1---filter-on-message-text">Example usage 1 - filter on message text</h2>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nv">$IMELog</span> <span class="p">=</span> <span class="s1">&#39;C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\IntuneManagementExtension.log&#39;</span>
@@ -96,7 +96,7 @@ Source              : https://github.com/redhat-developer/vscode-yaml.git
 
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -108,7 +108,7 @@ Source              : https://github.com/redhat-developer/vscode-yaml.git
       <guid>https://write-verbose.com/2023/03/21/PowerShellWPFPt2/</guid>
       <description>Tips for working with the WPF user interface in PowerShell</description>
       <content:encoded><![CDATA[<p><strong>More things I learned creating a GUI tool with PowerShell and WPF.</strong><br>
-The snippets in this article are based on the <a href="https://github.com/gbdixg/Show-Win32AppUI">Show-Win32AppUI tool</a> available on GitHub.</p>
+The snippets in this article are based on the <a href="https://github.com/gbdixg/Show-Win32AppUI" target="_blank">Show-Win32AppUI tool</a> available on GitHub.</p>
 <h1 id="part2---creating-a-multi-page-wpf-app-in-powershell">Part2 - Creating a multi-page WPF app in PowerShell</h1>
 <p>(See <a href="/2023/03/21/PowerShellWPFPt1/">part1 of this series</a> for information on using PowerShell Runspaces with WPF).</p>
 <p>WPF uses .XAML text files to define the layout and properties of supported <em>controls</em> such as Textboxes, Buttons, Status bars etc. XAML is a form is XML, with opening and closing tags that create a hierarchy of controls. A <em>child</em> control such as a Combobox is displayed within a parent container such as a <em>Window</em>.</p>
@@ -150,7 +150,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </span></span><span class="line"><span class="cl">        <span class="na">Grid.Row=</span><span class="s">&#34;3&#34;</span>
 </span></span><span class="line"><span class="cl">        <span class="na">Grid.Column=</span><span class="s">&#34;3&#34;</span>
 </span></span><span class="line"><span class="cl">        <span class="na">BorderThickness=</span><span class="s">&#34;0&#34;</span><span class="nt">/&gt;</span>
-</span></span></code></pre></div><p>See the <a href="https://github.com/gbdixg/Show-Win32AppUI/tree/main/Show-Win32AppUI/Xaml">Show-Win32UI tool</a> for an example of separate XAML files per Page and main Window.</p>
+</span></span></code></pre></div><p>See the <a href="https://github.com/gbdixg/Show-Win32AppUI/tree/main/Show-Win32AppUI/Xaml" target="_blank">Show-Win32UI tool</a> for an example of separate XAML files per Page and main Window.</p>
 <h1 id="load-xaml-controls-into-powershell-variables">Load XAML controls into PowerShell variables</h1>
 <p>A thread safe Hashtable collection allows WPF controls to be referenced in PowerShell at runtime. Grouping the controls in a collection is convenient as it simplifies passing them into Runspaces.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example of reading controls from XAML files and assigning them to variables</span>
@@ -314,7 +314,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </span></span><span class="line"><span class="cl">    <span class="na">Margin=</span><span class="s">&#34;5&#34;</span><span class="nt">/&gt;</span>   
 </span></span></code></pre></div><h2 id="defining-event-handlers">Defining Event Handlers</h2>
 <p>WPF controls support events that occur based on user input. Some events are common to most controls, such as <strong>MouseEnter</strong> and <strong>MouseLeave</strong> while other events are specific to a control type, such as <strong>SelectionChanged</strong> in a ComboBox.</p>
-<p>PowerShell uses an &ldquo;Add_[Event Name]&rdquo; syntax to define the code to run when the event fires as below. The per-control event list is available in the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.windows.controls.combobox?view=windowsdesktop-7.0#events">MS Documentation</a>.</p>
+<p>PowerShell uses an &ldquo;Add_[Event Name]&rdquo; syntax to define the code to run when the event fires as below. The per-control event list is available in the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.windows.controls.combobox?view=windowsdesktop-7.0#events" target="_blank">MS Documentation</a>.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c"># Example event handler - code will run when the Combo box selection changes</span>
 </span></span><span class="line"><span class="cl"><span class="nv">$UIControls</span><span class="p">.</span><span class="py">combo_language</span><span class="p">.</span><span class="py">Add_SelectionChanged</span><span class="p">({</span>
 </span></span><span class="line"><span class="cl">    
@@ -330,7 +330,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </span></span><span class="line"><span class="cl"><span class="p">})</span>
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -342,7 +342,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
       <guid>https://write-verbose.com/2023/03/21/PowerShellWPFPt1/</guid>
       <description>Create a responsive WPF app using PowerShell Runspaces to simulate multiple threads</description>
       <content:encoded><![CDATA[<p><strong>Things I learned creating a GUI tool with PowerShell and WPF.</strong><br>
-The snippets in this article are based on the <a href="https://github.com/gbdixg/Show-Win32AppUI">Show-Win32AppUI tool</a> available on GitHub.</p>
+The snippets in this article are based on the <a href="https://github.com/gbdixg/Show-Win32AppUI" target="_blank">Show-Win32AppUI tool</a> available on GitHub.</p>
 <h1 id="disclaimer">Disclaimer</h1>
 <p>I realise PowerShell isn&rsquo;t suited to creating GUI apps. The main reason to use PowerShell is <em>supportability</em>. Specifically, when working with Colleagues who aren&rsquo;t comfortable maintaining a compiled language like C#. Its far easier to make small changes to variables or paths in a script.</p>
 <h1 id="why-wpf">Why WPF?</h1>
@@ -361,7 +361,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </ul>
 <p>These concepts are covered in more detail below.</p>
 <h2 id="sharing-variables-functions-and-modules-with-a-runspace">Sharing variables, functions and modules with a Runspace</h2>
-<p><strong>Required modules</strong> must be specifically loaded into the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.runspaces.initialsessionstate?view=powershellsdk-7.3.0">InitialSessionState</a> of the Runspace. The Runspace won&rsquo;t automatically have access to modules already loaded in the <em>parent</em> PowerShell session.</p>
+<p><strong>Required modules</strong> must be specifically loaded into the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.runspaces.initialsessionstate?view=powershellsdk-7.3.0" target="_blank">InitialSessionState</a> of the Runspace. The Runspace won&rsquo;t automatically have access to modules already loaded in the <em>parent</em> PowerShell session.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example of importing modules into a new Runspace ###</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="nv">$modulesToLoad</span><span class="p">=</span><span class="vm">@</span><span class="p">(</span><span class="s1">&#39;Microsoft.Graph.Intune&#39;</span><span class="p">,</span><span class="s1">&#39;MSAL.PS&#39;</span><span class="p">)</span> <span class="c"># Must be installed on the computer</span>
@@ -382,7 +382,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </span></span><span class="line"><span class="cl">    <span class="nv">$initialSessionState</span><span class="p">.</span><span class="py">Commands</span><span class="p">.</span><span class="py">Add</span><span class="p">(</span><span class="nv">$entry</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="nv">$Runspace</span> <span class="p">=</span> <span class="p">[</span><span class="no">runspacefactory</span><span class="p">]::</span><span class="n">CreateRunspace</span><span class="p">(</span><span class="nv">$initialSessionState</span><span class="p">)</span>
-</span></span></code></pre></div><p><strong>Variables</strong> can be shared with a Runspace using the <strong>SetVariable</strong> method of the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.runspaces.sessionstateproxy?view=powershellsdk-7.3.0">SessionStateProxy</a> class.  SetVariable parameters are the <em>variable name</em> (without the &lsquo;$&rsquo;) and the value to set.</p>
+</span></span></code></pre></div><p><strong>Variables</strong> can be shared with a Runspace using the <strong>SetVariable</strong> method of the <a href="https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.runspaces.sessionstateproxy?view=powershellsdk-7.3.0" target="_blank">SessionStateProxy</a> class.  SetVariable parameters are the <em>variable name</em> (without the &lsquo;$&rsquo;) and the value to set.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example importing parent session variables into a new Runspace ###</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="nv">$VariablesToImport</span> <span class="p">=</span> <span class="vm">@</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">,</span><span class="s1">&#39;password&#39;</span><span class="p">,</span><span class="s1">&#39;displayName&#39;</span><span class="p">)</span> <span class="c"># existing variables in the parent session</span>
@@ -436,7 +436,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    
 </span></span><span class="line"><span class="cl"> <span class="p">},</span><span class="vm">$True</span><span class="p">)</span>   
-</span></span></code></pre></div><p>More information on thread safe collections is available <a href="https://learn.microsoft.com/en-us/dotnet/standard/collections/thread-safe/">here</a></p>
+</span></span></code></pre></div><p>More information on thread safe collections is available <a href="https://learn.microsoft.com/en-us/dotnet/standard/collections/thread-safe/" target="_blank">here</a></p>
 <h2 id="how-to-update-the-wpf-user-interface-from-another-runspace">How to update the WPF user interface from another Runspace</h2>
 <p>If you try to modify the WPF user interface from a separate Runspace, PowerShell will throw an error indicating only the owning thread (Runspace) can update it.</p>
 <p><img loading="lazy" src="/img/UIThreadError2.png" alt="UIError"  />
@@ -450,7 +450,7 @@ The snippets in this article are based on the <a href="https://github.com/gbdixg
 </span></span><span class="line"><span class="cl">    <span class="nv">$UIControls</span><span class="p">.</span><span class="py">txt_SetupFile</span><span class="p">.</span><span class="py">Text</span> <span class="p">=</span> <span class="s2">&#34;Successfully updated from another Runspace&#34;</span>
 </span></span><span class="line"><span class="cl"><span class="p">},</span><span class="s2">&#34;Normal&#34;</span><span class="p">)</span>
 </span></span></code></pre></div><h2 id="writing-to-the-same-log-file-from-separate-runspaces">Writing to the same log file from separate Runspaces</h2>
-<p>Runspaces also make it more complex to write to a single log file. There is potential for a deadlock or <a href="https://learn.microsoft.com/en-us/dotnet/standard/threading/managed-threading-best-practices#race-conditions">race condition</a> to occur. A <strong>Mutex</strong> is one way to implement the required locking:</p>
+<p>Runspaces also make it more complex to write to a single log file. There is potential for a deadlock or <a href="https://learn.microsoft.com/en-us/dotnet/standard/threading/managed-threading-best-practices#race-conditions" target="_blank">race condition</a> to occur. A <strong>Mutex</strong> is one way to implement the required locking:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c">### Example using a Mutex lock before writing to a log file ###</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c"># In the Runspace script block</span>
@@ -585,11 +585,11 @@ You will need to implement your own colour-coding to distinguish between warning
 </span></span><span class="line"><span class="cl"><span class="nv">$ParentHost</span><span class="p">.</span><span class="py">ui</span><span class="p">.</span><span class="py">WriteVerboseLine</span><span class="p">(</span><span class="s2">&#34;Realtime verbose output from Runspace in parent console&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="nv">$ParentHost</span><span class="p">.</span><span class="py">UI</span><span class="p">.</span><span class="py">WriteWarningLine</span><span class="p">(</span><span class="s2">&#34;Realtime warning output from Runspace in parent console&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="nv">$ParentHost</span><span class="p">.</span><span class="py">UI</span><span class="p">.</span><span class="py">WriteErrorLine</span><span class="p">(</span><span class="s2">&#34;Realtime error output from Runspace in parent console&#34;</span><span class="p">)</span>
-</span></span></code></pre></div><p>See the <a href="https://github.com/gbdixg/Show-Win32AppUI">Show-Win32AppUI tool</a> for an example of using these ideas together in a WPF app.</p>
+</span></span></code></pre></div><p>See the <a href="https://github.com/gbdixg/Show-Win32AppUI" target="_blank">Show-Win32AppUI tool</a> for an example of using these ideas together in a WPF app.</p>
 <p>See <a href="/2023/03/21/PowerShellWPFPt2/">part2 of this series</a> for information on WPF controls, events and XAML.</p>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -606,7 +606,7 @@ You will need to implement your own colour-coding to distinguish between warning
 <p>A custom Azure application can limit MS Graph access to specific requirements of a PowerShell script, reducing the risk.</p>
 <h1 id="disable-user-consent">Disable user consent</h1>
 <p>The first step is to prevent users granting application consent. User consent is enabled by default and presents a risk of unwanted access to company data.</p>
-<p>In the <a href="https://aad.portal.azure.com/">Azure AD portal</a>, navigate to <strong>Enterprise applications</strong> and then <strong>Consent and permissions</strong>.</p>
+<p>In the <a href="https://aad.portal.azure.com/" target="_blank">Azure AD portal</a>, navigate to <strong>Enterprise applications</strong> and then <strong>Consent and permissions</strong>.</p>
 <p>Many companies change the setting to <strong>Do not allow user consent</strong>. Note that this does create an admin overhead, so you could look into the advanced options of defining low-risk permissions or using conditional access.</p>
 <p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp0.png" alt="User consent"  />
 </p>
@@ -618,7 +618,7 @@ You will need to implement your own colour-coding to distinguish between warning
 <h1 id="clean-up-microsoft-graph-powershell">Clean-up Microsoft Graph PowerShell</h1>
 <p>If you want to implement Custom Apps for access to MSGraph, you should first review and remove excess permissions from the <em>Microsoft Graph PowerShell</em> app. Over time administrators may have consented to more and more permissions.</p>
 <p>It isn&rsquo;t possible to remove permissions or revoke consent in the admin portal, but it does provide the PowerShell commands.</p>
-<p>In the <a href="https://aad.portal.azure.com/">Azure AD portal</a>, navigate to <strong>Enterprise applications</strong><br>
+<p>In the <a href="https://aad.portal.azure.com/" target="_blank">Azure AD portal</a>, navigate to <strong>Enterprise applications</strong><br>
 In the <em>All applications</em> view, select <strong>Microsoft Graph PowerShell</strong> and then <strong>Permissions</strong><br>
 Click <strong>Review Permissions</strong></p>
 <p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp05.png" alt="User consent"  />
@@ -646,7 +646,7 @@ Click <strong>Review Permissions</strong></p>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h1 id="custom-app-step-by-step">Custom app Step by Step</h1>
 <p>The following steps create a new application with delegated API access to MSGraph, suitable for use from a PowerShell script. The permissions are specific to the <a href="/2023/03/18/Show-Win32AppUI/">Show-Win32AppUI</a></p>
-<p>Open the <a href="https://aad.portal.azure.com/">Azure AD portal</a> and select <strong>App registrations</strong></p>
+<p>Open the <a href="https://aad.portal.azure.com/" target="_blank">Azure AD portal</a> and select <strong>App registrations</strong></p>
 <p>Click on <strong>New Registration</strong> to start the process</p>
 <p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp1.png" alt="New registration"  />
 </p>
@@ -734,7 +734,7 @@ Click <strong>Grant admin consent for <tenant></strong></p>
 </ul>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -829,7 +829,7 @@ Click <strong>Grant admin consent for <tenant></strong></p>
 </span></span></code></pre></div><p>Note the use of a JSON array for the body and control characters for new lines. This is quite laborious to create by hand, but VSCode extensions can make this much easier&hellip;</p>
 <h3 id="marketplace-snippet-extension">Marketplace Snippet Extension</h3>
 <p>There are a number of extensions in the VSCode marketplace that will create a Snippet from highlighted code in the editor.</p>
-<p>For example, <a href="https://marketplace.visualstudio.com/items?itemName=ryanolsonx.snippet-creator">Snippet Creator</a> will automatically detetect the in-use language and then prompt for the Snippet prefix and description.  You can then edit the Snippet to fine-tune it.</p>
+<p>For example, <a href="https://marketplace.visualstudio.com/items?itemName=ryanolsonx.snippet-creator" target="_blank">Snippet Creator</a> will automatically detetect the in-use language and then prompt for the Snippet prefix and description.  You can then edit the Snippet to fine-tune it.</p>
 <h3 id="snippet-scope">Snippet Scope</h3>
 <p><strong>Language-specific</strong></p>
 <p>Most Snippets will be created in a language-specific Snippet file and will only prompt for insertion when using that language e.g.<br>
@@ -868,7 +868,7 @@ Click <strong>Grant admin consent for <tenant></strong></p>
 <p><code>%USERPROFILE%\.vscode\extensions\ms-vscode.powershell-2021.2.2\snippets\PowerShell.json</code></p>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -889,14 +889,14 @@ Click <strong>Grant admin consent for <tenant></strong></p>
 <h2 id="powershell-script">PowerShell script</h2>
 <p>The <strong>Find-ADSite</strong> PowerShell function below will return the AD Site and Subnet for a specified computer name or IP Address.<br>
 If a company populates subnet descriptions with useful information, it can also identify information such as the specific Office or floor.</p>
-<p>AD Administrators may define a <a href="https://blog.mindcore.dk/2013/07/catch-all-or-super-subnet-in-sites-and/">catch-all subnet</a> with a wide address range. By default if the IP address is within more than one subnet, the output will only include the smallest range. Use the -AllMatches parameter to see everything.</p>
+<p>AD Administrators may define a <a href="https://blog.mindcore.dk/2013/07/catch-all-or-super-subnet-in-sites-and/" target="_blank">catch-all subnet</a> with a wide address range. By default if the IP address is within more than one subnet, the output will only include the smallest range. Use the -AllMatches parameter to see everything.</p>
 <p><img loading="lazy" src="/img/find-adsite1.png" alt="Find-ADSite"  />
 </p>
 <script type="application/javascript" src="https://gist.github.com/gbdixg/5cd6ea0c984278b08b36260ada0e3f9c.js"></script>
 
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -919,7 +919,7 @@ If a company populates subnet descriptions with useful information, it can also 
 
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -993,7 +993,7 @@ If a company populates subnet descriptions with useful information, it can also 
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -1069,10 +1069,10 @@ Each line (the $_ variable) is tested for a match against the RegEx expression u
 <script type="application/javascript" src="https://gist.github.com/gbdixg/e931a3056a56af3e7de1460eb0571fff.js"></script>
 
 <h2 id="regex-links">Regex Links</h2>
-<p>For some practice with Regular Expressions, check out <a href="https://alf.nu/RegexGolf/">RegEx Golf</a> or <a href="https://regexcrossword.com/">Regex Crosswords</a>. There is even a <a href="https://www.bennadel.com/blog/3629-the-12th-annual-regular-expression-day---june-1st-2019.htm">Regular Expressions day</a>.</p>
+<p>For some practice with Regular Expressions, check out <a href="https://alf.nu/RegexGolf/" target="_blank">RegEx Golf</a> or <a href="https://regexcrossword.com/" target="_blank">Regex Crosswords</a>. There is even a <a href="https://www.bennadel.com/blog/3629-the-12th-annual-regular-expression-day---june-1st-2019.htm" target="_blank">Regular Expressions day</a>.</p>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -1084,7 +1084,7 @@ Each line (the $_ variable) is tested for a match against the RegEx expression u
       <guid>https://write-verbose.com/2018/12/15/audit-google-chrome-extensions/</guid>
       <description>A PowerShell script to list the installed Google Chrome extensions on a local or remote computer</description>
       <content:encoded><![CDATA[<p>This post includes a PowerShell <em>Get-ChromeExtension</em> script to list installed extensions on the local or remote computer.</p>
-<p>Browser extensions are supposed to be curated and vetted, but there have been <a href="https://securityboulevard.com/2020/12/3-million-chrome-users-infected-via-extensions-here-we-go-again/">many examples of malware</a>. If you don&rsquo;t already have control of extensions through an allow or blocklist, the first step is to find out what is in-use.</p>
+<p>Browser extensions are supposed to be curated and vetted, but there have been <a href="https://securityboulevard.com/2020/12/3-million-chrome-users-infected-via-extensions-here-we-go-again/" target="_blank">many examples of malware</a>. If you don&rsquo;t already have control of extensions through an allow or blocklist, the first step is to find out what is in-use.</p>
 <p>The code below is a PowerShell function to get the installed Google Chrome browser extensions from a local or remote Windows computer.</p>
 <blockquote>
 <p>Chrome Browser Extensions install into the user profile and do not appear in the Add/Remove Programs list.</p>
@@ -1130,7 +1130,7 @@ The PowerShell script below gets the installed extensions using the following me
 
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     

@@ -30,13 +30,13 @@
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 </span></span></code></pre></div><h2 id="wsl-kernel-update-package">WSL kernel update package</h2>
 <p>This is required because Microsoft removed the previously included Linux kernel from Windows. It now gets updated and patched through Windows Update</p>
-<p><a href="https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi">Download and install the update package</a></p>
+<p><a href="https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" target="_blank">Download and install the update package</a></p>
 <h2 id="set-the-default-version">Set the default version</h2>
 <p>Make sure everything is version 2</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Bash" data-lang="Bash"><span class="line"><span class="cl">wsl --set-default-version <span class="m">2</span>
 </span></span></code></pre></div><h2 id="install-the-required-distro">Install the required distro</h2>
 <p>Ubuntu is the most reliable on Windows at the time of writing</p>
-<p><a href="https://www.microsoft.com/en-gb/p/ubuntu-2004-lts/9n6svws3rx71">Ubuntu 20.04 LTS</a></p>
+<p><a href="https://www.microsoft.com/en-gb/p/ubuntu-2004-lts/9n6svws3rx71" target="_blank">Ubuntu 20.04 LTS</a></p>
 <h2 id="create-username">Create username</h2>
 <p>Start the distro from the Start Menu shortcut. When prompted, specify a username and password.</p>
 <p>The user is automatically added to the Sudo group.</p>
@@ -58,7 +58,7 @@
 <p><code>%LOCALAPPDATA%\Packages\CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc\LocalState\ext4.vhdx</code></p>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     

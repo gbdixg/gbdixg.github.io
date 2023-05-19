@@ -32,7 +32,7 @@ Item and Container Labels apply different controls. Separate labels means the na
 There are sub-scopes within Items for Files, Emails and Meetings (Calendar events). Again, the controls are different so labels can be more specific if targeted. For example, email labels can control view, reply, forwarding, whereas file labels can control Save, Print, Copy, Expiry, Offline Access.</p>
 <p>It helps that client apps only show labels applicable to the current scope, so a label scoped to <strong>Items - Email</strong> will not be displayed in a document, spreadsheet or presentation.</p>
 <p><strong>Create a baseline set of company-wide labels and a small number of targeted additions</strong><br>
-A core set of labels should be applicable to everyone. Specific departments or teams may need extra labels for custom data, such as <a href="https://csrc.nist.gov/glossary/term/PII">PII</a>, or <em>Blueprints</em>. Label policies can deploy the extra labels just to specific AAD groups.</p>
+A core set of labels should be applicable to everyone. Specific departments or teams may need extra labels for custom data, such as <a href="https://csrc.nist.gov/glossary/term/PII" target="_blank">PII</a>, or <em>Blueprints</em>. Label policies can deploy the extra labels just to specific AAD groups.</p>
 <p><strong>Create labels that will endure over a long period</strong><br>
 Choose labels that will still be applicable in years to come and then consult users (and perhaps run a limited pilot) to get labels right before mass adoption.  Deleting labels is problematic. The label is added to the metadata of items and deleting the label does not remove it from the metadata. The recommended way to retire a label is to stop publishing it (label policy), but don&rsquo;t delete the label itself.</p>
 <p><strong>Avoid sub labels</strong><br>
@@ -109,7 +109,7 @@ Users will need reassurance to feel confident in applying labels with content re
 </span></span><span class="line"><span class="cl"><span class="n">AccessType</span>
 </span></span><span class="line"><span class="cl"><span class="p">----------</span>
 </span></span><span class="line"><span class="cl"><span class="n">allowed</span>
-</span></span></code></pre></div><p>If needed, the settings can be modified in the <a href="https://portal.azure.com/#view/Microsoft_AAD_IAM/CompanyRelationshipsMenuBlade/~/CrossTenantAccessSettings">Azure AD portal</a>, External Identities &gt; Cross-tenant access settings &gt; Default settings, or using the <a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.identity.signins/update-mgpolicycrosstenantaccesspolicydefault?view=graph-powershell-1.0">Update-MgPolicyCrossTenantAccessPolicyDefault</a> command.</p>
+</span></span></code></pre></div><p>If needed, the settings can be modified in the <a href="https://portal.azure.com/#view/Microsoft_AAD_IAM/CompanyRelationshipsMenuBlade/~/CrossTenantAccessSettings" target="_blank">Azure AD portal</a>, External Identities &gt; Cross-tenant access settings &gt; Default settings, or using the <a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.identity.signins/update-mgpolicycrosstenantaccesspolicydefault?view=graph-powershell-1.0" target="_blank">Update-MgPolicyCrossTenantAccessPolicyDefault</a> command.</p>
 <h3 id="exchange-online-irm-configuration">Exchange Online: IRM Configuration</h3>
 <p>The following features are dependent on Information Rights Management Licensing in Exchange Online:</p>
 <ul>
@@ -129,7 +129,7 @@ Users will need reassurance to feel confident in applying labels with content re
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="nb">Set-IRMConfiguration</span> <span class="n">-AzureRMSLicensingEnabled</span> <span class="vm">$True</span>
 </span></span></code></pre></div><h3 id="multi-language-support">Multi-language support</h3>
-<p>Sensitivity Labels and their descriptions can be localised to match the Office language. Local language support can only be added using the <a href="https://docs.microsoft.com/en-us/powershell/module/exchange/set-label?view=exchange-ps#example-1">Set-Language PowerShell command</a>.</p>
+<p>Sensitivity Labels and their descriptions can be localised to match the Office language. Local language support can only be added using the <a href="https://docs.microsoft.com/en-us/powershell/module/exchange/set-label?view=exchange-ps#example-1" target="_blank">Set-Language PowerShell command</a>.</p>
 <p>Set-Label is available in the Security and Compliance PowerShell module (available after using Connect-IPPSSession from the ExchangeOnlineManagement PowerShell module).</p>
 <p>You may see references to adding multi-language support using an XML export and import process in the Azure Information Protection blade of the Azure Portal. This method relates to AIP Classic that is now deprecated.</p>
 <h2 id="limitations">Limitations</h2>
@@ -139,7 +139,7 @@ Users will need reassurance to feel confident in applying labels with content re
 <li>Semi-annual Enterprise 2002+</li>
 <li>Monthly Enterprise and Current Channel 1910+</li>
 </ul>
-<p>There are <a href="https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitivity-labels-versions?view=o365-worldwide#sensitivity-label-capabilities-in-word-excel-and-powerpoint">some features that require later versions</a>, such as <em>Dynamic content marking</em>, <em>Let users assign permissions</em> and <em>audit label-related user activity</em>.</p>
+<p>There are <a href="https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitivity-labels-versions?view=o365-worldwide#sensitivity-label-capabilities-in-word-excel-and-powerpoint" target="_blank">some features that require later versions</a>, such as <em>Dynamic content marking</em>, <em>Let users assign permissions</em> and <em>audit label-related user activity</em>.</p>
 <h3 id="user-encryption-over-ride">User encryption over-ride</h3>
 <p>Users are able to over-ride the encryption settings applied by a manual label. After they apply the label to their content, they can make changes to the protection using File &gt; Info &gt; Protect Document &gt; Restrict Access.</p>
 <p>The only way to avoid this is to provide at least one Label with <em>Let users assign their own permissions</em> and educate users to choose this Label rather than modifying a pre-configured one.</p>
@@ -166,7 +166,7 @@ Users will need reassurance to feel confident in applying labels with content re
 <p>SharePoint caches Labels and Label Policies, so changes can take even longer e.g. 24hrs.</p>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -310,7 +310,7 @@ The additional conditions are only available for Exchange when creating a per-lo
 <li>Azure AD client secret</li>
 </ul>
 <p>Sensitive Info Types can be used in Client-side and Service-side auto-labelling.</p>
-<p>There is a long list of <a href="https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitive-information-type-entity-definitions?view=o365-worldwide">built-in Sensitive Information Types (SIT) provided by Microsoft</a>. You can also create your own in the <a href="https://compliance.microsoft.com/dataclassificationclassifiers?viewid=sensitiveinfotypes"><em>Data Classification</em> blade</a> of the Purview Compliance Center. Custom SITs are one of the following:</p>
+<p>There is a long list of <a href="https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitive-information-type-entity-definitions?view=o365-worldwide" target="_blank">built-in Sensitive Information Types (SIT) provided by Microsoft</a>. You can also create your own in the <a href="https://compliance.microsoft.com/dataclassificationclassifiers?viewid=sensitiveinfotypes" target="_blank">&lt;em&gt;Data Classification&lt;/em&gt; blade</a> of the Purview Compliance Center. Custom SITs are one of the following:</p>
 <h3 id="pattern-based-sit">Pattern-based SIT</h3>
 <p>When you create a pattern-based Sensitive Info Type, you can specify a <strong>Primary element</strong> and <strong>Supporting elements</strong>. The elements consist of the following options:</p>
 <ul>
@@ -324,14 +324,14 @@ The additional conditions are only available for Exchange when creating a per-lo
 <p>A Fingerprint-based Sensitive Info Type is created by uploading an example document. It works best with Forms and Templates.</p>
 <h2 id="trainable-classifiers">Trainable Classifiers</h2>
 <p>This method of automatic-labelling is based on machine learning. A Classifier is trained to recognise a document through examples. The classifier must first be fed a selection of documents that are in-scope and out-of-scope of the required label.  The administrator must confirm or reject the automatic classification to train the learning model. It can then be applied to a bulk repository such as a document library.</p>
-<p>Microsoft provides many <a href="https://learn.microsoft.com/en-us/microsoft-365/compliance/classifier-tc-definitions?view=o365-worldwide#trainable-classifiers-definitions">&ldquo;ready-to-use&rdquo; classifiers</a>, including ones to detect profanity, threats and discrimination and even resumes (CVs). Creating a custom Trainable Classifier requires at least 50 sample documents. It can take up-to 2 weeks to scan your environment using these classifiers.</p>
+<p>Microsoft provides many <a href="https://learn.microsoft.com/en-us/microsoft-365/compliance/classifier-tc-definitions?view=o365-worldwide#trainable-classifiers-definitions" target="_blank">&amp;ldquo;ready-to-use&amp;rdquo; classifiers</a>, including ones to detect profanity, threats and discrimination and even resumes (CVs). Creating a custom Trainable Classifier requires at least 50 sample documents. It can take up-to 2 weeks to scan your environment using these classifiers.</p>
 <p>Trainable Classifiers can be used in Client-side and Service-side auto-labelling. They can also be used to apply Retention Labels.</p>
 <p><img loading="lazy" src="/img/UsingMIPLabels/Label-Classifier.png" alt="Trainable Classifiers"  />
 </p>
 <h2 id="exchange-mail-flow-rules">Exchange Mail Flow Rules</h2>
 <p>Encryption can be applied using Labels in Exchange Mail Flow rules.  This option may be an attractive alternative if you don&rsquo;t have an E5 license that supports Automatic Label Policies. The Label and associated encryption is applied to messages in transit (not messages at rest in mailboxes).</p>
 <p>Create a Rule as follows&hellip;<br>
-In the <a href="https://admin.exchange.microsoft.com/">Exchange Admin Portal</a>, select Mail Flow &gt; Rules &gt; Add a rule</p>
+In the <a href="https://admin.exchange.microsoft.com/" target="_blank">Exchange Admin Portal</a>, select Mail Flow &gt; Rules &gt; Add a rule</p>
 <p>In the drop-down list select the option to <em>Apply Office 365 Message Encryption and rights protection to messages</em></p>
 <p><img loading="lazy" src="/img/UsingMIPLabels/Label-MailFlow1.png" alt="Mail Flow Rule"  />
 </p>
@@ -382,7 +382,7 @@ In its original form AIP used separate Sensitivity Labels managed in the Azure P
 <li>Supports Office 2003-2007 file formats</li>
 <li>Logging to the Windows event log</li>
 </ul>
-<p>To use AIP you will need to deploy the <a href="https://www.microsoft.com/download/details.aspx?id=53018">unified labelling client</a> to Windows computers. You may see references in documentation to the AIP Classic Client. This is the older version of AIP that is now deprecated.</p>
+<p>To use AIP you will need to deploy the <a href="https://www.microsoft.com/download/details.aspx?id=53018" target="_blank">unified labelling client</a> to Windows computers. You may see references in documentation to the AIP Classic Client. This is the older version of AIP that is now deprecated.</p>
 <p>If the AIP client is installed, the built-in labelling interfaces in Office are disabled (e.g. the Ribbon Sensitivity button) and an Office add-in displays an information bar instead. It&rsquo;s a supported scenario to use AIP for some features while still using the built-in labelling for Office. To achieve this, just disable the AIP Office add-ins (MSIP.WordAddin, MSIP.ExcelAddin, MSIP.PowerPointAddin, MSIP.OutlookAddin) using a Group policy / CSP setting.</p>
 <h3 id="aip-unified-labelling-scanner">AIP Unified Labelling Scanner?</h3>
 <p>The Scanner works by running jobs that crawl the specified data stores to label and protect the documents. This can be a one-off exercise to ensure wide coverage (then relying on native labelling options), or it could be a repeat scheduled process.</p>
@@ -393,7 +393,7 @@ In its original form AIP used separate Sensitivity Labels managed in the Azure P
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl"> .doc, docx, .docm, .dot, .dotx, .xls, .xlt, .xlsx, .xlsm, .xlsb, .ppt, .pps, .pot, .pptx, .pdf, .txt, .xml, .csv
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -456,7 +456,7 @@ Containers (a.k.a <em>Groups &amp; Sites</em>) can be:</p>
 </span></span><span class="line"><span class="cl"><span class="c"># Enable Purview Labelling:</span>
 </span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Set-PolicyConfig</span> <span class="n">-PurviewLabelConsent</span> <span class="vm">$True</span>
 </span></span></code></pre></div><h2 id="whats-in-a-name">What&rsquo;s in a name?</h2>
-<p>Label names are freeform, configured by an administrator in the <a href="https://compliance.microsoft.com/">Purview Compliance Center</a>. The label <em>display name</em> and <em>description</em> are visible to users and should be intuitive.</p>
+<p>Label names are freeform, configured by an administrator in the <a href="https://compliance.microsoft.com/" target="_blank">Purview Compliance Center</a>. The label <em>display name</em> and <em>description</em> are visible to users and should be intuitive.</p>
 <p>Items and Containers can only have one Sensitivity Label (although they can also have an M365 Retention Label - a separate topic).</p>
 <h3 id="example-labels">Example Labels</h3>
 <p>The following example is a baseline set of labels published to everyone in an organization:</p>
@@ -889,7 +889,7 @@ For this reason, <strong>mandatory labelling may be a better choice</strong>, fo
 <li>Sensitivity Labels for PowerBI</li>
 </ul>
 <p>NOTES:</p>
-<p>Alternative licensing - add one of the following to an E3 license: Microsoft 365 E5 Compliance, Microsoft 365 E5 Information Protection and Governance, Advanced OME and customer key for Office 365. Refer to the downloadable spreadsheet <a href="https://www.microsoft.com/en-us/download/details.aspx?id=103006">Microsoft 365 Compliance Licensing Comparison</a> for more information.</p>
+<p>Alternative licensing - add one of the following to an E3 license: Microsoft 365 E5 Compliance, Microsoft 365 E5 Information Protection and Governance, Advanced OME and customer key for Office 365. Refer to the downloadable spreadsheet <a href="https://www.microsoft.com/en-us/download/details.aspx?id=103006" target="_blank">Microsoft 365 Compliance Licensing Comparison</a> for more information.</p>
 <h2 id="role-based-admin-delegation">Role Based Admin Delegation</h2>
 <p>M365 administrators working with Information Protection need delegated access to the configuration settings in the Purview Compliance Center. Add users to one of the following built-in roles:</p>
 <ul>
@@ -911,7 +911,7 @@ For this reason, <strong>mandatory labelling may be a better choice</strong>, fo
 </ul>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -926,7 +926,7 @@ For this reason, <strong>mandatory labelling may be a better choice</strong>, fo
 <h2 id="be-aware-of-network-routing">BE AWARE OF NETWORK ROUTING</h2>
 <p>Although the migration tool uses a source UNC path and destination OneDrive URL, files are actually uploaded to Azure blobs before being transferred to OneDrive<br>
 e.g. *.blob.core.windows.net</p>
-<p>There is a list of <a href="https://learn.microsoft.com/en-us/sharepointmigration/mm-prerequisites">required endpoints</a>, and it&rsquo;s important to determine if the migration traffic will route out through the enterprise proxy servers, or go direct e.g. through an ExpressRoute link. This routing will be specific to your network setup.</p>
+<p>There is a list of <a href="https://learn.microsoft.com/en-us/sharepointmigration/mm-prerequisites" target="_blank">required endpoints</a>, and it&rsquo;s important to determine if the migration traffic will route out through the enterprise proxy servers, or go direct e.g. through an ExpressRoute link. This routing will be specific to your network setup.</p>
 <h3 id="use-agent-groups-in-an-enterprise-network">Use &ldquo;Agent Groups&rdquo; in an enterprise network</h3>
 <blockquote>
 <p>Agent Groups are a logical grouping within Migration Manager, allowing each migration to use a specific agent or agent(s)</p>
@@ -953,7 +953,7 @@ If you are carrying out migrations in multiple locations, you need to group them
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl"><span class="nv">%temp%</span>\SPMigrationAgentSetup\SPMigrationAgentSetup\Microsoft.SharePoint.Migration.ClientShared.dll.config
 </span></span></code></pre></div><p>Under AppSettings, add the following:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl"><span class="p">&lt;</span>add key=GeoLocation value=<span class="s2">&#34;FRA&#34;</span> /&gt;
-</span></span></code></pre></div><p>The value must be a <a href="https://learn.microsoft.com/en-us/microsoft-365/enterprise/microsoft-365-multi-geo?view=o365-worldwide#microsoft-365-multi-geo-availability">valid Azure tenant location code</a> that is already enabled in your tenant.</p>
+</span></span></code></pre></div><p>The value must be a <a href="https://learn.microsoft.com/en-us/microsoft-365/enterprise/microsoft-365-multi-geo?view=o365-worldwide#microsoft-365-multi-geo-availability" target="_blank">valid Azure tenant location code</a> that is already enabled in your tenant.</p>
 <p>Save the file and continue the setup wizard. The Migration Manager agent will register in the satellite geo and be visible in the SPO Admin Portal for the relevant Geolocation.</p>
 <h2 id="timezone-headaches">TIMEZONE HEADACHES</h2>
 <p>Migration tasks can either start immediately or at a specified time. However, the time used in the Migration Manager portal is the time zone tenant home location, not the local time of the administrator accessing the portal.<br>
@@ -1006,7 +1006,7 @@ To schedule a migration outside business hours, the administrator must take acco
 <p>Microsoft Migration Manager is a free but basic migration tool. By the time you have discovered its limitations, you may wish you had paid for an ISV product instead.</p>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -1019,7 +1019,7 @@ To schedule a migration outside business hours, the administrator must take acco
       <description>Things I learned migrating home drives to OneDrive with Migration Manager.</description>
       <content:encoded><![CDATA[<p>Part one of &ldquo;Notes from the Field&rdquo; for a home drive to OneDrive for Business migration using Microsoft Migration Manager, covering migration tool considerations, architecture and access requirements.</p>
 <h2 id="tool-selection">TOOL SELECTION</h2>
-<p>Migration Manager comes from the Microsoft purchase of <a href="https://mover.io/index.html">Mover.io</a> in 2019. It is presented as an Enterprise migration tool that puts more structure around the migration process than the more basic SharePoint Migration Tool. However, be prepared for limited configuration and customisation options. As a basic guide consider the following tool choices for file share migration:</p>
+<p>Migration Manager comes from the Microsoft purchase of <a href="https://mover.io/index.html" target="_blank">Mover.io</a> in 2019. It is presented as an Enterprise migration tool that puts more structure around the migration process than the more basic SharePoint Migration Tool. However, be prepared for limited configuration and customisation options. As a basic guide consider the following tool choices for file share migration:</p>
 <ul>
 <li>SharePoint Migration Tool : Ad hoc data migrations</li>
 <li>Migration Manager : Large scale migrations using repetitive process</li>
@@ -1032,7 +1032,7 @@ To schedule a migration outside business hours, the administrator must take acco
 <li>Removing the home drive mapping</li>
 <li>Cleaning-up or restricting access to home drives</li>
 </ul>
-<p>A 3rd-party tool, could be more suitable if you are looking to automate as much of the process as possible.For example, <a href="https://sharegate.com/blog/easier-onedrive-for-business-migration">ShareGate Migration Tool</a> provides a PowerShell interface.</p>
+<p>A 3rd-party tool, could be more suitable if you are looking to automate as much of the process as possible.For example, <a href="https://sharegate.com/blog/easier-onedrive-for-business-migration" target="_blank">ShareGate Migration Tool</a> provides a PowerShell interface.</p>
 <p>Migration Manager is still attractive as it&rsquo;s effectively free as part of an enterprise M365 license.</p>
 <h2 id="architecture">ARCHITECTURE</h2>
 <p>Migration Manager consists of the following components:</p>
@@ -1094,11 +1094,11 @@ The technicians managing and monitoring the data migrations will need the ShareP
 </span></span></code></pre></div><p>For already provisioned OneDrives, use a script to grant the <em>SiteCollectionAdmin</em> permission on each OneDrive to a group containing the Migration Manager cloud service account.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Connect-SPOService</span> <span class="n">-URL</span> <span class="nv">$AdminURL</span>
 </span></span><span class="line"><span class="cl"><span class="nb">Set-SPOUser</span> <span class="n">-Site</span> <span class="nv">$UsersOneDriveURL</span> <span class="n">-LoginName</span> <span class="nv">$CloudServiceAccountorGroup</span> <span class="n">-IsSiteCollectionAdmin</span> <span class="vm">$True</span>
-</span></span></code></pre></div><p><strong>NOTE</strong>: This command normally expects a user account as the LoginName. If using a group name, it must be in <a href="https://social.technet.microsoft.com/wiki/contents/articles/13921.sharepoint-20102013-claims-encoding.aspx">claims encoded</a> format.</p>
+</span></span></code></pre></div><p><strong>NOTE</strong>: This command normally expects a user account as the LoginName. If using a group name, it must be in <a href="https://social.technet.microsoft.com/wiki/contents/articles/13921.sharepoint-20102013-claims-encoding.aspx" target="_blank">claims encoded</a> format.</p>
 <p>Part two in this series will look at network routing, multi-geo considerations and scheduling issues.</p>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     

@@ -19,7 +19,7 @@
       <guid>https://write-verbose.com/2023/05/19/AuditVSCodeExt/</guid>
       <description>Get installed Visual Studio Code extensions on a local or remote computer</description>
       <content:encoded><![CDATA[<p>The recent incident of malicious extensions in the Visual Studio Code Marketplace got me thinking about how to audit extensions across a large estate. This post includes a script to get installed extensions on a local or remote computer.</p>
-<p>You&rsquo;re probably aware of the <a href="https://www.bleepingcomputer.com/news/security/malicious-microsoft-vscode-extensions-steal-passwords-open-remote-shells/">recent discovery of malicious extensions</a> in the VSCode Marketplace.</p>
+<p>You&rsquo;re probably aware of the <a href="https://www.bleepingcomputer.com/news/security/malicious-microsoft-vscode-extensions-steal-passwords-open-remote-shells/" target="_blank">recent discovery of malicious extensions</a> in the VSCode Marketplace.</p>
 <blockquote>
 <p>&lsquo;Theme Darcula dark&rsquo; – Described as &ldquo;an attempt to improve Dracula colors consistency on VS Code,&rdquo; this extension was used to steal basic information about the developer&rsquo;s system&hellip;downloaded over 45,000 times</p>
 </blockquote>
@@ -30,9 +30,9 @@
 <h2 id="enterprise-reporting">Enterprise reporting</h2>
 <p>The script below is just the first part of a solution to audit installed VSCode extensions. Suggestions to capture information across a large estate include:</p>
 <ul>
-<li>Use <a href="https://github.com/proxb/PoshRSJob">PoshRSJob</a> or <a href="https://github.com/PaulHigin/PSThreadJob">PSThreadJob</a> to rapidly query online computers over the network</li>
-<li>Save the output to the local registry and use <a href="https://askgarth.com/blog/how-to-use-regkeytomof/">RegKeytoMof</a> to bring it into the Configuration Manager inventory</li>
-<li>Save the output to a file or registry key and <a href="https://msendpointmgr.com/2021/04/12/enhance-intune-inventory-data-with-proactive-remediations-and-log-analytics/">upload to LogAnalytics</a></li>
+<li>Use <a href="https://github.com/proxb/PoshRSJob" target="_blank">PoshRSJob</a> or <a href="https://github.com/PaulHigin/PSThreadJob" target="_blank">PSThreadJob</a> to rapidly query online computers over the network</li>
+<li>Save the output to the local registry and use <a href="https://askgarth.com/blog/how-to-use-regkeytomof/" target="_blank">RegKeytoMof</a> to bring it into the Configuration Manager inventory</li>
+<li>Save the output to a file or registry key and <a href="https://msendpointmgr.com/2021/04/12/enhance-intune-inventory-data-with-proactive-remediations-and-log-analytics/" target="_blank">upload to LogAnalytics</a></li>
 </ul>
 <h2 id="example-script-output">Example script output</h2>
 <p>The VSCode extension script below is similar to the <a href="/2018/12/15/audit-google-chrome-extensions/">Chrome Extension script</a> published some time ago.</p>
@@ -60,7 +60,7 @@ Source              : https://github.com/redhat-developer/vscode-yaml.git
 
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -85,7 +85,7 @@ Item and Container Labels apply different controls. Separate labels means the na
 There are sub-scopes within Items for Files, Emails and Meetings (Calendar events). Again, the controls are different so labels can be more specific if targeted. For example, email labels can control view, reply, forwarding, whereas file labels can control Save, Print, Copy, Expiry, Offline Access.</p>
 <p>It helps that client apps only show labels applicable to the current scope, so a label scoped to <strong>Items - Email</strong> will not be displayed in a document, spreadsheet or presentation.</p>
 <p><strong>Create a baseline set of company-wide labels and a small number of targeted additions</strong><br>
-A core set of labels should be applicable to everyone. Specific departments or teams may need extra labels for custom data, such as <a href="https://csrc.nist.gov/glossary/term/PII">PII</a>, or <em>Blueprints</em>. Label policies can deploy the extra labels just to specific AAD groups.</p>
+A core set of labels should be applicable to everyone. Specific departments or teams may need extra labels for custom data, such as <a href="https://csrc.nist.gov/glossary/term/PII" target="_blank">PII</a>, or <em>Blueprints</em>. Label policies can deploy the extra labels just to specific AAD groups.</p>
 <p><strong>Create labels that will endure over a long period</strong><br>
 Choose labels that will still be applicable in years to come and then consult users (and perhaps run a limited pilot) to get labels right before mass adoption.  Deleting labels is problematic. The label is added to the metadata of items and deleting the label does not remove it from the metadata. The recommended way to retire a label is to stop publishing it (label policy), but don&rsquo;t delete the label itself.</p>
 <p><strong>Avoid sub labels</strong><br>
@@ -162,7 +162,7 @@ Users will need reassurance to feel confident in applying labels with content re
 </span></span><span class="line"><span class="cl"><span class="n">AccessType</span>
 </span></span><span class="line"><span class="cl"><span class="p">----------</span>
 </span></span><span class="line"><span class="cl"><span class="n">allowed</span>
-</span></span></code></pre></div><p>If needed, the settings can be modified in the <a href="https://portal.azure.com/#view/Microsoft_AAD_IAM/CompanyRelationshipsMenuBlade/~/CrossTenantAccessSettings">Azure AD portal</a>, External Identities &gt; Cross-tenant access settings &gt; Default settings, or using the <a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.identity.signins/update-mgpolicycrosstenantaccesspolicydefault?view=graph-powershell-1.0">Update-MgPolicyCrossTenantAccessPolicyDefault</a> command.</p>
+</span></span></code></pre></div><p>If needed, the settings can be modified in the <a href="https://portal.azure.com/#view/Microsoft_AAD_IAM/CompanyRelationshipsMenuBlade/~/CrossTenantAccessSettings" target="_blank">Azure AD portal</a>, External Identities &gt; Cross-tenant access settings &gt; Default settings, or using the <a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.identity.signins/update-mgpolicycrosstenantaccesspolicydefault?view=graph-powershell-1.0" target="_blank">Update-MgPolicyCrossTenantAccessPolicyDefault</a> command.</p>
 <h3 id="exchange-online-irm-configuration">Exchange Online: IRM Configuration</h3>
 <p>The following features are dependent on Information Rights Management Licensing in Exchange Online:</p>
 <ul>
@@ -182,7 +182,7 @@ Users will need reassurance to feel confident in applying labels with content re
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="nb">Set-IRMConfiguration</span> <span class="n">-AzureRMSLicensingEnabled</span> <span class="vm">$True</span>
 </span></span></code></pre></div><h3 id="multi-language-support">Multi-language support</h3>
-<p>Sensitivity Labels and their descriptions can be localised to match the Office language. Local language support can only be added using the <a href="https://docs.microsoft.com/en-us/powershell/module/exchange/set-label?view=exchange-ps#example-1">Set-Language PowerShell command</a>.</p>
+<p>Sensitivity Labels and their descriptions can be localised to match the Office language. Local language support can only be added using the <a href="https://docs.microsoft.com/en-us/powershell/module/exchange/set-label?view=exchange-ps#example-1" target="_blank">Set-Language PowerShell command</a>.</p>
 <p>Set-Label is available in the Security and Compliance PowerShell module (available after using Connect-IPPSSession from the ExchangeOnlineManagement PowerShell module).</p>
 <p>You may see references to adding multi-language support using an XML export and import process in the Azure Information Protection blade of the Azure Portal. This method relates to AIP Classic that is now deprecated.</p>
 <h2 id="limitations">Limitations</h2>
@@ -192,7 +192,7 @@ Users will need reassurance to feel confident in applying labels with content re
 <li>Semi-annual Enterprise 2002+</li>
 <li>Monthly Enterprise and Current Channel 1910+</li>
 </ul>
-<p>There are <a href="https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitivity-labels-versions?view=o365-worldwide#sensitivity-label-capabilities-in-word-excel-and-powerpoint">some features that require later versions</a>, such as <em>Dynamic content marking</em>, <em>Let users assign permissions</em> and <em>audit label-related user activity</em>.</p>
+<p>There are <a href="https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitivity-labels-versions?view=o365-worldwide#sensitivity-label-capabilities-in-word-excel-and-powerpoint" target="_blank">some features that require later versions</a>, such as <em>Dynamic content marking</em>, <em>Let users assign permissions</em> and <em>audit label-related user activity</em>.</p>
 <h3 id="user-encryption-over-ride">User encryption over-ride</h3>
 <p>Users are able to over-ride the encryption settings applied by a manual label. After they apply the label to their content, they can make changes to the protection using File &gt; Info &gt; Protect Document &gt; Restrict Access.</p>
 <p>The only way to avoid this is to provide at least one Label with <em>Let users assign their own permissions</em> and educate users to choose this Label rather than modifying a pre-configured one.</p>
@@ -219,7 +219,7 @@ Users will need reassurance to feel confident in applying labels with content re
 <p>SharePoint caches Labels and Label Policies, so changes can take even longer e.g. 24hrs.</p>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -363,7 +363,7 @@ The additional conditions are only available for Exchange when creating a per-lo
 <li>Azure AD client secret</li>
 </ul>
 <p>Sensitive Info Types can be used in Client-side and Service-side auto-labelling.</p>
-<p>There is a long list of <a href="https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitive-information-type-entity-definitions?view=o365-worldwide">built-in Sensitive Information Types (SIT) provided by Microsoft</a>. You can also create your own in the <a href="https://compliance.microsoft.com/dataclassificationclassifiers?viewid=sensitiveinfotypes"><em>Data Classification</em> blade</a> of the Purview Compliance Center. Custom SITs are one of the following:</p>
+<p>There is a long list of <a href="https://learn.microsoft.com/en-us/microsoft-365/compliance/sensitive-information-type-entity-definitions?view=o365-worldwide" target="_blank">built-in Sensitive Information Types (SIT) provided by Microsoft</a>. You can also create your own in the <a href="https://compliance.microsoft.com/dataclassificationclassifiers?viewid=sensitiveinfotypes" target="_blank">&lt;em&gt;Data Classification&lt;/em&gt; blade</a> of the Purview Compliance Center. Custom SITs are one of the following:</p>
 <h3 id="pattern-based-sit">Pattern-based SIT</h3>
 <p>When you create a pattern-based Sensitive Info Type, you can specify a <strong>Primary element</strong> and <strong>Supporting elements</strong>. The elements consist of the following options:</p>
 <ul>
@@ -377,14 +377,14 @@ The additional conditions are only available for Exchange when creating a per-lo
 <p>A Fingerprint-based Sensitive Info Type is created by uploading an example document. It works best with Forms and Templates.</p>
 <h2 id="trainable-classifiers">Trainable Classifiers</h2>
 <p>This method of automatic-labelling is based on machine learning. A Classifier is trained to recognise a document through examples. The classifier must first be fed a selection of documents that are in-scope and out-of-scope of the required label.  The administrator must confirm or reject the automatic classification to train the learning model. It can then be applied to a bulk repository such as a document library.</p>
-<p>Microsoft provides many <a href="https://learn.microsoft.com/en-us/microsoft-365/compliance/classifier-tc-definitions?view=o365-worldwide#trainable-classifiers-definitions">&ldquo;ready-to-use&rdquo; classifiers</a>, including ones to detect profanity, threats and discrimination and even resumes (CVs). Creating a custom Trainable Classifier requires at least 50 sample documents. It can take up-to 2 weeks to scan your environment using these classifiers.</p>
+<p>Microsoft provides many <a href="https://learn.microsoft.com/en-us/microsoft-365/compliance/classifier-tc-definitions?view=o365-worldwide#trainable-classifiers-definitions" target="_blank">&amp;ldquo;ready-to-use&amp;rdquo; classifiers</a>, including ones to detect profanity, threats and discrimination and even resumes (CVs). Creating a custom Trainable Classifier requires at least 50 sample documents. It can take up-to 2 weeks to scan your environment using these classifiers.</p>
 <p>Trainable Classifiers can be used in Client-side and Service-side auto-labelling. They can also be used to apply Retention Labels.</p>
 <p><img loading="lazy" src="/img/UsingMIPLabels/Label-Classifier.png" alt="Trainable Classifiers"  />
 </p>
 <h2 id="exchange-mail-flow-rules">Exchange Mail Flow Rules</h2>
 <p>Encryption can be applied using Labels in Exchange Mail Flow rules.  This option may be an attractive alternative if you don&rsquo;t have an E5 license that supports Automatic Label Policies. The Label and associated encryption is applied to messages in transit (not messages at rest in mailboxes).</p>
 <p>Create a Rule as follows&hellip;<br>
-In the <a href="https://admin.exchange.microsoft.com/">Exchange Admin Portal</a>, select Mail Flow &gt; Rules &gt; Add a rule</p>
+In the <a href="https://admin.exchange.microsoft.com/" target="_blank">Exchange Admin Portal</a>, select Mail Flow &gt; Rules &gt; Add a rule</p>
 <p>In the drop-down list select the option to <em>Apply Office 365 Message Encryption and rights protection to messages</em></p>
 <p><img loading="lazy" src="/img/UsingMIPLabels/Label-MailFlow1.png" alt="Mail Flow Rule"  />
 </p>
@@ -435,7 +435,7 @@ In its original form AIP used separate Sensitivity Labels managed in the Azure P
 <li>Supports Office 2003-2007 file formats</li>
 <li>Logging to the Windows event log</li>
 </ul>
-<p>To use AIP you will need to deploy the <a href="https://www.microsoft.com/download/details.aspx?id=53018">unified labelling client</a> to Windows computers. You may see references in documentation to the AIP Classic Client. This is the older version of AIP that is now deprecated.</p>
+<p>To use AIP you will need to deploy the <a href="https://www.microsoft.com/download/details.aspx?id=53018" target="_blank">unified labelling client</a> to Windows computers. You may see references in documentation to the AIP Classic Client. This is the older version of AIP that is now deprecated.</p>
 <p>If the AIP client is installed, the built-in labelling interfaces in Office are disabled (e.g. the Ribbon Sensitivity button) and an Office add-in displays an information bar instead. It&rsquo;s a supported scenario to use AIP for some features while still using the built-in labelling for Office. To achieve this, just disable the AIP Office add-ins (MSIP.WordAddin, MSIP.ExcelAddin, MSIP.PowerPointAddin, MSIP.OutlookAddin) using a Group policy / CSP setting.</p>
 <h3 id="aip-unified-labelling-scanner">AIP Unified Labelling Scanner?</h3>
 <p>The Scanner works by running jobs that crawl the specified data stores to label and protect the documents. This can be a one-off exercise to ensure wide coverage (then relying on native labelling options), or it could be a repeat scheduled process.</p>
@@ -446,7 +446,7 @@ In its original form AIP used separate Sensitivity Labels managed in the Azure P
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl"> .doc, docx, .docm, .dot, .dotx, .xls, .xlt, .xlsx, .xlsm, .xlsb, .ppt, .pps, .pot, .pptx, .pdf, .txt, .xml, .csv
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -509,7 +509,7 @@ Containers (a.k.a <em>Groups &amp; Sites</em>) can be:</p>
 </span></span><span class="line"><span class="cl"><span class="c"># Enable Purview Labelling:</span>
 </span></span><span class="line"><span class="cl"><span class="nb">PS </span><span class="n">C:</span><span class="p">\&gt;</span> <span class="nb">Set-PolicyConfig</span> <span class="n">-PurviewLabelConsent</span> <span class="vm">$True</span>
 </span></span></code></pre></div><h2 id="whats-in-a-name">What&rsquo;s in a name?</h2>
-<p>Label names are freeform, configured by an administrator in the <a href="https://compliance.microsoft.com/">Purview Compliance Center</a>. The label <em>display name</em> and <em>description</em> are visible to users and should be intuitive.</p>
+<p>Label names are freeform, configured by an administrator in the <a href="https://compliance.microsoft.com/" target="_blank">Purview Compliance Center</a>. The label <em>display name</em> and <em>description</em> are visible to users and should be intuitive.</p>
 <p>Items and Containers can only have one Sensitivity Label (although they can also have an M365 Retention Label - a separate topic).</p>
 <h3 id="example-labels">Example Labels</h3>
 <p>The following example is a baseline set of labels published to everyone in an organization:</p>
@@ -942,7 +942,7 @@ For this reason, <strong>mandatory labelling may be a better choice</strong>, fo
 <li>Sensitivity Labels for PowerBI</li>
 </ul>
 <p>NOTES:</p>
-<p>Alternative licensing - add one of the following to an E3 license: Microsoft 365 E5 Compliance, Microsoft 365 E5 Information Protection and Governance, Advanced OME and customer key for Office 365. Refer to the downloadable spreadsheet <a href="https://www.microsoft.com/en-us/download/details.aspx?id=103006">Microsoft 365 Compliance Licensing Comparison</a> for more information.</p>
+<p>Alternative licensing - add one of the following to an E3 license: Microsoft 365 E5 Compliance, Microsoft 365 E5 Information Protection and Governance, Advanced OME and customer key for Office 365. Refer to the downloadable spreadsheet <a href="https://www.microsoft.com/en-us/download/details.aspx?id=103006" target="_blank">Microsoft 365 Compliance Licensing Comparison</a> for more information.</p>
 <h2 id="role-based-admin-delegation">Role Based Admin Delegation</h2>
 <p>M365 administrators working with Information Protection need delegated access to the configuration settings in the Purview Compliance Center. Add users to one of the following built-in roles:</p>
 <ul>
@@ -964,7 +964,7 @@ For this reason, <strong>mandatory labelling may be a better choice</strong>, fo
 </ul>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -976,7 +976,7 @@ For this reason, <strong>mandatory labelling may be a better choice</strong>, fo
       <guid>https://write-verbose.com/2023/02/02/Firewallmde/</guid>
       <description>A reminder that Firewall Events are not available in MDE Advanced Hunting by default</description>
       <content:encoded><![CDATA[<p>You may notice that Windows Firewall events are not available in Defender for Endpoint Advanced Hunting. This is a quick post on the steps required to enable Firewall audit events.</p>
-<p><a href="https://medium.com/@olafhartong">Olaf Hartong&rsquo;s excellent series on MDE Internals</a> highlights that some MDE telemetry is based on Kernel call-backs or drivers, making those areas independent of client audit policy and enabled by default.</p>
+<p><a href="https://medium.com/@olafhartong" target="_blank">Olaf Hartong&amp;rsquo;s excellent series on MDE Internals</a> highlights that some MDE telemetry is based on Kernel call-backs or drivers, making those areas independent of client audit policy and enabled by default.</p>
 <p>Other settings, however, do rely on ETW providers and therefore on the MDE client&rsquo;s security audit policy. Firewall audit events will only be available in MDE if the relevant audit subcategory is enabled.</p>
 <h2 id="enable-client-side-firewall-auditing">Enable client-side Firewall auditing</h2>
 <p>The following <em>auditpol</em> command will enable Windows Firewall client-side auditing and start sending the telemetry to MDE.</p>
@@ -1126,7 +1126,7 @@ For this reason, <strong>mandatory labelling may be a better choice</strong>, fo
 </span></span><span class="line"><span class="cl">Reason: The rule does not match the traffic.
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -1138,7 +1138,7 @@ For this reason, <strong>mandatory labelling may be a better choice</strong>, fo
       <guid>https://write-verbose.com/2018/12/15/audit-google-chrome-extensions/</guid>
       <description>A PowerShell script to list the installed Google Chrome extensions on a local or remote computer</description>
       <content:encoded><![CDATA[<p>This post includes a PowerShell <em>Get-ChromeExtension</em> script to list installed extensions on the local or remote computer.</p>
-<p>Browser extensions are supposed to be curated and vetted, but there have been <a href="https://securityboulevard.com/2020/12/3-million-chrome-users-infected-via-extensions-here-we-go-again/">many examples of malware</a>. If you don&rsquo;t already have control of extensions through an allow or blocklist, the first step is to find out what is in-use.</p>
+<p>Browser extensions are supposed to be curated and vetted, but there have been <a href="https://securityboulevard.com/2020/12/3-million-chrome-users-infected-via-extensions-here-we-go-again/" target="_blank">many examples of malware</a>. If you don&rsquo;t already have control of extensions through an allow or blocklist, the first step is to find out what is in-use.</p>
 <p>The code below is a PowerShell function to get the installed Google Chrome browser extensions from a local or remote Windows computer.</p>
 <blockquote>
 <p>Chrome Browser Extensions install into the user profile and do not appear in the Add/Remove Programs list.</p>
@@ -1184,7 +1184,7 @@ The PowerShell script below gets the installed extensions using the following me
 
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     

@@ -38,7 +38,7 @@ GIT will be in a special state where it expects the conflict to be resolved befo
 </span></span><span class="line"><span class="cl">        both modified:   consolidate.py
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">no changes added to commit <span class="o">(</span>use <span class="s2">&#34;git add&#34;</span> and/or <span class="s2">&#34;git commit -a&#34;</span><span class="o">)</span>
-</span></span></code></pre></div><p>GIT will display the files that have conflicts.  The problem can be resolved at the command line, but a graphical diff tool such as <a href="https://www.perforce.com/products/helix-core-apps/merge-diff-tool-p4merge">p4merge</a> may be better.</p>
+</span></span></code></pre></div><p>GIT will display the files that have conflicts.  The problem can be resolved at the command line, but a graphical diff tool such as <a href="https://www.perforce.com/products/helix-core-apps/merge-diff-tool-p4merge" target="_blank">p4merge</a> may be better.</p>
 <p>If you open the files in a basic text editor you will see GIT has marked the conflicts.<br>
 In the example below, the file &ldquo;consolidate.py&rdquo; is in conflict. GIT has updated the file with markers showing the lines that need attendtion. The HEAD section shows the lines as they appear in the current branch (main).  Then there is a section break and directly below are the same lines as they appear in the <em>featureA</em> branch.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">import sys
@@ -181,7 +181,7 @@ The existing repo can be local or remote. It can be referenced by an SSH or HTTP
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">❯ git pull origin
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     

@@ -83,10 +83,10 @@ Each line (the $_ variable) is tested for a match against the RegEx expression u
 <script type="application/javascript" src="https://gist.github.com/gbdixg/e931a3056a56af3e7de1460eb0571fff.js"></script>
 
 <h2 id="regex-links">Regex Links</h2>
-<p>For some practice with Regular Expressions, check out <a href="https://alf.nu/RegexGolf/">RegEx Golf</a> or <a href="https://regexcrossword.com/">Regex Crosswords</a>. There is even a <a href="https://www.bennadel.com/blog/3629-the-12th-annual-regular-expression-day---june-1st-2019.htm">Regular Expressions day</a>.</p>
+<p>For some practice with Regular Expressions, check out <a href="https://alf.nu/RegexGolf/" target="_blank">RegEx Golf</a> or <a href="https://regexcrossword.com/" target="_blank">Regex Crosswords</a>. There is even a <a href="https://www.bennadel.com/blog/3629-the-12th-annual-regular-expression-day---june-1st-2019.htm" target="_blank">Regular Expressions day</a>.</p>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     

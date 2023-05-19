@@ -24,7 +24,7 @@
 <p>A custom Azure application can limit MS Graph access to specific requirements of a PowerShell script, reducing the risk.</p>
 <h1 id="disable-user-consent">Disable user consent</h1>
 <p>The first step is to prevent users granting application consent. User consent is enabled by default and presents a risk of unwanted access to company data.</p>
-<p>In the <a href="https://aad.portal.azure.com/">Azure AD portal</a>, navigate to <strong>Enterprise applications</strong> and then <strong>Consent and permissions</strong>.</p>
+<p>In the <a href="https://aad.portal.azure.com/" target="_blank">Azure AD portal</a>, navigate to <strong>Enterprise applications</strong> and then <strong>Consent and permissions</strong>.</p>
 <p>Many companies change the setting to <strong>Do not allow user consent</strong>. Note that this does create an admin overhead, so you could look into the advanced options of defining low-risk permissions or using conditional access.</p>
 <p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp0.png" alt="User consent"  />
 </p>
@@ -36,7 +36,7 @@
 <h1 id="clean-up-microsoft-graph-powershell">Clean-up Microsoft Graph PowerShell</h1>
 <p>If you want to implement Custom Apps for access to MSGraph, you should first review and remove excess permissions from the <em>Microsoft Graph PowerShell</em> app. Over time administrators may have consented to more and more permissions.</p>
 <p>It isn&rsquo;t possible to remove permissions or revoke consent in the admin portal, but it does provide the PowerShell commands.</p>
-<p>In the <a href="https://aad.portal.azure.com/">Azure AD portal</a>, navigate to <strong>Enterprise applications</strong><br>
+<p>In the <a href="https://aad.portal.azure.com/" target="_blank">Azure AD portal</a>, navigate to <strong>Enterprise applications</strong><br>
 In the <em>All applications</em> view, select <strong>Microsoft Graph PowerShell</strong> and then <strong>Permissions</strong><br>
 Click <strong>Review Permissions</strong></p>
 <p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp05.png" alt="User consent"  />
@@ -64,7 +64,7 @@ Click <strong>Review Permissions</strong></p>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><h1 id="custom-app-step-by-step">Custom app Step by Step</h1>
 <p>The following steps create a new application with delegated API access to MSGraph, suitable for use from a PowerShell script. The permissions are specific to the <a href="/2023/03/18/Show-Win32AppUI/">Show-Win32AppUI</a></p>
-<p>Open the <a href="https://aad.portal.azure.com/">Azure AD portal</a> and select <strong>App registrations</strong></p>
+<p>Open the <a href="https://aad.portal.azure.com/" target="_blank">Azure AD portal</a> and select <strong>App registrations</strong></p>
 <p>Click on <strong>New Registration</strong> to start the process</p>
 <p><img loading="lazy" src="/img/AzureAppRegistration/CustomApp1.png" alt="New registration"  />
 </p>
@@ -152,7 +152,7 @@ Click <strong>Grant admin consent for <tenant></strong></p>
 </ul>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -165,7 +165,7 @@ Click <strong>Grant admin consent for <tenant></strong></p>
       <description>A PowerShell GUI app to simplify creating Win32 Apps in Intune</description>
       <content:encoded><![CDATA[<p>A GUI tool for end-to-end creation of Win32 Apps in Microsoft Intune.</p>
 <p>This post provides details of &ldquo;Show-Win32AppUI&rdquo;, a GUI tool that simplifies the end-to-end process of creating Win32 Apps in Intune.</p>
-<p>The GitHub source is <a href="https://github.com/gbdixg/Show-Win32AppUI">available here</a>.  Instructions for setup and use are below.</p>
+<p>The GitHub source is <a href="https://github.com/gbdixg/Show-Win32AppUI" target="_blank">available here</a>.  Instructions for setup and use are below.</p>
 <p><img loading="lazy" src="/img/Show-Win32AppUI/Show-Win32AppUI.gif" alt="Show-Win32AppUI"  />
 </p>
 <p>This isn&rsquo;t a one size fits all community tool. You will likely need to modify it to meet your needs. However, its written in PowerShell and has code comments and blog posts to make editing simpler.</p>
@@ -178,7 +178,7 @@ Click <strong>Grant admin consent for <tenant></strong></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">MSAL</span><span class="p">.</span><span class="nb">PS </span><span class="n">-RequiredVersion</span> <span class="mf">4.37</span><span class="p">.</span><span class="py">0</span><span class="p">.</span><span class="py">0</span>
 </span></span><span class="line"><span class="cl"><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">IntuneWin32App</span> <span class="n">-RequiredVersion</span> <span class="mf">1.4</span><span class="p">.</span><span class="py">0</span>
 </span></span></code></pre></div><h2 id="tenant-id">Tenant ID</h2>
-<p>Update the $TenantID on line 4 of <em>Show-Win32AppUI.ps1</em> to use your required Azure tenant. Your tenant ID is available from the <a href="https://aad.portal.azure.com/">Azure AD portal</a> <em>Overview</em> page.</p>
+<p>Update the $TenantID on line 4 of <em>Show-Win32AppUI.ps1</em> to use your required Azure tenant. Your tenant ID is available from the <a href="https://aad.portal.azure.com/" target="_blank">Azure AD portal</a> <em>Overview</em> page.</p>
 <h2 id="azure-client-app">Azure Client App</h2>
 <p>An Azure Client App is used with interactive authentication to access the Microsoft Graph. There are two setup steps required:</p>
 <ol>
@@ -206,7 +206,7 @@ Whether you use a custom app or Microsoft Graph PowerShell, the app must be conf
 <li>Global Administrator</li>
 </ul>
 <h2 id="workstation-permissions">Workstation permissions</h2>
-<p>The tool does not need administrative access to the client workstation. Internet access is required, to download the <a href="https://github.com/Microsoft/Microsoft-Win32-Content-Prep-Tool">Win32 Content Prep tool</a> on first use.</p>
+<p>The tool does not need administrative access to the client workstation. Internet access is required, to download the <a href="https://github.com/Microsoft/Microsoft-Win32-Content-Prep-Tool" target="_blank">Win32 Content Prep tool</a> on first use.</p>
 <h2 id="powershell-script-execution">PowerShell script execution</h2>
 <p>PowerShell script execution is disabled on Windows clients by default. Use one of the methods below to allow script execution on the workstation.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">set-executionpolicy</span> <span class="n">Unrestricted</span>
@@ -274,25 +274,25 @@ Whether you use a custom app or Microsoft Graph PowerShell, the app must be conf
 <p><img loading="lazy" src="/img/Show-Win32AppUI/Win32AppUI-Defaults.png" alt="WriteHost"  />
 </p>
 <h1 id="detection-method">Detection Method</h1>
-<p>The Win32 app detection is hardcoded to use a file exists method. The <em>Install.ps1</em> script wrapper creates a &ldquo;.ps1.tag&rdquo; file under the %PROGRAMDATA% folder and <em>Uninstall.ps1</em> deletes it - a detection method <a href="https://oofhours.com/2020/05/18/two-for-one-updated-autopilot-branding-and-update-os-scripts/">first suggested by Michael Niehaus</a></p>
+<p>The Win32 app detection is hardcoded to use a file exists method. The <em>Install.ps1</em> script wrapper creates a &ldquo;.ps1.tag&rdquo; file under the %PROGRAMDATA% folder and <em>Uninstall.ps1</em> deletes it - a detection method <a href="https://oofhours.com/2020/05/18/two-for-one-updated-autopilot-branding-and-update-os-scripts/" target="_blank">first suggested by Michael Niehaus</a></p>
 <h1 id="credits">Credits</h1>
 <ul>
 <li>
-<p>Show-Win32AppUI is a front-end to the excellent <a href="https://github.com/MSEndpointMgr/IntuneWin32App">IntuneWin32App module</a>. Full credit to the contributors of this project.</p>
+<p>Show-Win32AppUI is a front-end to the excellent <a href="https://github.com/MSEndpointMgr/IntuneWin32App" target="_blank">IntuneWin32App module</a>. Full credit to the contributors of this project.</p>
 </li>
 <li>
-<p>The <a href="https://github.com/AzureAD/MSAL.PS">MSAL.PS module</a> has simplified the transition from ADAL to MSAL authentication.</p>
+<p>The <a href="https://github.com/AzureAD/MSAL.PS" target="_blank">MSAL.PS module</a> has simplified the transition from ADAL to MSAL authentication.</p>
 </li>
 <li>
-<p><a href="https://learn-powershell.net/">Boe Prox</a> for PowerShell Runspace tips</p>
+<p><a href="https://learn-powershell.net/" target="_blank">Boe Prox</a> for PowerShell Runspace tips</p>
 </li>
 <li>
-<p><a href="https://smsagent.blog/blog-posts/">SMSAgent</a> for PowerShell WPF tips</p>
+<p><a href="https://smsagent.blog/blog-posts/" target="_blank">SMSAgent</a> for PowerShell WPF tips</p>
 </li>
 </ul>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     

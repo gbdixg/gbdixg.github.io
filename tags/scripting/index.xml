@@ -25,7 +25,7 @@
 <p>IME Log entries are in the CMTrace format used by System Center Configuration Manager e.g.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-LaTeX" data-lang="LaTeX"><span class="line"><span class="cl">&lt;![LOG[[Win32App] Checking ESP status and phase for sessionId: 0]LOG]!&gt;&lt;time=&#34;23:05:44.2390147&#34; date=&#34;4-16-2023&#34; component=&#34;IntuneManagementExtension&#34; context=&#34;&#34; type=&#34;1&#34; thread=&#34;65&#34; file=&#34;&#34;&gt;
 </span></span><span class="line"><span class="cl">&lt;![LOG[[Proxy Poller] Processing session id 2 starts]LOG]!&gt;&lt;time=&#34;23:05:47.8411669&#34; date=&#34;4-16-2023&#34; component=&#34;IntuneManagementExtension&#34; context=&#34;&#34; type=&#34;1&#34; thread=&#34;25&#34; file=&#34;&#34;&gt;
-</span></span></code></pre></div><p>The log entries are best viewed using the <a href="https://learn.microsoft.com/en-us/mem/configmgr/core/support/cmtrace">CMTrace tool</a>, but this won&rsquo;t be readily available for a company that doesn&rsquo;t use System Center Configuration Manager. There is no official download for cloud-only businesses using Intune.</p>
+</span></span></code></pre></div><p>The log entries are best viewed using the <a href="https://learn.microsoft.com/en-us/mem/configmgr/core/support/cmtrace" target="_blank">CMTrace tool</a>, but this won&rsquo;t be readily available for a company that doesn&rsquo;t use System Center Configuration Manager. There is no official download for cloud-only businesses using Intune.</p>
 <p><strong>Read-IMELog</strong> is a PowerShell script that converts IME logs to PowerShell objects, allowing flexible filtering and sorting.  It can also be used for Config Manager logs.</p>
 <h2 id="example-usage-1---filter-on-message-text">Example usage 1 - filter on message text</h2>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nv">$IMELog</span> <span class="p">=</span> <span class="s1">&#39;C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\IntuneManagementExtension.log&#39;</span>
@@ -43,7 +43,7 @@
 
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -64,14 +64,14 @@
 <h2 id="powershell-script">PowerShell script</h2>
 <p>The <strong>Find-ADSite</strong> PowerShell function below will return the AD Site and Subnet for a specified computer name or IP Address.<br>
 If a company populates subnet descriptions with useful information, it can also identify information such as the specific Office or floor.</p>
-<p>AD Administrators may define a <a href="https://blog.mindcore.dk/2013/07/catch-all-or-super-subnet-in-sites-and/">catch-all subnet</a> with a wide address range. By default if the IP address is within more than one subnet, the output will only include the smallest range. Use the -AllMatches parameter to see everything.</p>
+<p>AD Administrators may define a <a href="https://blog.mindcore.dk/2013/07/catch-all-or-super-subnet-in-sites-and/" target="_blank">catch-all subnet</a> with a wide address range. By default if the IP address is within more than one subnet, the output will only include the smallest range. Use the -AllMatches parameter to see everything.</p>
 <p><img loading="lazy" src="/img/find-adsite1.png" alt="Find-ADSite"  />
 </p>
 <script type="application/javascript" src="https://gist.github.com/gbdixg/5cd6ea0c984278b08b36260ada0e3f9c.js"></script>
 
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -145,7 +145,7 @@ If a company populates subnet descriptions with useful information, it can also 
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -221,10 +221,10 @@ Each line (the $_ variable) is tested for a match against the RegEx expression u
 <script type="application/javascript" src="https://gist.github.com/gbdixg/e931a3056a56af3e7de1460eb0571fff.js"></script>
 
 <h2 id="regex-links">Regex Links</h2>
-<p>For some practice with Regular Expressions, check out <a href="https://alf.nu/RegexGolf/">RegEx Golf</a> or <a href="https://regexcrossword.com/">Regex Crosswords</a>. There is even a <a href="https://www.bennadel.com/blog/3629-the-12th-annual-regular-expression-day---june-1st-2019.htm">Regular Expressions day</a>.</p>
+<p>For some practice with Regular Expressions, check out <a href="https://alf.nu/RegexGolf/" target="_blank">RegEx Golf</a> or <a href="https://regexcrossword.com/" target="_blank">Regex Crosswords</a>. There is even a <a href="https://www.bennadel.com/blog/3629-the-12th-annual-regular-expression-day---june-1st-2019.htm" target="_blank">Regular Expressions day</a>.</p>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     

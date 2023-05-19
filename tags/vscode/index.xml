@@ -19,7 +19,7 @@
       <guid>https://write-verbose.com/2023/05/19/AuditVSCodeExt/</guid>
       <description>Get installed Visual Studio Code extensions on a local or remote computer</description>
       <content:encoded><![CDATA[<p>The recent incident of malicious extensions in the Visual Studio Code Marketplace got me thinking about how to audit extensions across a large estate. This post includes a script to get installed extensions on a local or remote computer.</p>
-<p>You&rsquo;re probably aware of the <a href="https://www.bleepingcomputer.com/news/security/malicious-microsoft-vscode-extensions-steal-passwords-open-remote-shells/">recent discovery of malicious extensions</a> in the VSCode Marketplace.</p>
+<p>You&rsquo;re probably aware of the <a href="https://www.bleepingcomputer.com/news/security/malicious-microsoft-vscode-extensions-steal-passwords-open-remote-shells/" target="_blank">recent discovery of malicious extensions</a> in the VSCode Marketplace.</p>
 <blockquote>
 <p>&lsquo;Theme Darcula dark&rsquo; – Described as &ldquo;an attempt to improve Dracula colors consistency on VS Code,&rdquo; this extension was used to steal basic information about the developer&rsquo;s system&hellip;downloaded over 45,000 times</p>
 </blockquote>
@@ -30,9 +30,9 @@
 <h2 id="enterprise-reporting">Enterprise reporting</h2>
 <p>The script below is just the first part of a solution to audit installed VSCode extensions. Suggestions to capture information across a large estate include:</p>
 <ul>
-<li>Use <a href="https://github.com/proxb/PoshRSJob">PoshRSJob</a> or <a href="https://github.com/PaulHigin/PSThreadJob">PSThreadJob</a> to rapidly query online computers over the network</li>
-<li>Save the output to the local registry and use <a href="https://askgarth.com/blog/how-to-use-regkeytomof/">RegKeytoMof</a> to bring it into the Configuration Manager inventory</li>
-<li>Save the output to a file or registry key and <a href="https://msendpointmgr.com/2021/04/12/enhance-intune-inventory-data-with-proactive-remediations-and-log-analytics/">upload to LogAnalytics</a></li>
+<li>Use <a href="https://github.com/proxb/PoshRSJob" target="_blank">PoshRSJob</a> or <a href="https://github.com/PaulHigin/PSThreadJob" target="_blank">PSThreadJob</a> to rapidly query online computers over the network</li>
+<li>Save the output to the local registry and use <a href="https://askgarth.com/blog/how-to-use-regkeytomof/" target="_blank">RegKeytoMof</a> to bring it into the Configuration Manager inventory</li>
+<li>Save the output to a file or registry key and <a href="https://msendpointmgr.com/2021/04/12/enhance-intune-inventory-data-with-proactive-remediations-and-log-analytics/" target="_blank">upload to LogAnalytics</a></li>
 </ul>
 <h2 id="example-script-output">Example script output</h2>
 <p>The VSCode extension script below is similar to the <a href="/2018/12/15/audit-google-chrome-extensions/">Chrome Extension script</a> published some time ago.</p>
@@ -60,7 +60,7 @@ Source              : https://github.com/redhat-developer/vscode-yaml.git
 
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -155,7 +155,7 @@ Source              : https://github.com/redhat-developer/vscode-yaml.git
 </span></span></code></pre></div><p>Note the use of a JSON array for the body and control characters for new lines. This is quite laborious to create by hand, but VSCode extensions can make this much easier&hellip;</p>
 <h3 id="marketplace-snippet-extension">Marketplace Snippet Extension</h3>
 <p>There are a number of extensions in the VSCode marketplace that will create a Snippet from highlighted code in the editor.</p>
-<p>For example, <a href="https://marketplace.visualstudio.com/items?itemName=ryanolsonx.snippet-creator">Snippet Creator</a> will automatically detetect the in-use language and then prompt for the Snippet prefix and description.  You can then edit the Snippet to fine-tune it.</p>
+<p>For example, <a href="https://marketplace.visualstudio.com/items?itemName=ryanolsonx.snippet-creator" target="_blank">Snippet Creator</a> will automatically detetect the in-use language and then prompt for the Snippet prefix and description.  You can then edit the Snippet to fine-tune it.</p>
 <h3 id="snippet-scope">Snippet Scope</h3>
 <p><strong>Language-specific</strong></p>
 <p>Most Snippets will be created in a language-specific Snippet file and will only prompt for insertion when using that language e.g.<br>
@@ -194,7 +194,7 @@ Source              : https://github.com/redhat-developer/vscode-yaml.git
 <p><code>%USERPROFILE%\.vscode\extensions\ms-vscode.powershell-2021.2.2\snippets\PowerShell.json</code></p>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     

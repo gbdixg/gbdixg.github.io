@@ -19,7 +19,7 @@
       <guid>https://write-verbose.com/2018/12/15/audit-google-chrome-extensions/</guid>
       <description>A PowerShell script to list the installed Google Chrome extensions on a local or remote computer</description>
       <content:encoded><![CDATA[<p>This post includes a PowerShell <em>Get-ChromeExtension</em> script to list installed extensions on the local or remote computer.</p>
-<p>Browser extensions are supposed to be curated and vetted, but there have been <a href="https://securityboulevard.com/2020/12/3-million-chrome-users-infected-via-extensions-here-we-go-again/">many examples of malware</a>. If you don&rsquo;t already have control of extensions through an allow or blocklist, the first step is to find out what is in-use.</p>
+<p>Browser extensions are supposed to be curated and vetted, but there have been <a href="https://securityboulevard.com/2020/12/3-million-chrome-users-infected-via-extensions-here-we-go-again/" target="_blank">many examples of malware</a>. If you don&rsquo;t already have control of extensions through an allow or blocklist, the first step is to find out what is in-use.</p>
 <p>The code below is a PowerShell function to get the installed Google Chrome browser extensions from a local or remote Windows computer.</p>
 <blockquote>
 <p>Chrome Browser Extensions install into the user profile and do not appear in the Add/Remove Programs list.</p>
@@ -65,7 +65,7 @@ The PowerShell script below gets the installed extensions using the following me
 
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     

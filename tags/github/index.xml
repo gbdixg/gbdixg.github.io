@@ -23,7 +23,7 @@
 <h2 id="contributing-on-github">CONTRIBUTING ON GitHub</h2>
 <h3 id="forking-a-repo">Forking a repo</h3>
 <p>A fork is a clone of the repo on the same hosting provider site (i.e. GitHub). You can view all the forks from the repo home page by clicking on <em>Insights &gt; Forks</em></p>
-<p>As an example of how forks are used, the <a href="https://github.com/gohugoio/hugo">Hugo repository on GitHub</a> contains code for a static website generator.  The maintainers of the project have write access and can push changes, but other GitHub users have read access.</p>
+<p>As an example of how forks are used, the <a href="https://github.com/gohugoio/hugo" target="_blank">Hugo repository on GitHub</a> contains code for a static website generator.  The maintainers of the project have write access and can push changes, but other GitHub users have read access.</p>
 <p>Any GitHub contributor can suggest changes by first forking the repo into their own GitHub account. The <em>Fork</em> button at the top-right of the  home page clones the Hugo repo to a copy that appears under the contributors GitHub account. The contributor now has write access to the forked copy, but it isn&rsquo;t that convenient to work directly on GitHub. They need to clone the fork to a GIT repo on their development workstation.</p>
 <h3 id="cloning-a-fork">Cloning a fork</h3>
 <p>The contributor clones the forked repo to a local GIT repo using <code>git clone &lt;SSH or HTTP address of fork repo&gt;</code>. By default, this clone will track a single remote repo called <em>origin</em> (the fork) that will aceept pushed updates. But how does the local repo keep track of the primary Hugo repo, and how are contributor changes pushed to the original source?</p>
@@ -88,7 +88,7 @@ The next two lines show assign symbols to the two versions of the index.md file 
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">&gt; git log feature1..main --oneline <span class="c1"># Compare the feature1 branch to main showing the commits only in main</span>
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -119,7 +119,7 @@ GIT will be in a special state where it expects the conflict to be resolved befo
 </span></span><span class="line"><span class="cl">        both modified:   consolidate.py
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">no changes added to commit <span class="o">(</span>use <span class="s2">&#34;git add&#34;</span> and/or <span class="s2">&#34;git commit -a&#34;</span><span class="o">)</span>
-</span></span></code></pre></div><p>GIT will display the files that have conflicts.  The problem can be resolved at the command line, but a graphical diff tool such as <a href="https://www.perforce.com/products/helix-core-apps/merge-diff-tool-p4merge">p4merge</a> may be better.</p>
+</span></span></code></pre></div><p>GIT will display the files that have conflicts.  The problem can be resolved at the command line, but a graphical diff tool such as <a href="https://www.perforce.com/products/helix-core-apps/merge-diff-tool-p4merge" target="_blank">p4merge</a> may be better.</p>
 <p>If you open the files in a basic text editor you will see GIT has marked the conflicts.<br>
 In the example below, the file &ldquo;consolidate.py&rdquo; is in conflict. GIT has updated the file with markers showing the lines that need attendtion. The HEAD section shows the lines as they appear in the current branch (main).  Then there is a section break and directly below are the same lines as they appear in the <em>featureA</em> branch.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">import sys
@@ -262,7 +262,7 @@ The existing repo can be local or remote. It can be referenced by an SSH or HTTP
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">❯ git pull origin
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     

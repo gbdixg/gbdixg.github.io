@@ -22,7 +22,7 @@
 <h2 id="be-aware-of-network-routing">BE AWARE OF NETWORK ROUTING</h2>
 <p>Although the migration tool uses a source UNC path and destination OneDrive URL, files are actually uploaded to Azure blobs before being transferred to OneDrive<br>
 e.g. *.blob.core.windows.net</p>
-<p>There is a list of <a href="https://learn.microsoft.com/en-us/sharepointmigration/mm-prerequisites">required endpoints</a>, and it&rsquo;s important to determine if the migration traffic will route out through the enterprise proxy servers, or go direct e.g. through an ExpressRoute link. This routing will be specific to your network setup.</p>
+<p>There is a list of <a href="https://learn.microsoft.com/en-us/sharepointmigration/mm-prerequisites" target="_blank">required endpoints</a>, and it&rsquo;s important to determine if the migration traffic will route out through the enterprise proxy servers, or go direct e.g. through an ExpressRoute link. This routing will be specific to your network setup.</p>
 <h3 id="use-agent-groups-in-an-enterprise-network">Use &ldquo;Agent Groups&rdquo; in an enterprise network</h3>
 <blockquote>
 <p>Agent Groups are a logical grouping within Migration Manager, allowing each migration to use a specific agent or agent(s)</p>
@@ -49,7 +49,7 @@ If you are carrying out migrations in multiple locations, you need to group them
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl"><span class="nv">%temp%</span>\SPMigrationAgentSetup\SPMigrationAgentSetup\Microsoft.SharePoint.Migration.ClientShared.dll.config
 </span></span></code></pre></div><p>Under AppSettings, add the following:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl"><span class="p">&lt;</span>add key=GeoLocation value=<span class="s2">&#34;FRA&#34;</span> /&gt;
-</span></span></code></pre></div><p>The value must be a <a href="https://learn.microsoft.com/en-us/microsoft-365/enterprise/microsoft-365-multi-geo?view=o365-worldwide#microsoft-365-multi-geo-availability">valid Azure tenant location code</a> that is already enabled in your tenant.</p>
+</span></span></code></pre></div><p>The value must be a <a href="https://learn.microsoft.com/en-us/microsoft-365/enterprise/microsoft-365-multi-geo?view=o365-worldwide#microsoft-365-multi-geo-availability" target="_blank">valid Azure tenant location code</a> that is already enabled in your tenant.</p>
 <p>Save the file and continue the setup wizard. The Migration Manager agent will register in the satellite geo and be visible in the SPO Admin Portal for the relevant Geolocation.</p>
 <h2 id="timezone-headaches">TIMEZONE HEADACHES</h2>
 <p>Migration tasks can either start immediately or at a specified time. However, the time used in the Migration Manager portal is the time zone tenant home location, not the local time of the administrator accessing the portal.<br>
@@ -102,7 +102,7 @@ To schedule a migration outside business hours, the administrator must take acco
 <p>Microsoft Migration Manager is a free but basic migration tool. By the time you have discovered its limitations, you may wish you had paid for an ISV product instead.</p>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -115,7 +115,7 @@ To schedule a migration outside business hours, the administrator must take acco
       <description>Things I learned migrating home drives to OneDrive with Migration Manager.</description>
       <content:encoded><![CDATA[<p>Part one of &ldquo;Notes from the Field&rdquo; for a home drive to OneDrive for Business migration using Microsoft Migration Manager, covering migration tool considerations, architecture and access requirements.</p>
 <h2 id="tool-selection">TOOL SELECTION</h2>
-<p>Migration Manager comes from the Microsoft purchase of <a href="https://mover.io/index.html">Mover.io</a> in 2019. It is presented as an Enterprise migration tool that puts more structure around the migration process than the more basic SharePoint Migration Tool. However, be prepared for limited configuration and customisation options. As a basic guide consider the following tool choices for file share migration:</p>
+<p>Migration Manager comes from the Microsoft purchase of <a href="https://mover.io/index.html" target="_blank">Mover.io</a> in 2019. It is presented as an Enterprise migration tool that puts more structure around the migration process than the more basic SharePoint Migration Tool. However, be prepared for limited configuration and customisation options. As a basic guide consider the following tool choices for file share migration:</p>
 <ul>
 <li>SharePoint Migration Tool : Ad hoc data migrations</li>
 <li>Migration Manager : Large scale migrations using repetitive process</li>
@@ -128,7 +128,7 @@ To schedule a migration outside business hours, the administrator must take acco
 <li>Removing the home drive mapping</li>
 <li>Cleaning-up or restricting access to home drives</li>
 </ul>
-<p>A 3rd-party tool, could be more suitable if you are looking to automate as much of the process as possible.For example, <a href="https://sharegate.com/blog/easier-onedrive-for-business-migration">ShareGate Migration Tool</a> provides a PowerShell interface.</p>
+<p>A 3rd-party tool, could be more suitable if you are looking to automate as much of the process as possible.For example, <a href="https://sharegate.com/blog/easier-onedrive-for-business-migration" target="_blank">ShareGate Migration Tool</a> provides a PowerShell interface.</p>
 <p>Migration Manager is still attractive as it&rsquo;s effectively free as part of an enterprise M365 license.</p>
 <h2 id="architecture">ARCHITECTURE</h2>
 <p>Migration Manager consists of the following components:</p>
@@ -190,11 +190,11 @@ The technicians managing and monitoring the data migrations will need the ShareP
 </span></span></code></pre></div><p>For already provisioned OneDrives, use a script to grant the <em>SiteCollectionAdmin</em> permission on each OneDrive to a group containing the Migration Manager cloud service account.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Connect-SPOService</span> <span class="n">-URL</span> <span class="nv">$AdminURL</span>
 </span></span><span class="line"><span class="cl"><span class="nb">Set-SPOUser</span> <span class="n">-Site</span> <span class="nv">$UsersOneDriveURL</span> <span class="n">-LoginName</span> <span class="nv">$CloudServiceAccountorGroup</span> <span class="n">-IsSiteCollectionAdmin</span> <span class="vm">$True</span>
-</span></span></code></pre></div><p><strong>NOTE</strong>: This command normally expects a user account as the LoginName. If using a group name, it must be in <a href="https://social.technet.microsoft.com/wiki/contents/articles/13921.sharepoint-20102013-claims-encoding.aspx">claims encoded</a> format.</p>
+</span></span></code></pre></div><p><strong>NOTE</strong>: This command normally expects a user account as the LoginName. If using a group name, it must be in <a href="https://social.technet.microsoft.com/wiki/contents/articles/13921.sharepoint-20102013-claims-encoding.aspx" target="_blank">claims encoded</a> format.</p>
 <p>Part two in this series will look at network routing, multi-geo considerations and scheduling issues.</p>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     

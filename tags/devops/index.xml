@@ -65,7 +65,7 @@ GIT actually enters a menu system that allows granular control, such as splittin
 </span></span><span class="line"><span class="cl">&gt; git show HEAD@<span class="o">{</span><span class="s2">&#34;1 week ago&#34;</span><span class="o">}</span> <span class="c1"># show head 1 week ago</span>
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -81,7 +81,7 @@ GIT actually enters a menu system that allows granular control, such as splittin
 <h2 id="contributing-on-github">CONTRIBUTING ON GitHub</h2>
 <h3 id="forking-a-repo">Forking a repo</h3>
 <p>A fork is a clone of the repo on the same hosting provider site (i.e. GitHub). You can view all the forks from the repo home page by clicking on <em>Insights &gt; Forks</em></p>
-<p>As an example of how forks are used, the <a href="https://github.com/gohugoio/hugo">Hugo repository on GitHub</a> contains code for a static website generator.  The maintainers of the project have write access and can push changes, but other GitHub users have read access.</p>
+<p>As an example of how forks are used, the <a href="https://github.com/gohugoio/hugo" target="_blank">Hugo repository on GitHub</a> contains code for a static website generator.  The maintainers of the project have write access and can push changes, but other GitHub users have read access.</p>
 <p>Any GitHub contributor can suggest changes by first forking the repo into their own GitHub account. The <em>Fork</em> button at the top-right of the  home page clones the Hugo repo to a copy that appears under the contributors GitHub account. The contributor now has write access to the forked copy, but it isn&rsquo;t that convenient to work directly on GitHub. They need to clone the fork to a GIT repo on their development workstation.</p>
 <h3 id="cloning-a-fork">Cloning a fork</h3>
 <p>The contributor clones the forked repo to a local GIT repo using <code>git clone &lt;SSH or HTTP address of fork repo&gt;</code>. By default, this clone will track a single remote repo called <em>origin</em> (the fork) that will aceept pushed updates. But how does the local repo keep track of the primary Hugo repo, and how are contributor changes pushed to the original source?</p>
@@ -146,7 +146,7 @@ The next two lines show assign symbols to the two versions of the index.md file 
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">&gt; git log feature1..main --oneline <span class="c1"># Compare the feature1 branch to main showing the commits only in main</span>
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -316,7 +316,7 @@ A common use case is to abandon some changes that have been committed and revert
 </span></span><span class="line"><span class="cl">&gt; git stash apply <span class="c1"># Copies the latest entry in the stash to the working area and index. You can also specify an array element number if you don&#39;t want the latest</span>
 </span></span></code></pre></div><p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
@@ -437,7 +437,7 @@ Local branches are stored in the .git/refs/heads folder:</p>
 </ul>
 <p><br/><br/></p>
 <blockquote>
-<p>This article was originally posted on <a href="http://write-verbose.com">Write-Verbose.com</a></p>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
 </blockquote>]]></content:encoded>
     </item>
     
