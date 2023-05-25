@@ -10,7 +10,117 @@
       <link>https://write-verbose.com/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 02 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/defender/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 24 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/defender/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Access the Defender Security Center API interactively with PowerShell</title>
+      <link>https://write-verbose.com/2023/05/24/DefenderSecurityAPI/</link>
+      <pubDate>Wed, 24 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2023/05/24/DefenderSecurityAPI/</guid>
+      <description>Use Authorization Code Flow to access the Defender Security API with PowerShell</description>
+      <content:encoded><![CDATA[<p>This post is an introduction to accessing the Defender Security Center API in PowerShell using interactive authentication.<br>
+It is the basis for building tools and scripts to enhance day-to-day productivity that I&rsquo;ll explore in future posts.</p>
+<h2 id="background">Background</h2>
+<p>The Defender Security API is a gold mine as it can provide access to key MDE features including:</p>
+<ul>
+<li>Device information</li>
+<li>Alerts</li>
+<li>MDE Configuration</li>
+<li>Run Advanced Hunting queries</li>
+<li>Initiate Live Response and manage Library scripts</li>
+<li>Initiate Scans and Isolation</li>
+</ul>
+<p>I struggled to find examples of using the API interactively. Microsoft articles have examples using a client secret, which is fine for automation, but not ideal for interactive use.  The following steps demonstrate interactive access to the API.</p>
+<h2 id="azure-app">Azure App</h2>
+<p>The first step is to create an Azure Application to control the permissions available and limit admin access to the API.</p>
+<h3 id="create-the-app">Create the App</h3>
+<p>In the Azure Portal, go to the <strong>App Registrations</strong> blade and select <strong>New Registration</strong></p>
+<p>Enter a name for the app e.g. <strong>DefenderSecurityAPI</strong> (visible in MFA challenges and sign-in logs)</p>
+<p>Leave the <em>Supported Account Types</em> on the default <strong>Single Tenant</strong></p>
+<p>Do not configure a Redirect URL at this stage.</p>
+<p><img loading="lazy" src="/img/DefenderSecurityAPI/AppReg1.png" alt="Register App"  />
+</p>
+<p>Select <strong>Register</strong> to create the app.</p>
+<p>You are presented with the App <em>Overview</em> page.  Select <strong>Add a redirect URI</strong>, then <strong>Add a Platform</strong></p>
+<p>Select <strong>Mobile and Desktop applications</strong></p>
+<p>Enable the check box next to the nativeclient URL and also add local host in the Custom Redirect URIs:</p>
+<ul>
+<li><strong><a href="https://login.microsoftonline.com/common/oauth2/nativeclient" target="_blank">https://login.microsoftonline.com/common/oauth2/nativeclient</a></strong></li>
+<li><strong><a href="http://localhost" target="_blank">http://localhost</a></strong></li>
+</ul>
+<p>Select <strong>Configure</strong> to save the redirect URLs</p>
+<p>Next select <em>API Permissions</em> in the left pane, then <strong>Add a permission</strong></p>
+<p>Select the <strong>APIs my organization uses</strong> tab and then use the search box to find <strong>WindowsDefenderATP</strong></p>
+<p>Select <strong>Delegated Permissions</strong></p>
+<p><img loading="lazy" src="/img/DefenderSecurityAPI/APIPerms.png" alt="API Permissions"  />
+</p>
+<p>Expand the categories and select the individual permissions required<br>
+e.g. <em>Alert.Read, AdvancedQuery.Read, Machine.Read, Machine.Scan, Machine.RestrictExecution, Machine.Isolate, Machine.CollectForensics, Machine.Offboard, Software.Read</em></p>
+<p>Once you&rsquo;ve finished adding permissions, select <strong>Grant admin consent for tenant_name</strong></p>
+<p>Delegated permissions mean both the user and the app must have the required permission. The app won&rsquo;t elevate privileges.</p>
+<h3 id="restrict-access-to-the-app">Restrict Access to the app</h3>
+<p>To restrict who can use the app, we need to go to the <strong>Enterprise applications</strong> blade, either using the Azure Portal search box, or by navigating to the root of Azure AD and selecting it in the left pane.</p>
+<p>Select the app in the list to open its <em>Overview</em> page, then select <strong>Properties</strong> in the left pane.<br>
+Change <strong>Assignment Required</strong> to <em>Yes</em> and then <em>Save</em><br>
+Select <strong>Users and groups</strong> in the left pane and then select <strong>Add user/group</strong><br>
+Select an existing group that will be allowed to authenticate using the App.</p>
+<blockquote>
+<p>NOTE: Although we consented to API permissions in the previous step, it was only delegated permissions. The group members must also be granted permission to read or change Security assets e.g. through a built-in Role, such as <em>Security Administrator</em>.</p>
+</blockquote>
+<p>Select the <strong>Overview</strong> link in the left pane and copy the <em>Application ID</em> as this will be a script variable along with the TenantID.</p>
+<h2 id="authenticate-using-msalps">Authenticate using MSAL.PS</h2>
+<p>Use the <em>MSAL.PS</em> PowerShell module to authenticate interactively and cache an access token. The important part is to specify a security API scope.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c"># Pre-req</span>
+</span></span><span class="line"><span class="cl"><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">MSAL</span><span class="p">.</span><span class="nb">PS </span><span class="n">-MinimumVersion</span> <span class="mf">4.37</span><span class="p">.</span><span class="py">0</span><span class="p">.</span><span class="py">0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Replace with your Application and Tenant IDs</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$ApplicationID</span> <span class="p">=</span> <span class="s1">&#39;446e4714-3226-489e-b602-1515d6822e09&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$TenantID</span> <span class="p">=</span> <span class="s1">&#39;b0530087-fc9a-44e7-ad6f-1b045d56e15d&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Specify at least one security center API scope</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$Scopes</span> <span class="p">=</span> <span class="vm">@</span><span class="p">(</span><span class="s2">&#34;https://api.securitycenter.microsoft.com/Machine.Read&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Authenticate interactively with authorization code flow</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$AccessToken</span> <span class="p">=</span> <span class="nb">Get-MsalToken</span> <span class="n">-ClientId</span> <span class="nv">$ApplicationID</span> <span class="n">-TenantId</span> <span class="nv">$TenantID</span> <span class="n">-Scopes</span> <span class="nv">$Scopes</span>
+</span></span></code></pre></div><blockquote>
+<p>If authentication fails with a message &ldquo;You can&rsquo;t get there from here&rdquo;, see the <em>Conditional Access</em> section below.</p>
+</blockquote>
+<h2 id="call-the-api">Call the API</h2>
+<p>With an access token cached, its straight forward to call the Security Center API using Invoke-Restmethod. The following is a basic example of getting device information:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c"># Build the authentication header</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$AuthenticationHeader</span> <span class="p">=</span> <span class="vm">@</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Content-Type&#34;</span>  <span class="p">=</span> <span class="s2">&#34;application/json&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Authorization&#34;</span> <span class="p">=</span> <span class="nv">$AccessToken</span><span class="p">.</span><span class="py">CreateAuthorizationHeader</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;ExpiresOn&#34;</span>     <span class="p">=</span> <span class="nv">$AccessToken</span><span class="p">.</span><span class="py">ExpiresOn</span><span class="p">.</span><span class="py">UTCDateTime</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Example getting details of an MDE client device</span>
+</span></span><span class="line"><span class="cl"><span class="c"># The deviceID is available on the device details blade in the Security Center portal</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$Method</span> <span class="p">=</span> <span class="s1">&#39;Get&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$MachineID</span> <span class="p">=</span> <span class="s1">&#39;c6a833d8a0da6ad439076368d1681e7930c49fef&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$URI</span> <span class="p">=</span> <span class="s2">&#34;https://api.securitycenter.microsoft.com/api/machines/</span><span class="nv">$MachineID</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="nv">$URI</span> <span class="n">-Headers</span> <span class="nv">$AuthenticationHeader</span> <span class="n">-Method</span> <span class="nv">$Method</span>
+</span></span></code></pre></div><p>Example output:</p>
+<p><img loading="lazy" src="/img/DefenderSecurityAPI/GraphResponse.png" alt="Device info"  />
+</p>
+<h2 id="conditional-access">Conditional Access</h2>
+<p>There&rsquo;s an automatically created Conditional Access policy that must be modified before you can query the API. If authentication fails with the error below, you need to edit the policy.</p>
+<p><img loading="lazy" src="/img/DefenderSecurityAPI/CAError.png" alt="Conditional Access"  />
+</p>
+<p>The CA policy gets created during Defender for Endpoint setup, when MDE is linked to Intune. Its only visible in the CA <em>Classic view</em>:</p>
+<p>Azure Active Directory &gt; Security &gt; Conditional Access &gt; Classic Policies &gt; [Windows Defender ATP] Device Policy</p>
+<p><img loading="lazy" src="/img/DefenderSecurityAPI/CAPolicy.png" alt="Classic Policy"  />
+</p>
+<p>Don&rsquo;t delete or disable the policy. It could have undesirable results as indicated in this <a href="https://learn.microsoft.com/en-gb/mem/intune/protect/advanced-threat-protection-configure#enable-microsoft-defender-for-endpoint-in-intune" target="_blank">Microsoft article</a>. Instead, add a group exclusion to the policy for the same group authorised to use the Azure App.</p>
+<h2 id="summary">Summary</h2>
+<p>This article is an introduction to accessing the Defender Security Center API using PowerShell with interactive authentication. Future articles will explore practical use cases.</p>
+<p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
     <item>
       <title>Enable Defender Firewall event forwarding to MDE</title>
       <link>https://write-verbose.com/2023/02/02/Firewallmde/</link>

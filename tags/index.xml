@@ -10,11 +10,21 @@
       <link>https://write-verbose.com/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Fri, 19 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 24 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Defender</title>
+      <link>https://write-verbose.com/tags/defender/</link>
+      <pubDate>Wed, 24 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/defender/</guid>
+      <description></description>
+      <content:encoded><![CDATA[]]></content:encoded>
+    </item>
+    
     <item>
       <title>PowerShell</title>
       <link>https://write-verbose.com/tags/powershell/</link>
-      <pubDate>Fri, 19 May 2023 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 24 May 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/tags/powershell/</guid>
       <description></description>
@@ -24,7 +34,7 @@
     <item>
       <title>security</title>
       <link>https://write-verbose.com/tags/security/</link>
-      <pubDate>Fri, 19 May 2023 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 24 May 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/tags/security/</guid>
       <description></description>
@@ -117,16 +127,6 @@
       <pubDate>Sat, 18 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/tags/msgraph/</guid>
-      <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
-    </item>
-    
-    <item>
-      <title>Defender</title>
-      <link>https://write-verbose.com/tags/defender/</link>
-      <pubDate>Thu, 02 Feb 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://write-verbose.com/tags/defender/</guid>
       <description></description>
       <content:encoded><![CDATA[]]></content:encoded>
     </item>

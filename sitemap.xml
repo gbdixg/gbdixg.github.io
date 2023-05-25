@@ -2,25 +2,31 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://write-verbose.com/2023/05/24/DefenderSecurityAPI/</loc>
+    <lastmod>2023-05-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/defender/</loc>
+    <lastmod>2023-05-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/posts/</loc>
+    <lastmod>2023-05-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/powershell/</loc>
+    <lastmod>2023-05-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/security/</loc>
+    <lastmod>2023-05-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/</loc>
+    <lastmod>2023-05-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/</loc>
+    <lastmod>2023-05-24T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://write-verbose.com/2023/05/19/AuditVSCodeExt/</loc>
     <lastmod>2023-05-19T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://write-verbose.com/posts/</loc>
-    <lastmod>2023-05-19T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/powershell/</loc>
-    <lastmod>2023-05-19T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/security/</loc>
-    <lastmod>2023-05-19T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/</loc>
-    <lastmod>2023-05-19T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://write-verbose.com/tags/vscode/</loc>
-    <lastmod>2023-05-19T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/</loc>
     <lastmod>2023-05-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/governance/</loc>
@@ -85,9 +91,6 @@
   </url><url>
     <loc>https://write-verbose.com/categories/msgraph/</loc>
     <lastmod>2023-03-18T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/defender/</loc>
-    <lastmod>2023-02-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/edr/</loc>
     <lastmod>2023-02-02T00:00:00+00:00</lastmod>
