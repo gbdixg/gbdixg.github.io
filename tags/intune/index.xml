@@ -12,7 +12,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Mon, 17 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/intune/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Read Intune Logs with PowerShell (CMTrace format)</title>
+      <title>Read Intune IME Logs with PowerShell (CMTrace format)</title>
       <link>https://write-verbose.com/2023/04/17/readimelog/</link>
       <pubDate>Mon, 17 Apr 2023 00:00:00 +0000</pubDate>
       

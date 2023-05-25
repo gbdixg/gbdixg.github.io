@@ -1078,7 +1078,7 @@ For this reason, <strong>mandatory labelling may be a better choice</strong>, fo
     </item>
     
     <item>
-      <title>Read Intune Logs with PowerShell (CMTrace format)</title>
+      <title>Read Intune IME Logs with PowerShell (CMTrace format)</title>
       <link>https://write-verbose.com/2023/04/17/readimelog/</link>
       <pubDate>Mon, 17 Apr 2023 00:00:00 +0000</pubDate>
       
