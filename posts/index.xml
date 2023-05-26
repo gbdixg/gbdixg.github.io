@@ -12,12 +12,12 @@
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Wed, 24 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Access the Defender Security Center API interactively with PowerShell</title>
+      <title>Access api.securitycenter.microsoft.com interactively with PowerShell</title>
       <link>https://write-verbose.com/2023/05/24/DefenderSecurityAPI/</link>
       <pubDate>Wed, 24 May 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/2023/05/24/DefenderSecurityAPI/</guid>
-      <description>Use Authorization Code Flow to access the Defender Security API with PowerShell</description>
+      <description>Use Authorization Code Flow to access the Defender Security Center API with PowerShell</description>
       <content:encoded><![CDATA[<p>This post is an introduction to accessing the Defender Security Center API in PowerShell using interactive authentication. It is the basis for building tools and scripts to enhance day-to-day productivity that I&rsquo;ll explore in future posts.</p>
 <h2 id="background">Background</h2>
 <p>The Defender Security API is a gold mine as it can provide access to key MDE features including:</p>
