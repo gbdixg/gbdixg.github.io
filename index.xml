@@ -10,7 +10,69 @@
       <link>https://write-verbose.com/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 24 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 01 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hyper-V or Virtual Machine Platform or Windows Hypervisor Platform</title>
+      <link>https://write-verbose.com/2023/06/01/EnableWindows11HyperV/</link>
+      <pubDate>Thu, 01 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2023/06/01/EnableWindows11HyperV/</guid>
+      <description>About the Windows 11 Optional Features for virtualization and when to use them</description>
+      <content:encoded><![CDATA[<p>Windows 11 has multiple virtualization features with similar names. This short post explains when to enable each one.</p>
+<p>It&rsquo;s not immediately clear which features need to be enabled on Windows 11 for local virtualisation support. The following features appear to overlap:</p>
+<ul>
+<li>Hyper-V</li>
+<li>Virtual Machine Platform</li>
+<li>Windows Hypervisor Platform</li>
+</ul>
+<p>Firstly, where do you see these optional features on Windows 11?</p>
+<ol>
+<li>Settings &gt; Apps &gt; Optional Features &gt; More Windows Features</li>
+<li>PowerShell</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Get-WindowsOptionalFeature</span> <span class="n">-online</span> <span class="p">|</span> <span class="nb">Out-Gridview</span>
+</span></span></code></pre></div><h2 id="purpose">Purpose</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hyper-V</td>
+<td>Host local VMs using client Hyper-V</td>
+</tr>
+<tr>
+<td>Virtual Machine Platform</td>
+<td>Pre-req for Windows Subsystem for Linux*</td>
+</tr>
+<tr>
+<td>Windows Hypervisor Platform</td>
+<td>API for 3rd party virtualisation e.g. Docker, VirtualBox</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>*NOTE Virtual Machine Platform is automatically enabled if you use the command <em>wsl &ndash;install</em></p>
+</blockquote>
+<h2 id="enable">Enable</h2>
+<p>You can enable the features you need as follows:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c"># Hyper-V</span>
+</span></span><span class="line"><span class="cl"><span class="nb">Enable-WindowsOptionalFeature</span> <span class="n">-Online</span> <span class="n">-FeatureName</span> <span class="nb">Microsoft-Hyper</span><span class="n">-V</span> <span class="n">-All</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Virtual Machine Platform</span>
+</span></span><span class="line"><span class="cl"><span class="nb">Enable-WindowsOptionalFeature</span> <span class="n">-Online</span> <span class="n">-FeatureName</span> <span class="n">VirtualMachinePlatform</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Windows Hypervisor Platform</span>
+</span></span><span class="line"><span class="cl"><span class="nb">Enable-WindowsOptionalFeature</span> <span class="n">-Online</span> <span class="n">-FeatureName</span> <span class="n">HypervisorPlatform</span>
+</span></span></code></pre></div><p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
     <item>
       <title>Access api.securitycenter.microsoft.com interactively with PowerShell</title>
       <link>https://write-verbose.com/2023/05/24/DefenderSecurityAPI/</link>
