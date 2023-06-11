@@ -10,7 +10,60 @@
       <link>https://write-verbose.com/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 02 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/mde/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 31 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/mde/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Bypassing Defender EDR using Windows Firewall - mitigations</title>
+      <link>https://write-verbose.com/2022/05/31/EDRBypass/</link>
+      <pubDate>Wed, 31 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2022/05/31/EDRBypass/</guid>
+      <description>How to prevent an attacker using Windows Firewall to bypass Endpoint Detection</description>
+      <content:encoded><![CDATA[<p>Attackers can use Windows Firewall to block EDR telemetry leaving the endpoint.  Read-on for how this is mitigated.</p>
+<h2 id="risk-background">Risk background</h2>
+<p>As well as the usual source and destination variables, Windows Firewall can also block outbound communication based on the <em>service name</em> or <em>program</em> that initiates the communication.</p>
+<p>An attacker with elevated endpoint access will want to shut down Defender EDR as soon as possible and one method is to block the client agent communication with the cloud service.</p>
+<p>The following PowerShell commands can achieve this, blocking outbound TCP/443 from:</p>
+<ul>
+<li><em>WinDefend</em> service (main MDAV process)</li>
+<li><em>SenseCNDProxy</em> process (acts as a communication broker)</li>
+<li><em>MSSense</em> process (Main MDE process)</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c"># PowerShell commands to Disable outbound 443 from MDE agent to cloud service</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">New-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">&#34;Block 443 MsMpEng&#34;</span> <span class="n">-Name</span> <span class="s2">&#34;Block 443 MsMpEng&#34;</span> <span class="n">-Direction</span> <span class="n">Outbound</span> <span class="n">-Service</span> <span class="n">WinDefend</span> <span class="n">-Enabled</span> <span class="n">True</span> <span class="n">-RemotePort</span> <span class="mf">443</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-Action</span> <span class="n">Block</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">New-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">&#34;Block 443 SenseCncProxy&#34;</span> <span class="n">-Name</span> <span class="s2">&#34;Block 443 SenseCncProxy&#34;</span> <span class="n">-Direction</span> <span class="n">Outbound</span> <span class="n">-Program</span> <span class="s2">&#34;%ProgramFiles%\Windows Defender Advanced Threat Protection\SenseCncProxy.exe&#34;</span> <span class="n">-RemotePort</span> <span class="mf">443</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-Action</span> <span class="n">Block</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">New-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">&#34;Block 443 MsSense&#34;</span> <span class="n">-Name</span> <span class="s2">&#34;Block 443 MsSense&#34;</span> <span class="n">-Direction</span> <span class="n">Outbound</span> <span class="n">-Program</span> <span class="s2">&#34;%ProgramFiles%\Windows Defender Advanced Threat Protection\MsSense.exe&#34;</span> <span class="n">-RemotePort</span> <span class="mf">443</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-Action</span> <span class="n">Block</span>
+</span></span></code></pre></div><h2 id="mitigation">Mitigation</h2>
+<h3 id="1---tamper-protection">1 - Tamper Protection</h3>
+<p>The most important mitigation is to enable <strong>MDE Tamper Protection</strong>.</p>
+<p>Tamper protection prevents users with elevated rights on the endpoint making changes to the MDE client configuration. Tamper Projection includes prevention of local firewall rules affecting MDE processes.  If you run the commands above, MDE will generate an alert and block the changes.</p>
+<p>Enable Tamper Protection as follows:</p>
+<blockquote>
+<p>MDE Security Portal &gt; Settings &gt; Endpoints &gt; Advanced Features &gt; Tamper Protection = On</p>
+</blockquote>
+<h3 id="2--firewall-rule-merging">2- Firewall Rule Merging</h3>
+<p>Windows Firewall local rule merging should be disabled to prevent local changes.</p>
+<p>The Windows Firewall has <em>Rule Sources</em>.  For example, Group Policy is one rule source and local rules are another. When the Firewall is managed by GPO or Intune, it still allows local rule merging by default.</p>
+<p>When rule merging is enabled, local block rules can over-ride policy-based allow rules. Similarly, local allow rules can override policy-based profile defaults (profile defaults are initial rules applied to each profile - Domain / Private / Public).</p>
+<p>Disable Local Rule Merging as follows:</p>
+<p>Group Policy Editor:</p>
+<blockquote>
+<p>Computer Configuration &gt; Security Settings &gt; Windows Firewall with Advanced Security &gt; Properties &gt; Settings &gt; [PROFILE NAME] &gt; Settings &gt; Apply local firewall rules = No</p>
+</blockquote>
+<p>Intune Policy:</p>
+<blockquote>
+<p>Endpoint security &gt; Firewall &gt; Create policy &gt; Create a profile &gt; Windows 10 / 11 / Server &gt; Microsoft Defender Firewall &gt; [Provide a Name] &gt; Allow local policy merge = False</p>
+</blockquote>
+<h2 id="summary">Summary</h2>
+<p>With Tamper Protection enabled and Windows Firewall local rule merging disabled, the chances of at attacker abusing firewall rules are slim.</p>
+<p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
     <item>
       <title>Enable Defender Firewall event forwarding to MDE</title>
       <link>https://write-verbose.com/2023/02/02/Firewallmde/</link>
