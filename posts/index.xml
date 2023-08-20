@@ -10,7 +10,133 @@
       <link>https://write-verbose.com/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 01 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 20 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Replace sensitive information before committing PowerShell scripts using Git Clean and Smudge Filters</title>
+      <link>https://write-verbose.com/2023/08/20/GitClean/</link>
+      <pubDate>Sun, 20 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2023/08/20/GitClean/</guid>
+      <description>Git Filters can replace code at staging to avoid committing unwanted information, such as the Azure AppID or TenantID.</description>
+      <content:encoded><![CDATA[<p>The git filter option isn&rsquo;t well documented, but its <strong>very useful for removing sensitive information you don&rsquo;t want appearing in your public repo</strong>. This post provides an example of replacing the Azure TenantID and AppID with dummy values during the git commit process for a PowerShell script.</p>
+<h2 id="background">Background</h2>
+<p>Best practice is to never hard code sensitive information in your scripts. Better strategies include:</p>
+<ul>
+<li>Accessing an encrypted vault at runtime (Azure KeyVault, CyberArk Privileged Access etc)</li>
+<li>Operator supplied information at runtime (for interactive scripts)</li>
+</ul>
+<blockquote>
+<p>Having said that, there is information that isn&rsquo;t &ldquo;secret&rdquo; but is specific to an environment that needs to be removed before making code public.</p>
+</blockquote>
+<h2 id="scenario">Scenario</h2>
+<p>I&rsquo;ll use the <a href="https://github.com/gbdixg/PSMDE" target="_blank">PSMDE PowerShell module</a> as an example.<br>
+This PowerShell module is used interactively to manage Defender for Endpoint from the command line.
+The code uses the delegated authentication of an Azure Enterprise Application to access the Defender Security API. It uses <a href="https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow" target="_blank">Authorization Code Flow</a> with the following environment-specific information:</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Format</th>
+<th>Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TenantID</td>
+<td>GUID string</td>
+<td>Specific to an Azure environment</td>
+</tr>
+<tr>
+<td>ClientID</td>
+<td>GUID string</td>
+<td>A.K.A ApplicationID. Specific to an Azure Enterprise App.</td>
+</tr>
+<tr>
+<td>Credentials</td>
+<td>Multiple options</td>
+<td>Username / Password supplied interactively in this case</td>
+</tr>
+</tbody>
+</table>
+<p>The <a href="https://github.com/gbdixg/PSMDE/blob/master/Public/Connect-SecurityCenter.ps1" target="_blank">Connect-SecurityCenter.ps1</a> script <strong>makes authentication simple by including default values for the TenantID and ClientID</strong>. The administrator just calls the script and is prompted for credentials with sufficient access.</p>
+<p><em>Connect-SecurityCenter.ps1</em> extract with default values for TenantID and ClientID (AppID):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="kd">Function</span><span class="w"> </span><span class="nb">Connect-SecurityCenter</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl"> <span class="p">[</span><span class="nb">CmdletBinding</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl"> <span class="k">Param</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="nb">parameter</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="nb">ValidateNotNullOrEmpty</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="no">String</span><span class="p">]</span><span class="nv">$TenantID</span> <span class="p">=</span> <span class="s1">&#39;f8856e0c-f363-4583-9a2f-ef0208473d3c&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="nb">parameter</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="nb">ValidateNotNullOrEmpty</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="no">String</span><span class="p">]</span><span class="nv">$ClientID</span> <span class="p">=</span> <span class="s1">&#39;7c0cc95f-d722-4533-94e2-92530f29c07c&#39;</span>
+</span></span><span class="line"><span class="cl"> <span class="p">)</span>
+</span></span><span class="line"><span class="cl"> <span class="p">...</span>
+</span></span></code></pre></div><p>Someone downloading the public code is expected to edit the default values for their own environment.</p>
+<blockquote>
+<p>So how do we develop this module with our own variable defaults, but avoid committing them to the public repo?</p>
+</blockquote>
+<h2 id="git-filter">Git Filter</h2>
+<p>Git can apply filter scripts to the code during the staging step to replace text. The working directory retains the default values, but the repo code has sanitised replacement text.</p>
+<p>A <strong>Clean</strong> filter script is applied when the code is staged to the git index. A <strong>Smudge</strong> filter script is applied at checkout - effectively the opposite direction. The steps below explain how to implement these filters.</p>
+<h2 id="step-1-enable-filtering-in-the-git-global-config">Step 1: Enable filtering in the git global config</h2>
+<p>Update the git config to enable the filters as follows. This can be done in the per-repo git config, but I find its better as a global option&hellip;</p>
+<p>Command format:<br>
+git config &ndash;global filter.&lt;filter name&gt;.&lt;clean|smudge&gt;&lt;path to a script | inline command&gt;</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># Commands to run</span>
+</span></span><span class="line"><span class="cl">git config --global filter.gitClean.clean <span class="s2">&#34;~/gitclean.sh&#34;</span>
+</span></span><span class="line"><span class="cl">git config --global filter.gitClean.smudge <span class="s2">&#34;~/gitsmudge.sh&#34;</span>
+</span></span></code></pre></div><ul>
+<li><em>gitClean</em> is the freeform name for the filter. You can create multiple filters with separate scripts.</li>
+<li>gitClean has a separate clean script (gitclean.sh) and smudge script (gitsmudge.sh)</li>
+<li>Both scripts are in the user&rsquo;s home folder (~/ is c:\users\username on Windows)</li>
+</ul>
+<h2 id="step-2-create-the-clean-and-smudge-scripts">Step 2: Create the clean and smudge scripts</h2>
+<p>Even on Windows git uses bash to execute scripts. You might be able to get PowerShell working, but I found it easier just to stick with bash. The built-in <em>sed</em> command can be used to replace text as follows:</p>
+<p>Command format:<br>
+sed -e &ldquo;s/&lt;pattern&gt;/&lt;replacement&gt;/&lt;flags&gt;&rdquo;</p>
+<p>The text specified by &lt;pattern&gt; is replaced by the text in &lt;replacement&gt;. The &ldquo;g&rdquo; flag replaces all occurrences in the file.</p>
+<p>The <strong>gitclean.sh</strong> script replaces the real tenant ID and application ID with dummy text and the <strong>gitsmudge.sh</strong> script reverses the replacement.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="cp">#!/usr/bin/env bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="c1"># gitclean.sh</span>
+</span></span><span class="line"><span class="cl"><span class="nv">TenantID</span><span class="o">=</span><span class="s2">&#34;f8856e0c-f363-4583-9a2f-ef0208473d3c&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">AppID</span><span class="o">=</span><span class="s2">&#34;7c0cc95f-d722-4533-94e2-92530f29c07c&#34;</span>
+</span></span><span class="line"><span class="cl">sed -e <span class="s2">&#34;s/</span><span class="nv">$TenantID</span><span class="s2">/00000000-0000-0000-0000-TENANTID/g&#34;</span> -e <span class="s2">&#34;s/</span><span class="nv">$AppID</span><span class="s2">/00000000-0000-0000-0000-APPID/g&#34;</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="cp">#!/usr/bin/env bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="c1"># gitsmudge.sh</span>
+</span></span><span class="line"><span class="cl"><span class="nv">TenantID</span><span class="o">=</span><span class="s2">&#34;f8856e0c-f363-4583-9a2f-ef0208473d3c&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">AppID</span><span class="o">=</span><span class="s2">&#34;7c0cc95f-d722-4533-94e2-92530f29c07c&#34;</span>
+</span></span><span class="line"><span class="cl">sed -e <span class="s2">&#34;s/00000000-0000-0000-0000-TENANTID/</span><span class="nv">$TenantID</span><span class="s2">/g&#34;</span> -e <span class="s2">&#34;s/00000000-0000-0000-0000-APPID/</span><span class="nv">$AppID</span><span class="s2">/g&#34;</span>
+</span></span></code></pre></div><p>On Windows the files should be saved in the c:\users\&lt;username&gt; folder.</p>
+<p><strong>Watch out for unix line ending and encoding requirements</strong> - In Visual Studio Code:</p>
+<ul>
+<li>If the status bar shows CRLF, double-click on it and change to LF</li>
+<li>If the status bar shows <em>UTF-8 with BOM</em>, double-click on it and change to <em>UTF-8</em></li>
+</ul>
+<h2 id="step-3-specify-the-file-extensions-that-use-the-filter">Step 3: Specify the file extensions that use the filter</h2>
+<p>Edit the git <em>attributes</em> file in the repo:</p>
+<blockquote>
+<p>.git\info\attributes</p>
+</blockquote>
+<p>If the file doesn&rsquo;t exist, create it as a new text file with no file extension.<br>
+Add a line with &lt;file extension&gt; filter=&lt;filter name&gt; as follows:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">*.ps1 <span class="nv">filter</span><span class="o">=</span>gitClean
+</span></span></code></pre></div><h2 id="step-4-stage-the-files-in-the-index">Step 4: Stage the files in the index</h2>
+<p>The filter is applied at staging, but it won&rsquo;t be immediately obvious that anything has happened. Add or update the file using <strong>git add</strong>:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git add public<span class="se">\C</span>onnect-SecurityCenter.ps1
+</span></span></code></pre></div><p>The command will complete as normal. The file in the working directory will still have the real TenantID and AppID, but the staged file will have the replacement dummy values. Commit the staged file to the local repo and push to update to the public remote repo.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git commit -m <span class="s2">&#34;Update to Connect-SecurityCenter.ps1&#34;</span>
+</span></span><span class="line"><span class="cl">git push origin
+</span></span></code></pre></div><p>Check the GitHub repo to confirm the text replacement was successful.</p>
+<p>On subsequent updates, <em>git diff</em> will confirm the text replacement is successful at staging, before commit. It won&rsquo;t show any differences for these lines - indicating the dummy values are in-place.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git diff --staged
+</span></span></code></pre></div><p>Now that git filtering is in-place, you can edit and update the code without worrying that unwanted information is in the public domain.</p>
+<p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
     <item>
       <title>Hyper-V or Virtual Machine Platform or Windows Hypervisor Platform</title>
       <link>https://write-verbose.com/2023/06/01/EnableWindows11HyperV/</link>

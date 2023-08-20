@@ -2,31 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://write-verbose.com/tags/defender/</loc>
+    <lastmod>2023-08-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/git/</loc>
+    <lastmod>2023-08-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/github/</loc>
+    <lastmod>2023-08-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/posts/</loc>
+    <lastmod>2023-08-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/2023/08/20/GitClean/</loc>
+    <lastmod>2023-08-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/</loc>
+    <lastmod>2023-08-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/</loc>
+    <lastmod>2023-08-20T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://write-verbose.com/2023/06/01/EnableWindows11HyperV/</loc>
     <lastmod>2023-06-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/hyperv/</loc>
     <lastmod>2023-06-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://write-verbose.com/posts/</loc>
-    <lastmod>2023-06-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/</loc>
-    <lastmod>2023-06-01T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://write-verbose.com/tags/windows11/</loc>
-    <lastmod>2023-06-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/</loc>
     <lastmod>2023-06-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/braindump/</loc>
     <lastmod>2023-05-31T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/2022/05/31/EDRBypass/</loc>
-    <lastmod>2023-05-31T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/defender/</loc>
     <lastmod>2023-05-31T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/mde/</loc>
@@ -128,14 +137,8 @@
     <loc>https://write-verbose.com/tags/devops/</loc>
     <lastmod>2021-07-04T14:27:50+00:00</lastmod>
   </url><url>
-    <loc>https://write-verbose.com/tags/git/</loc>
-    <lastmod>2021-07-04T14:27:50+00:00</lastmod>
-  </url><url>
     <loc>https://write-verbose.com/2021/07/04/gitedgecases/</loc>
     <lastmod>2021-07-04T14:27:50+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/github/</loc>
-    <lastmod>2021-06-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/2021/06/30/github/</loc>
     <lastmod>2021-06-30T00:00:00+00:00</lastmod>

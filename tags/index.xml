@@ -10,7 +10,37 @@
       <link>https://write-verbose.com/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 01 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 20 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Defender</title>
+      <link>https://write-verbose.com/tags/defender/</link>
+      <pubDate>Sun, 20 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/defender/</guid>
+      <description></description>
+      <content:encoded><![CDATA[]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>Git</title>
+      <link>https://write-verbose.com/tags/git/</link>
+      <pubDate>Sun, 20 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/git/</guid>
+      <description></description>
+      <content:encoded><![CDATA[]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>GitHub</title>
+      <link>https://write-verbose.com/tags/github/</link>
+      <pubDate>Sun, 20 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/tags/github/</guid>
+      <description></description>
+      <content:encoded><![CDATA[]]></content:encoded>
+    </item>
+    
     <item>
       <title>HyperV</title>
       <link>https://write-verbose.com/tags/hyperv/</link>
@@ -37,16 +67,6 @@
       <pubDate>Wed, 31 May 2023 00:00:00 +0000</pubDate>
       
       <guid>https://write-verbose.com/tags/braindump/</guid>
-      <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
-    </item>
-    
-    <item>
-      <title>Defender</title>
-      <link>https://write-verbose.com/tags/defender/</link>
-      <pubDate>Wed, 31 May 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://write-verbose.com/tags/defender/</guid>
       <description></description>
       <content:encoded><![CDATA[]]></content:encoded>
     </item>
@@ -197,26 +217,6 @@
       <pubDate>Sun, 04 Jul 2021 14:27:50 +0000</pubDate>
       
       <guid>https://write-verbose.com/tags/devops/</guid>
-      <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
-    </item>
-    
-    <item>
-      <title>git</title>
-      <link>https://write-verbose.com/tags/git/</link>
-      <pubDate>Sun, 04 Jul 2021 14:27:50 +0000</pubDate>
-      
-      <guid>https://write-verbose.com/tags/git/</guid>
-      <description></description>
-      <content:encoded><![CDATA[]]></content:encoded>
-    </item>
-    
-    <item>
-      <title>github</title>
-      <link>https://write-verbose.com/tags/github/</link>
-      <pubDate>Wed, 30 Jun 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://write-verbose.com/tags/github/</guid>
       <description></description>
       <content:encoded><![CDATA[]]></content:encoded>
     </item>
