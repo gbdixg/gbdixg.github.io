@@ -10,7 +10,171 @@
       <link>https://write-verbose.com/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 20 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 27 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>PSMDE - PowerShell Defender for Endpoint Module</title>
+      <link>https://write-verbose.com/2023/08/27/PSMDE/</link>
+      <pubDate>Sun, 27 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2023/08/27/PSMDE/</guid>
+      <description>A PowerShell Module for access to the Defender Security API.</description>
+      <content:encoded><![CDATA[<p>PSMDE is a PowerShell module providing interactive access to Device information, Advanced Hunting data and machine actions.</p>
+<h2 id="module-functions">Module Functions</h2>
+<ul>
+<li>Connect-PSMDE</li>
+<li>Get-PSMDEDeviceInfo</li>
+<li>Get-PSMDELatestVersion</li>
+<li>Invoke-PSMDEAvScan</li>
+<li>Invoke-PSMDEAdvancedHunting</li>
+<li>Invoke-PSMDEIsolation</li>
+<li>Revoke-PSMDEIsolation</li>
+<li>Invoke-PSMDEFileQuarantine</li>
+<li>Save-PSMDESupportInfo</li>
+<li>Test-PSMDEMapsConnection</li>
+</ul>
+<h2 id="installation">Installation</h2>
+<h3 id="create-azure-app">Create Azure App</h3>
+<p>Create an Azure application to control authentication and authorization.<br>
+A step by step process is available <a href="https://write-verbose.com/2023/05/24/DefenderSecurityAPI/" target="_blank">here</a>
+The API permissions required are available in the Help text of each module function.</p>
+<h3 id="install-msalps">Install MSAL.PS</h3>
+<p>PSMDE relies on another module for authentication.  Install the <strong>MSAL.PS</strong> module from the PowerShell gallery.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Install-Module</span> <span class="n">MSAL</span><span class="p">.</span><span class="nb">PS </span><span class="n">-Scope</span> <span class="n">CurrentUser</span>
+</span></span></code></pre></div><h3 id="download-psmde">Download PSMDE</h3>
+<p>The PSMDE module is <a href="https://github.com/gbdixg/PSMDE" target="_blank">available from GitHub</a><br>
+Click on Code &gt; Download Zip<br>
+Unblock the zip file and extract it to a folder in the $ENV:PSModule path<br>
+Make sure you rename the root folder from <em>PSMDE-master</em> to <strong>PSMDE</strong><br>
+Edit the Public\<strong>Connect-PSMDE.ps1</strong> file to set your TenantID and ApplicationID</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="c"># Connect-PSMDE before edit</span>
+</span></span><span class="line"><span class="cl"><span class="k">Param</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="nb">parameter</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="nb">ValidateNotNullOrEmpty</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="no">String</span><span class="p">]</span><span class="nv">$TenantID</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-TENANTID&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="nb">parameter</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="nb">ValidateNotNullOrEmpty</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="no">String</span><span class="p">]</span><span class="nv">$ClientID</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-APPID&#39;</span>
+</span></span></code></pre></div><h2 id="usage">Usage</h2>
+<h3 id="security-context">Security Context</h3>
+<p>Start PowerShell in the context of an account with access to Defender information i.e. a member of</p>
+<ul>
+<li>A built in reader role such as <em>Global Reader</em> or <em>Security Reader</em></li>
+<li>A privileged role such as <em>Global Admin, Security Opertator, Security Admin</em></li>
+<li>A custom role with delegated access to your tenant</li>
+</ul>
+<h3 id="interactive-powershell">Interactive PowerShell</h3>
+<p>Use the module interactively at PowerShell console and explore the module functions</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Import-Module</span> <span class="n">PSMDE</span> <span class="c"># Load the module </span>
+</span></span><span class="line"><span class="cl"><span class="nb">Get-Command</span> <span class="n">-Module</span> <span class="n">PSMDE</span> <span class="c"># List available commands</span>
+</span></span><span class="line"><span class="cl"><span class="nb">Get-Help</span> <span class="nb">Get-PSMDEDeviceInfo</span> <span class="c"># Get help on a command</span>
+</span></span></code></pre></div><h2 id="example-1---get-device-information">EXAMPLE 1 - Get device information</h2>
+<p>The example below confirms the following for an endpoint:</p>
+<ul>
+<li>Defender is active and onboarded</li>
+<li>Engine and signatures are up-to-date</li>
+<li>Last scan times</li>
+<li>OS version and IP address information</li>
+<li>Logged-on users</li>
+<li>MDE alerts</li>
+<li>Vulnerabilities</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Import-Module</span> <span class="n">PSMDE</span>  
+</span></span><span class="line"><span class="cl"><span class="nb">Connect-PSMDE</span> <span class="n">-TenantID</span> <span class="nv">$TenantID</span> <span class="n">-ClientID</span> <span class="nv">$AppID</span> <span class="c"># Optional parameters. Set defaults in the Connect-PSMDE.ps1 file</span>
+</span></span><span class="line"><span class="cl"><span class="nb">Get-PSMDEDeviceInfo</span> <span class="n">-Computername</span> <span class="n">PC12345</span>  
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">Computername                  : PC12345
+</span></span><span class="line"><span class="cl">osPlatform                    : Windows10
+</span></span><span class="line"><span class="cl">version                       : 22H2
+</span></span><span class="line"><span class="cl">osBuild                       : 19045
+</span></span><span class="line"><span class="cl">isPotentialDuplication        : False
+</span></span><span class="line"><span class="cl">machineTags                   : {MDEPilot}
+</span></span><span class="line"><span class="cl">healthStatus                  : Active
+</span></span><span class="line"><span class="cl">onboardingStatus              : Onboarded
+</span></span><span class="line"><span class="cl">defenderAvStatus              : Updated
+</span></span><span class="line"><span class="cl">exposureLevel                 : Medium
+</span></span><span class="line"><span class="cl">riskScore                     : Medium
+</span></span><span class="line"><span class="cl">avEngineVersion               : 1.1.23080.2005
+</span></span><span class="line"><span class="cl">avSignatureVersion            : 1.395.1403.0
+</span></span><span class="line"><span class="cl">avPlatformVersion             : 4.18.23080.2006
+</span></span><span class="line"><span class="cl">avIsSignatureUpToDate         : True
+</span></span><span class="line"><span class="cl">avIsEngineUpToDate            : True
+</span></span><span class="line"><span class="cl">avIsPlatformUpToDate          : True
+</span></span><span class="line"><span class="cl">avSignatureDataRefreshTime    : 27/08/2023 15:35:36
+</span></span><span class="line"><span class="cl">avSignatureDataRefreshTimeUTC : 27/08/2023 14:35:36
+</span></span><span class="line"><span class="cl">quickScanTime                 : 22/08/2023 03:16:00
+</span></span><span class="line"><span class="cl">quickScanTimeUTC              : 22/08/2023 02:16:00
+</span></span><span class="line"><span class="cl">fullScanTime                  : 
+</span></span><span class="line"><span class="cl">fullScanTimeUTC               : 
+</span></span><span class="line"><span class="cl">avmode                        : 0
+</span></span><span class="line"><span class="cl">LastSeen                      : 27/08/2023 14:53:08
+</span></span><span class="line"><span class="cl">LastSeenUTC                   : 27/08/2023 13:53:08
+</span></span><span class="line"><span class="cl">lastIpAddress                 : 192.168.1.140
+</span></span><span class="line"><span class="cl">lastExternalIpAddress         : 100.19.112.28
+</span></span><span class="line"><span class="cl">managedBy                     : Intune
+</span></span><span class="line"><span class="cl">loggedOnUsers                 : {@{id=RnD\user1; lastSeen=27/08/2023 16:23:38; logonTypes=RemoteInteractive}, @{id=azuread\admin1; lastSeen=27/08/2023 16:02:54; logonTypes=Interactive}}
+</span></span><span class="line"><span class="cl">alertCount                    : 9
+</span></span><span class="line"><span class="cl">alerts                        : {@{serverity=Informational; alertCreationTime=2023-05-08T19:45:47.8359999Z; detectionSource=AutomatedInvestigation; category=SuspiciousActivity; threatName=; threatFamilyName=}, 
+</span></span><span class="line"><span class="cl">                                <span class="p">@</span>{serverity=Informational; alertCreationTime=2023-08-15T21:55:56.9250938Z; detectionSource=WindowsDefenderAv; category=Malware; threatName=Virus:DOS/EICAR_Test_File; 
+</span></span><span class="line"><span class="cl">                                threatFamilyName=EICAR_Test_File}, @{serverity=Medium; alertCreationTime=2023-05-08T16:11:02.4388031Z; detectionSource=WindowsDefenderAv; category=SuspiciousActivity; 
+</span></span><span class="line"><span class="cl">                                threatName=Trojan:PowerShell/Powersploit.L; threatFamilyName=Powersploit}, @{serverity=Medium; alertCreationTime=2023-05-08T16:02:13.0120825Z; detectionSource=WindowsDefenderAtp; 
+</span></span><span class="line"><span class="cl">                                category=Execution; threatName=; threatFamilyName=}...}
+</span></span><span class="line"><span class="cl">CVEs                          : {@{name=CVE-2023-33144; description=Visual Studio Code Spoofing Vulnerability; severity=Medium; publicExploit=False; firstDetected=2023-06-13T17:30:51Z}, @{name=CVE-2023-21779; 
+</span></span><span class="line"><span class="cl">                                description=Visual Studio Code Remote Code Execution Vulnerability; severity=High; publicExploit=False; firstDetected=2023-05-02T14:45:15Z}, @{name=CVE-2023-24893; description=Visual 
+</span></span><span class="line"><span class="cl">                                Studio Code Remote Code Execution Vulnerability; severity=High; publicExploit=False; firstDetected=2023-05-02T14:45:15Z}, @{name=CVE-2023-29338; description=Visual Studio Code 
+</span></span><span class="line"><span class="cl">                                Information Disclosure Vulnerability; severity=Medium; publicExploit=False; firstDetected=2023-06-08T10:30:35Z}}
+</span></span><span class="line"><span class="cl">deviceid                      : c6a833d9a0da6ad439076368d1781e7940c49fef
+</span></span></code></pre></div><h2 id="example-2-scan-computers-based-on-advanced-hunting-query-results">EXAMPLE 2: Scan computers based on Advanced Hunting Query results</h2>
+<p>The example below achieves the following:</p>
+<ul>
+<li>Runs an Advanced Hunting query to find endpoints where a file has executed in the last 6 hours</li>
+<li>Triggers a full scan on those endpoints</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Invoke-PSMDEAdvancedHunting</span> <span class="n">-Query</span> <span class="p">@</span><span class="s1">&#39;  
+</span></span></span><span class="line"><span class="cl"><span class="s1">DeviceProcessEvents
+</span></span></span><span class="line"><span class="cl"><span class="s1">| where Timestamp &gt; ago(6h)
+</span></span></span><span class="line"><span class="cl"><span class="s1">| where ActionType == &#34;ProcessCreated&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s1">| where SHA1 == &#34;1bc5066ddf693fc034d6514618854e26a85fd0d1&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s1">| distinct DeviceName 
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;</span><span class="p">@</span> <span class="p">|</span> <span class="nb">Invoke-PSMDEAvscan</span> <span class="n">-ScanType</span> <span class="n">Full</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">Computername     : PC123456
+</span></span><span class="line"><span class="cl"><span class="k">type</span>             : RunAntiVirusScan
+</span></span><span class="line"><span class="cl">ScanType         : Full
+</span></span><span class="line"><span class="cl">status           : Pending
+</span></span><span class="line"><span class="cl">errorHResult     : 0
+</span></span><span class="line"><span class="cl">requestor        : admin@tenant.com
+</span></span><span class="line"><span class="cl">requestorComment : Full scan initiated by PSMDE
+</span></span><span class="line"><span class="cl">DeviceId         : c6a833d9a0da6ad439056368d1681e7940c49fee
+</span></span></code></pre></div><h2 id="example-3-isolate-computers">EXAMPLE 3: Isolate computers</h2>
+<p>The example below performs the following:</p>
+<ul>
+<li>Runs an Advanced Hunting query to find endpoints where PowerShell has communicated with a specific public IP</li>
+<li>Triggers full isolation of those endpoints</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Invoke-PSMDEAdvancedHunting</span> <span class="n">-Query</span> <span class="p">@</span><span class="s1">&#39;  
+</span></span></span><span class="line"><span class="cl"><span class="s1">DeviceNetworkEvents
+</span></span></span><span class="line"><span class="cl"><span class="s1">| where Timestamp &gt; ago (6h)
+</span></span></span><span class="line"><span class="cl"><span class="s1">| where InitiatingProcessFileName =~&#34;PowerShell.exe&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s1">| where RemoteIP == &#34;20.50.201.195&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s1">| distinct DeviceName
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;</span><span class="p">@</span> <span class="p">|</span> <span class="nb">Invoke-PSMDEIsolation</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">computername  : PC123456
+</span></span><span class="line"><span class="cl">isolationType : Full
+</span></span><span class="line"><span class="cl">comment       : PSMDE: Isolate device
+</span></span><span class="line"><span class="cl">requestor     : <span class="p">&lt;</span>admin@tenant.com&gt;
+</span></span><span class="line"><span class="cl">status        : Pending
+</span></span><span class="line"><span class="cl">deviceid      : c6a833d9a0da6ad439056368d1681e7940c49fee
+</span></span></code></pre></div><h2 id="example-4">EXAMPLE 4</h2>
+<p>The following example queries a Microsoft URI for the latest available version of Defender for Endpoint:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nb">Get-PSMDELatestVersion</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">Engine         Platform        Signatures
+</span></span><span class="line"><span class="cl">------         --------        ----------
+</span></span><span class="line"><span class="cl">1.1.23070.1005 4.18.23070.1004 1.395.1451.0
+</span></span></code></pre></div><p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
     <item>
       <title>Replace sensitive information before committing PowerShell scripts using Git Clean and Smudge Filters</title>
       <link>https://write-verbose.com/2023/08/20/GitClean/</link>

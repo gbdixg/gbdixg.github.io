@@ -3,7 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://write-verbose.com/tags/defender/</loc>
-    <lastmod>2023-08-20T00:00:00+00:00</lastmod>
+    <lastmod>2023-08-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/posts/</loc>
+    <lastmod>2023-08-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/powershell/</loc>
+    <lastmod>2023-08-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/2023/08/27/PSMDE/</loc>
+    <lastmod>2023-08-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/</loc>
+    <lastmod>2023-08-27T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/</loc>
+    <lastmod>2023-08-27T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/git/</loc>
     <lastmod>2023-08-20T00:00:00+00:00</lastmod>
@@ -11,16 +26,7 @@
     <loc>https://write-verbose.com/tags/github/</loc>
     <lastmod>2023-08-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://write-verbose.com/posts/</loc>
-    <lastmod>2023-08-20T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://write-verbose.com/2023/08/20/GitClean/</loc>
-    <lastmod>2023-08-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/</loc>
-    <lastmod>2023-08-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/</loc>
     <lastmod>2023-08-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/2023/06/01/EnableWindows11HyperV/</loc>
@@ -42,9 +48,6 @@
     <lastmod>2023-05-31T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/2023/05/24/DefenderSecurityAPI/</loc>
-    <lastmod>2023-05-24T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/powershell/</loc>
     <lastmod>2023-05-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/security/</loc>
