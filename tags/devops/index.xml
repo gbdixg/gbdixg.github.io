@@ -50,7 +50,7 @@ GIT actually enters a menu system that allows granular control, such as splittin
 <p>The <code>git show</code> command provides information about a commit.  The most common way to reference a commit is using its hash (or partial hash), but there are also other ways:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">&gt; git show 8d4112 <span class="c1">#  use the partial hash to refer to the commit</span>
 </span></span><span class="line"><span class="cl">commit 8d411239358d55f45747c401c5c2c3fba8652d71
-</span></span><span class="line"><span class="cl">Author: Geoff Dixon &lt;dixon@mail.home&gt;
+</span></span><span class="line"><span class="cl">Author: gbdixg &lt;gbdixg@domain.home&gt;
 </span></span><span class="line"><span class="cl">Date:   Mon Jun <span class="m">7</span> 17:44:03 +100
 </span></span><span class="line"><span class="cl">...
 </span></span><span class="line"><span class="cl">&gt; 
@@ -416,8 +416,8 @@ Local branches are stored in the .git/refs/heads folder:</p>
 </span></span><span class="line"><span class="cl">❯ git cat-file -p main <span class="c1"># show the object contents</span>
 </span></span><span class="line"><span class="cl">tree 30b4d42bbe1a39dcc314f7c280b1437a1925585e
 </span></span><span class="line"><span class="cl">parent cc0e10d238e78a57115572360a93deba2554d185
-</span></span><span class="line"><span class="cl">author Geoff Dixon &lt;GBDixg@WESTCLIFF.HOME&gt; <span class="m">1621179226</span> +0100
-</span></span><span class="line"><span class="cl">committer Geoff Dixon &lt;GBDixg@WESTCLIFF.HOME&gt; <span class="m">1621179226</span> +0100
+</span></span><span class="line"><span class="cl">author gbdixg &lt;user@domain.HOME&gt; <span class="m">1621179226</span> +0100
+</span></span><span class="line"><span class="cl">committer gbdixg &lt;user@domain.HOME&gt; <span class="m">1621179226</span> +0100
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">Updated summaries. Added article
 </span></span></code></pre></div><p>This is identical to the contents of the commit we looked at earlier, because that was the latest commit on the main branch.</p>
