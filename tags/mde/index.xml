@@ -62,7 +62,8 @@ The main benefits of a Differencing Disk are:</p>
 <h3 id="example">Example</h3>
 <p><img loading="lazy" src="/img/DiffVM/NewDiffVM.png" alt="New-DiffVM"  />
 </p>
-<p>{ { &lt; gist gbdixg ff17941b17b31cacf0b62d9e6c1c4f42 &gt; }}</p>
+<script type="application/javascript" src="https://gist.github.com/gbdixg/ff17941b17b31cacf0b62d9e6c1c4f42.js"></script>
+
 <p><br/><br/></p>
 <blockquote>
 <p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
