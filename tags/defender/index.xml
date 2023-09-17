@@ -302,6 +302,64 @@ Add a line with &lt;file extension&gt; filter=&lt;filter name&gt; as follows:</p
     </item>
     
     <item>
+      <title>Create a Hyper-V VM with a differencing disk using PowerShell</title>
+      <link>https://write-verbose.com/2023/08/13/HyperVDiff/</link>
+      <pubDate>Sun, 13 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2023/08/13/HyperVDiff/</guid>
+      <description>Save GBs of disk space when there are multiple VMs with the same OS and base configuration</description>
+      <content:encoded><![CDATA[<p>This post cover the following:</p>
+<ul>
+<li>An overview of the steps to create the parent virtual disk</li>
+<li>A script to automate creation of child VMs with a differencing disk</li>
+</ul>
+<h2 id="environment">Environment</h2>
+<p>My environment is a Windows 11 host running Client Hyper-V. The VMs are running Windows 11 Enterprise (Eval).<br>
+I&rsquo;m using PowerShell 5.1 and haven&rsquo;t tested on other versions of the OS or PowerShell.</p>
+<h2 id="parent-disk-creation">Parent Disk creation</h2>
+<p>The following is a brief overview of creating the base image that becomes the parent disk.</p>
+<ul>
+<li>Create a Hyper-V Generation 2 VM</li>
+<li>Enable the TPM (Settings &gt; Security)</li>
+<li>Install Windows 11</li>
+<li>During the OOBE phase, select <em>Other Signin Options &gt; Domain Join</em></li>
+<li>Create a local user e.g. &ldquo;Bob&rdquo;</li>
+<li>Log on as Bob and configure the system and software</li>
+<li>NOTE: Install all software per machine or Sysprep will fail</li>
+<li>Enable the built-in Administrator account and set the password</li>
+<li>Log off from the Bob account and log on as Administrator</li>
+<li>Delete the local profile for Bob&rsquo;s account as follows:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-PowerShell" data-lang="PowerShell"><span class="line"><span class="cl"><span class="nv">$p</span> <span class="p">=</span> <span class="nb">Get-WMIObject</span> <span class="n">-Class</span> <span class="n">Win32_UserProfile</span> <span class="n">-Filter</span> <span class="s2">&#34;LocalPath=&#39;c:\\users\\Bob&#39;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$p</span><span class="p">.</span><span class="py">Delete</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$p</span><span class="p">.</span><span class="py">Dispose</span><span class="p">()</span>
+</span></span></code></pre></div><ul>
+<li>Delete the local user account for Bob</li>
+<li>Run Sysprep as follows:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">c<span class="p">:</span><span class="nl">\windows\system32\sysprep\sysprep.exe</span><span class="c1"> /generalize /oobe /mode:vm</span>
+</span></span></code></pre></div><ul>
+<li>Delete the VM in the Hyper-V console (the disk will remain)</li>
+<li>Move the VHDX disk file to an appropriate location and set the NTFS properties to be read-only.</li>
+</ul>
+<h2 id="powershell-script">PowerShell Script</h2>
+<p>The script below creates a new VM with a <em>Differencing Disk</em> linked to the parent disk.<br>
+The main benefits of a Differencing Disk are:</p>
+<ul>
+<li>Rapid deployment - only have to go through OOBE and you have a working OS</li>
+<li>Save disk space - the base OS is in the parent disk</li>
+</ul>
+<h3 id="example">Example</h3>
+<p><img loading="lazy" src="/img/DiffVM/NewDiffVM.png" alt="New-DiffVM"  />
+</p>
+<p>{ { &lt; gist gbdixg ff17941b17b31cacf0b62d9e6c1c4f42 &gt; }}</p>
+<p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
+    <item>
       <title>Bypassing Defender EDR using Windows Firewall - mitigations</title>
       <link>https://write-verbose.com/2022/05/31/EDRBypass/</link>
       <pubDate>Wed, 31 May 2023 00:00:00 +0000</pubDate>
