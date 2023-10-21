@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>VPN on Write-Verbose</title>
+    <link>https://write-verbose.com/tags/vpn/</link>
+    <description>Recent content in VPN on Write-Verbose</description>
+    <image>
+      <title>Write-Verbose</title>
+      <url>https://write-verbose.com/papermod-cover.png</url>
+      <link>https://write-verbose.com/papermod-cover.png</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 12 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://write-verbose.com/tags/vpn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Third-party Windows VPN? Always add these registry values</title>
+      <link>https://write-verbose.com/2023/10/12/FirewallVPN/</link>
+      <pubDate>Thu, 12 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://write-verbose.com/2023/10/12/FirewallVPN/</guid>
+      <description>Windows Firewall may not switch to the domain profile when the VPN tunnel is established</description>
+      <content:encoded><![CDATA[<p>It&rsquo;s a common problem that Windows Firewall doesn&rsquo;t switch to the Domain profile when a VPN tunnel is established to the company network. Apply the settings below on all Windows endpoints to avoid the issue.</p>
+<h2 id="the-problem">The Problem</h2>
+<p>It&rsquo;s important that Windows Firewall switches to the Domain profile when a VPN tunnel is established. However, you&rsquo;ll often see seemingly random cases where this doesn&rsquo;t happen. This can result in overly restrictive Public/Private profile rules blocking applications and OS features.</p>
+<p>I&rsquo;ve seen this issue with <a href="https://www.ivanti.com/en-gb/company/history/pulse-secure" target="_blank">Pulse Secure</a>, <a href="https://www.paloaltonetworks.co.uk/sase/globalprotect" target="_blank">Palo Alto Global Protect</a> and <a href="https://www.cisco.com/c/en_uk/products/security/anyconnect-secure-mobility-client/index.html" target="_blank">Cisco Anyconnect</a>.  It doesn&rsquo;t happen all the time, but often enough that I now apply the solution below to all Windows computers with a VPN client.</p>
+<h2 id="the-solution">The Solution</h2>
+<p>Create the following two registry values on the Windows client:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="c"># Disable Domain Discovery negative caching</span>
+</span></span><span class="line"><span class="cl"><span class="n">Path</span><span class="err">:</span> <span class="n">HKEY_LOCAL_MACHINE</span><span class="p">\</span><span class="n">SYSTEM</span><span class="p">\</span><span class="n">CurrentControlSet</span><span class="p">\</span><span class="n">Services</span><span class="p">\</span><span class="n">NetLogon</span><span class="p">\</span><span class="n">Parameters</span>
+</span></span><span class="line"><span class="cl"><span class="n">ValueName</span><span class="err">:</span> <span class="n">NegativeCachePeriod</span>
+</span></span><span class="line"><span class="cl"><span class="n">ValueType</span><span class="err">:</span> <span class="n">REG_DWORD</span>
+</span></span><span class="line"><span class="cl"><span class="n">ValueData</span><span class="err">:</span> <span class="mf">0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Disable DNS negative caching</span>
+</span></span><span class="line"><span class="cl"><span class="n">Path</span><span class="err">:</span> <span class="n">HKEY_LOCAL_MACHINE</span><span class="p">\</span><span class="n">SYSTEM</span><span class="p">\</span><span class="n">CurrentControlSet</span><span class="p">\</span><span class="n">Services</span><span class="p">\</span><span class="n">Dnscache</span><span class="p">\</span><span class="n">Parameters</span>
+</span></span><span class="line"><span class="cl"><span class="n">ValueName</span><span class="err">:</span> <span class="n">MaxNegativeCacheTtl</span>
+</span></span><span class="line"><span class="cl"><span class="n">ValueType</span><span class="err">:</span> <span class="n">REG_DWORD</span>
+</span></span><span class="line"><span class="cl"><span class="n">ValueData</span><span class="err">:</span> <span class="mf">0</span>
+</span></span></code></pre></div><p>You don&rsquo;t even need to reboot. Just reconnect the VPN and re-check the active Firewall profiles. The Domain Profile should be active as shown below:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">netsh advfirewall monitor show currentprofile
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Domain Profile:
+</span></span><span class="line"><span class="cl">----------------------------------------------------------------------
+</span></span><span class="line"><span class="cl">MYCOMPANY.COM
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Public Profile:
+</span></span><span class="line"><span class="cl">----------------------------------------------------------------------
+</span></span><span class="line"><span class="cl">Unidentified network
+</span></span><span class="line"><span class="cl">Ok.
+</span></span></code></pre></div><h2 id="what-effect-do-the-registry-settings-have">What effect do the registry settings have?</h2>
+<p>Negative caching is a name resolution feature that occurs when a name lookup fails. The failure is cached and not retried until the time-to-live expires the item from the cache.</p>
+<p>Background services on a Windows laptop may attempt to resolve the computer domain name and fail because the VPN is not connected. When the VPN does connects, the client attempts a <a href="https://learn.microsoft.com/en-us/windows/win32/api/dsgetdc/nf-dsgetdc-dsgetdcnamea" target="_blank">DGGetDC</a> call to the computer domain, but the negative name resolution result is returned from the cache and this fails. The Windows Firewall does not activate the Domain Profile even though the Domain would be reachable.</p>
+<p>The two registry settings above disable workstation negative caching for the DNS client and Netlogon service. When the VPN connects, the DSGetDC call succeeds even if it recently failed.</p>
+<p><strong>I&rsquo;ve not experienced any downsides or side-effects with these settings</strong></p>
+<h2 id="background">Background</h2>
+<p>Windows Firewall has basic location awareness through its three profiles:</p>
+<table>
+<thead>
+<tr>
+<th>Profile Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Public</td>
+<td>Automatically applied when a domain controller is not reachable (computer domain)</td>
+</tr>
+<tr>
+<td>Domain</td>
+<td>Automatically applied when a domain controller is reachable (computer domain)</td>
+</tr>
+<tr>
+<td>Private</td>
+<td>A public network that has been manually designated as private by user selections</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Profiles allow different rules to be applied depending on the scenario.</strong> It&rsquo;s common for the Domain profile to be more permissive than the Public profile (although this is changing with zero trust concepts).</p>
+<p><strong>Firewall Profiles are applied per-network interface.</strong> If a computer is connected to Public WIFI and Corporate ethernet at the same time, both the Domain and Public profiles will be active.</p>
+<p>A VPN client is an example where per-adapter profiles come into play. VPN clients normally use a virtual network adapter that &ldquo;connects&rdquo; when the VPN tunnel is established. <strong>Windows Firewall should apply the Domain profile to the virtual interface</strong>, as the computer domain is reachable. At the same time, the physical network adapter is connected to a local network that receives the Public profile because a domain controller is not reachable.</p>
+<blockquote>
+<p>The Private Profile is an edge case. Windows will prompt the user when it detects a new public network with a dialog asking &ldquo;Do you want your PC to be discoverable by other PCs and devices on this network?&rdquo;. If you select &ldquo;yes&rdquo; the network is tagged as Private. This dialog is often supressed by policy in enterprises.</p>
+</blockquote>
+<p><br/><br/></p>
+<blockquote>
+<p>This article was originally posted on <a href="http://write-verbose.com" target="_blank">Write-Verbose.com</a></p>
+</blockquote>]]></content:encoded>
+    </item>
+    
+  </channel>
+</rss>

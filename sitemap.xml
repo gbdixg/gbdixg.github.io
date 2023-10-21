@@ -2,22 +2,31 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://write-verbose.com/tags/defender/</loc>
-    <lastmod>2023-08-27T00:00:00+00:00</lastmod>
+    <loc>https://write-verbose.com/tags/docker/</loc>
+    <lastmod>2023-10-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/posts/</loc>
+    <lastmod>2023-10-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/</loc>
+    <lastmod>2023-10-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/2023/10/12/FirewallVPN/</loc>
+    <lastmod>2023-10-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/vpn/</loc>
+    <lastmod>2023-10-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/</loc>
+    <lastmod>2023-10-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://write-verbose.com/tags/defender/</loc>
     <lastmod>2023-08-27T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/powershell/</loc>
     <lastmod>2023-08-27T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/2023/08/27/PSMDE/</loc>
-    <lastmod>2023-08-27T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/tags/</loc>
-    <lastmod>2023-08-27T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://write-verbose.com/</loc>
     <lastmod>2023-08-27T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://write-verbose.com/tags/git/</loc>
